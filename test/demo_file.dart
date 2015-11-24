@@ -1,6 +1,6 @@
 library midi_demo_file;
 
-import 'midi.dart';
+import 'package:tekartik_midi/midi.dart';
 
 MidiFile getDemoFileCDE() {
   MidiFile file = new MidiFile();

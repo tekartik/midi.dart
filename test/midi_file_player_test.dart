@@ -2,7 +2,7 @@ library midi_player_test;
 
 import 'test_common.dart';
 import 'package:tekartik_midi/midi.dart';
-import 'package:tekartik_midi/demo_file.dart';
+import 'demo_file.dart';
 import 'package:tekartik_midi/midi_file_player.dart';
 
 main() {

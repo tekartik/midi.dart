@@ -70,11 +70,10 @@ main() {
       MidiParser midiParser = new MidiParser(data);
       EventParser parser = new EventParser(midiParser);
       parser.parseEvent();
-      NoteOffEvent noteOffEvent = parser.event as NoteOffEvent;
+      expect(parser.event, new isInstanceOf<NoteOffEvent>());
       //print(noteOffEvent);
       parser.parseEvent();
-      noteOffEvent = parser.event as NoteOffEvent;
-      //print(noteOffEvent);
+      expect(parser.event, new isInstanceOf<NoteOffEvent>());
     });
   });
 }
