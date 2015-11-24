@@ -1,7 +1,6 @@
 library event_writer_test;
 
-import 'package:test/test.dart';
-
+import 'test_common.dart';
 import 'package:tekartik_midi/midi.dart';
 import 'package:tekartik_midi/midi_writer.dart';
 import 'package:tekartik_midi/midi_parser.dart';

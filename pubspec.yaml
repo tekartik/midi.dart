@@ -1,4 +1,5 @@
 name: tekartik_midi
+version: 0.1.0
 description: midi
 dependencies:
   collection: any

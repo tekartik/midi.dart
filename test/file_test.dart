@@ -1,7 +1,6 @@
 library file_test;
 
-import 'package:test/test.dart';
-
+import 'test_common.dart';
 import 'package:tekartik_midi/midi.dart';
 
 main() {

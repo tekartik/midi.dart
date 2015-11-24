@@ -1,9 +1,7 @@
 @TestOn("vm")
 library file_test;
 
-import 'dart:io';
 import 'package:path/path.dart';
-import 'package:test/test.dart';
 import 'package:tekartik_midi/midi.dart';
 import 'package:tekartik_midi/midi_parser.dart';
 import 'package:tekartik_midi/midi_writer.dart';

@@ -4,10 +4,7 @@ import 'package:tekartik_midi/midi_file_player.dart';
 import 'package:tekartik_midi/midi.dart';
 import 'package:tekartik_midi/demo_file.dart';
 import 'package:tekartik_midi/midi_player_base.dart';
-//import 'package:tekartik_utils/dev_utils.dart';
-//import 'package:tekartik_test/test_utils.dart';
-import 'package:test/test.dart';
-//import 'dart:async';
+import 'test_common.dart';
 
 class _TestMidiPlayer extends MidiPlayerBase {
   num nowToTimestamp([num now]) {

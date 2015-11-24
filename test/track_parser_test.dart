@@ -1,7 +1,6 @@
 library track_parser_test;
 
-import 'package:test/test.dart';
-
+import 'test_common.dart';
 import 'package:tekartik_midi/midi.dart';
 import 'package:tekartik_midi/midi_parser.dart';
 import 'package:tekartik_utils/hex_utils.dart';

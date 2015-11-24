@@ -5,7 +5,6 @@ import 'package:tekartik_midi/midi.dart';
 import 'io_test_common.dart';
 import 'package:tekartik_midi/midi_parser.dart';
 import 'package:tekartik_midi/midi_file_player.dart';
-import 'dart:io';
 
 main() {
   // to skip

@@ -1,7 +1,6 @@
 library midi_parser_test;
 
-import 'package:test/test.dart';
-
+import 'test_common.dart';
 import 'package:tekartik_midi/midi_parser.dart';
 
 main() {
