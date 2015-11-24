@@ -15,7 +15,7 @@ class _TestMidiPlayer extends MidiPlayerBase {
   }
 
   rawPlayEvent(PlayableEvent event) {
-    //devPrint(event);
+    //print(event);
   }
   num now;
   _TestMidiPlayer(this.now, num noteOnLastTimestamp)

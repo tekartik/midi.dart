@@ -12,7 +12,7 @@ main() {
     readWriteAndCheck(String filename, {String parentPath}) {
       File file;
       if (parentPath == null) {
-        file = new File(outDataFilenamePath(filename));
+        file = new File(inDataFilenamePath(filename));
       } else {
         file = new File(join(parentPath, filename));
       }
@@ -39,6 +39,7 @@ main() {
     test('file equals simple', () {
       new Directory(outDataPath).createSync(recursive: true);
       readWriteAndCheck('simple_in.mid');
+      readWriteAndCheck('sample.mid');
       //readWriteAndCheck('song.mid');
     });
 

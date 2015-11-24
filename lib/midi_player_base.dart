@@ -344,6 +344,7 @@ abstract class MidiPlayerBase {
   }
   */
 
+  // In milliseconds
   num get now;
 
   MidiPlayerBase(this.noteOnLastTimestamp);
