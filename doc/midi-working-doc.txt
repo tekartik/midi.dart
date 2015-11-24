@@ -1,0 +1,44 @@
+Take 5
+
+
+4D 54 68 64  00 00 00 06  00 01 00 1E  01 E0 4D 54  MThd ???? ???? ?àMT
+72 6B 00 00  00 4A 00 F0  05 7E 7F 09  01 F7 00 FF  rk?? ?J?ð ?~? ?÷?ÿ
+01 09 54 61  6B 65 20 46  69 76 65 00  FF 54 05 60  ??Ta ke F ive? ÿT?`
+00 00 00 00  00 FF 51 03  05 73 16 00  FF 58 04 05  ???? ?ÿQ? ?s?? ÿX??
+02 18 08 00  FF 59 02 00  00 88 F7 60  FF 58 04 03  ???? ÿY?? ?÷` ÿX??
+02 18 08 A1  60 FF 58 04  05 02 18 08  00 FF 2F 00  ???¡ `ÿX? ???? ?ÿ/?
+4D 54 72 6B  00 00 00 3A  00 FF 03 0D  2D 3C 3E 2D  MTrk ???: ?ÿ?? -<>-
+3C 3E 2D 3C  3E 2D 3C 3E  2D 00 FF 21  01 00 00 FF  <>-< >-<> -?ÿ! ???ÿ
+20 01 00 00  B0 07 64 00  B0 0A 40 00  B0 00 38 00   ??? °?d? °?@? °?8?
+B0 20 00 00  B0 5B 51 00  B0 5D 05 00  C0 20 00 FF  ° ?? °[Q? °]?? À ?ÿ
+2F 00 4D 54  72 6B 00 00  00 39 00 FF  03 0C 20 22  /?MT rk?? ?9?ÿ ?? "
+54 61 6B 65  20 46 69 76  65 22 00 FF  21 01 00 00  Take  Fiv e"?ÿ !???
+
+Header format=1 ntrks=30 division=480
+Track start
+Time=0  Sysex, leng=6
+Time=0  Meta Text, type=0x01 (Text Event)  leng=9
+     Text = <Take Five>
+Time=0  SMPTE, hour=96 minute=0 second=0 frame=0 fract-frame=0
+Time=0  Tempo, microseconds-per-MIDI-quarter-note=357142
+Time=0  Time signature=5/4  MIDI-clocks/click=24  32nd-notes/24-MIDI-clocks=8
+Time=0  Key signature, sharp/flats=0  minor=0
+Time=146400  Time signature=3/4  MIDI-clocks/click=24  32nd-notes/24-MIDI-clocks=8
+Time=150720  Time signature=5/4  MIDI-clocks/click=24  32nd-notes/24-MIDI-clocks=8
+Time=150720  Meta event, end of track
+Track end
+Track start
+Time=0  Meta Text, type=0x03 (Sequence/Track Name)  leng=13
+     Text = <-<>-<>-<>-<>->
+Time=0  Meta event, unrecognized, type=0x21 leng=1
+Time=0  Meta event, unrecognized, type=0x20 leng=1
+Time=0  Parameter, chan=1 c1=7 c2=100
+Time=0  Parameter, chan=1 c1=10 c2=64
+Time=0  Parameter, chan=1 c1=0 c2=56
+Time=0  Parameter, chan=1 c1=32 c2=0
+Time=0  Parameter, chan=1 c1=91 c2=81
+Time=0  Parameter, chan=1 c1=93 c2=5
+Time=0  Program, chan=1 program=32
+Time=0  Meta event, end of track
+Track end
+Track start

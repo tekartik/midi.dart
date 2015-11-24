@@ -1,0 +1,11 @@
+name: tekartik_midi
+description: midi
+dependencies:
+  collection: any
+  tekartik_utils:
+    git: git://github.com/alextekartik/tekartik_utils.dart
+dev_dependencies:
+  dev_test: any
+  test: any
+  path: any
+
