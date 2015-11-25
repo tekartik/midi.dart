@@ -2,6 +2,8 @@
 
 Library for parsing, manipulation Midi files and for sequencing midi event
 
+[![Build Status](https://travis-ci.org/alextekartik/tekartik_midi.dart.svg?branch=master)](https://travis-ci.org/alextekartik/tekartik_midi.dart)
+
 *API subject to change*
 
 ## Usage example
