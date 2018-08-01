@@ -71,10 +71,10 @@ main() {
       MidiParser midiParser = new MidiParser(data);
       EventParser parser = new EventParser(midiParser);
       parser.parseEvent();
-      expect(parser.event, new isInstanceOf<NoteOffEvent>());
+      expect(parser.event, const TypeMatcher<NoteOffEvent>());
       //print(noteOffEvent);
       parser.parseEvent();
-      expect(parser.event, new isInstanceOf<NoteOffEvent>());
+      expect(parser.event, const TypeMatcher<NoteOffEvent>());
     });
   });
 }
