@@ -2,7 +2,7 @@ library midi_file_player;
 
 import 'midi.dart';
 import 'dart:math';
-import 'package:tekartik_core/log_utils.dart';
+import 'package:tekartik_common_utils/log_utils.dart';
 
 class PlayableEvent {
   num timestamp; // ms

@@ -1,10 +1,15 @@
 name: tekartik_midi
 version: 0.1.0
 description: midi
+author: Alexandre Roux <alex@tekartik.com>
+environment:
+  sdk: '>=1.24.3 <2.0.0'
 dependencies:
   collection: any
-  tekartik_utils:
-    git: git://github.com/alextekartik/tekartik_utils.dart
+  tekartik_common_utils:
+    git:
+      url: git://github.com/tekartik/common_utils.dart
+
 dev_dependencies:
   dev_test: any
   test: any

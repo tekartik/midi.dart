@@ -34,6 +34,7 @@ main() {
       //MidiWriter midiWriter = new MidiWriter();
       //new FileWriter(midiWriter).
     }
+
     ;
 
     test('file equals simple', () {

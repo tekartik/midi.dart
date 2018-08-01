@@ -4,10 +4,10 @@ import 'midi_parser.dart';
 import 'midi_writer.dart';
 import 'midi_buffer.dart';
 
-import 'package:tekartik_utils/hex_utils.dart';
-import 'package:tekartik_core/log_utils.dart';
+import 'package:tekartik_common_utils/hex_utils.dart';
+import 'package:tekartik_common_utils/log_utils.dart';
 
-import 'package:collection/equality.dart';
+import 'package:collection/collection.dart';
 
 part 'src/midi/file.dart';
 part 'src/midi/track.dart';

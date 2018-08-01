@@ -4,7 +4,7 @@ import 'test_common.dart';
 import 'package:tekartik_midi/midi.dart';
 import 'package:tekartik_midi/midi_writer.dart';
 import 'package:tekartik_midi/midi_parser.dart';
-import 'package:tekartik_utils/hex_utils.dart';
+import 'package:tekartik_common_utils/hex_utils.dart';
 
 main() {
   group('event writer', () {

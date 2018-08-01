@@ -404,7 +404,7 @@ class SysExEvent extends MidiEvent {
 
   @override
   bool operator ==(other) {
-    if (super == (other)) {
+    if (other is SysExEvent && super == (other)) {
       return (const ListEquality().equals(other.data, data));
     }
     return false;
@@ -427,8 +427,8 @@ abstract class MetaEvent extends MidiEvent {
   MetaEvent._();
 
   MetaEvent._withParam(this.metaCommand, this.data)
-      : super.withParam(
-            MidiEvent.CMD_META_EVENT); // properly use the full command here (i.e. 0xFF)
+      : super.withParam(MidiEvent
+            .CMD_META_EVENT); // properly use the full command here (i.e. 0xFF)
 
   factory MetaEvent(int metaCommand, [List<int> data]) {
     MetaEvent event = new MetaEvent.base(MidiEvent.CMD_META_EVENT, metaCommand);
@@ -484,7 +484,7 @@ abstract class MetaEvent extends MidiEvent {
 
   @override
   bool operator ==(other) {
-    if (super == (other)) {
+    if (other is MetaEvent && super == (other)) {
       if (other.metaCommand != metaCommand) {
         return false;
       }
@@ -559,7 +559,8 @@ class TimeSigEvent extends MetaEvent {
 
   TimeSigEvent.topBottom(int top, int bottom)
       : this(top, bottomToDenom(bottom));
-  TimeSigEvent(int num, int denom, [int tickCount = 24, num32ndToQuarter = 8])
+  TimeSigEvent(int num, int denom,
+      [int tickCount = 24, int num32ndToQuarter = 8])
       : super._withParam(MetaEvent.META_TIME_SIG,
             createData(num, denom, tickCount, num32ndToQuarter));
 //  public TimeSig(int num, int denom) {

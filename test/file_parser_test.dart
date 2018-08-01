@@ -3,7 +3,7 @@ library file_parser_test;
 
 import 'package:tekartik_midi/midi.dart';
 import 'package:tekartik_midi/midi_parser.dart';
-import 'package:tekartik_utils/hex_utils.dart';
+import 'package:tekartik_common_utils/hex_utils.dart';
 import 'dart:io';
 import 'io_test_common.dart';
 

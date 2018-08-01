@@ -226,16 +226,19 @@ abstract class MidiPlayerBase {
 
     _streamController = new StreamController<PlayableEvent>(sync: true);
 
-    _done = _streamController.stream.listen((PlayableEvent event) {
-      playEvent(event);
-    }, onDone: () {
-      //pause();
-    }).asFuture().then((_) {
-      //devPrint('onDone');
-      //_midiFilePlayer = null;
-      _isDone = true;
-      _isPlaying = false;
-    });
+    _done = _streamController.stream
+        .listen((PlayableEvent event) {
+          playEvent(event);
+        }, onDone: () {
+          //pause();
+        })
+        .asFuture()
+        .then((_) {
+          //devPrint('onDone');
+          //_midiFilePlayer = null;
+          _isDone = true;
+          _isPlaying = false;
+        });
   }
 
 //  void _play(MidiFile file) {
@@ -292,9 +295,9 @@ abstract class MidiPlayerBase {
         _waitPlayNextCompleter = nextCompleter;
         new Future.delayed(
             new Duration(
-                milliseconds: (_currentEvent.timestamp -
-                    nowTimestamp +
-                    _timerResolution).toInt()), () {
+                milliseconds:
+                    (_currentEvent.timestamp - nowTimestamp + _timerResolution)
+                        .toInt()), () {
           if (!nextCompleter.isCompleted) {
             nextCompleter.complete();
           }

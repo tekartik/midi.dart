@@ -4,7 +4,7 @@ import 'test_common.dart';
 import 'package:tekartik_midi/midi.dart';
 import 'package:tekartik_midi/midi_parser.dart';
 
-import 'package:tekartik_utils/hex_utils.dart';
+import 'package:tekartik_common_utils/hex_utils.dart';
 
 main() {
   group('midi event parser', () {
@@ -56,11 +56,12 @@ main() {
 
       parser.parseEvent();
       expect(parser.event is ControlChangeEvent, isTrue);
-      ControlChangeEvent cce = parser.event;
+      ControlChangeEvent cce = parser.event as ControlChangeEvent;
       expect(cce.controller, ControlChangeEvent.ALL_NOTES_OFF);
       expect(cce, ControlChangeEvent.newAllNotesOffEvent(0));
 
-      cce = EventParser.dataParseEvent(parseHexString("00 B0 78 00"));
+      cce = EventParser.dataParseEvent(parseHexString("00 B0 78 00"))
+          as ControlChangeEvent;
       expect(cce.controller, ControlChangeEvent.ALL_SOUND_OFF);
       expect(cce, ControlChangeEvent.newAllSoundOffEvent(0));
     });
