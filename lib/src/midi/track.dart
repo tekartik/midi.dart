@@ -1,4 +1,5 @@
-part of tekartik_midi;
+import 'package:collection/collection.dart';
+import 'package:tekartik_midi/midi.dart';
 
 class MidiTrack {
   List<TrackEvent> events = new List();

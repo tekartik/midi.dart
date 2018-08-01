@@ -1,5 +1,3 @@
-part of midi_writer;
-
 abstract class BinaryWriter {
   List<int> _data = new List();
   int position = 0;

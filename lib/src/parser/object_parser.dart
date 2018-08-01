@@ -1,6 +1,8 @@
-part of midi_parser;
+import 'package:tekartik_midi/midi_buffer.dart';
+import 'package:tekartik_midi/midi_parser.dart';
 
 class ObjectParser {
+  MidiParser get midiParser => _midiParser;
   MidiParser _midiParser;
   ObjectParser(this._midiParser);
 
@@ -8,7 +10,7 @@ class ObjectParser {
     _midiParser.read(buffer, size);
   }
 
-  OutBuffer get buffer => _midiParser._outBuffer;
+  OutBuffer get buffer => _midiParser.outBuffer;
 
   int readUint16() {
     return _midiParser.readUint16();

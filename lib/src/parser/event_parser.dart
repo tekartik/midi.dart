@@ -1,4 +1,6 @@
-part of midi_parser;
+import 'package:tekartik_midi/midi.dart';
+import 'package:tekartik_midi/midi_parser.dart';
+import 'package:tekartik_midi/src/parser/object_parser.dart';
 
 class EventParser extends ObjectParser {
   int deltaTime;
@@ -13,15 +15,15 @@ class EventParser extends ObjectParser {
   EventParser(MidiParser parser) : super(parser);
 
   MidiEvent parseEvent() {
-    deltaTime = _midiParser.readVariableLengthData();
-    int command = _midiParser.readUint8();
+    deltaTime = midiParser.readVariableLengthData();
+    int command = midiParser.readUint8();
     if ((command & 0x80) == 0) {
       if ((lastCommand & 0x80) == 0) {
         throw new FormatException("invalid last command");
       }
       command = lastCommand;
       // We go back 1
-      _midiParser.back(1);
+      midiParser.back(1);
     } else {
       // save for later use
       lastCommand = command;
@@ -33,13 +35,13 @@ class EventParser extends ObjectParser {
         // sysex?
         event = new SysExEvent.withParam(command);
       } else {
-        int metaCommand = _midiParser.readUint8();
+        int metaCommand = midiParser.readUint8();
         event = new MetaEvent.base(command, metaCommand);
       }
     } else {
       event = new MidiEvent.base(command);
     }
-    event.readData(_midiParser);
+    event.readData(midiParser);
     return event;
   }
 
