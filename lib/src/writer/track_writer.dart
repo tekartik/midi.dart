@@ -1,4 +1,5 @@
-part of midi_writer;
+import 'package:tekartik_midi/midi.dart';
+import 'package:tekartik_midi/midi_writer.dart';
 
 class TrackWriter extends ObjectWriter {
   TrackWriter(MidiWriter midiWriter) : super(midiWriter);

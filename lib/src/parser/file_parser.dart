@@ -1,4 +1,7 @@
-part of midi_parser;
+import 'package:tekartik_midi/midi.dart';
+import 'package:tekartik_midi/midi_parser.dart';
+import 'package:tekartik_midi/src/parser/object_parser.dart';
+import 'package:tekartik_midi/src/parser/track_parser.dart';
 
 class FileParser extends ObjectParser {
   FileParser(MidiParser midiParser) : super(midiParser);
@@ -13,7 +16,7 @@ class FileParser extends ObjectParser {
   ];
 
   void parseTracks() {
-    TrackParser trackParser = new TrackParser(_midiParser);
+    TrackParser trackParser = new TrackParser(midiParser);
 
     // Clear track count
     int trackCount = file.trackCount;
@@ -35,7 +38,7 @@ class FileParser extends ObjectParser {
     if (!buffer.equalsList(fileHeader)) {
       throw new FormatException("Bad file header");
     }
-    int dataHeaderLen = _midiParser.readUint32();
+    int dataHeaderLen = midiParser.readUint32();
     if (dataHeaderLen < 6) {
       throw new FormatException("Bad data header len");
     }

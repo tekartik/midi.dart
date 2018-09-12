@@ -1,12 +1,14 @@
 library midi_writer;
 
+import 'package:tekartik_midi/src/writer/binary_writer.dart';
+
 import 'midi.dart';
 
-part 'src/writer/binary_writer.dart';
-part 'src/writer/object_writer.dart';
-part 'src/writer/file_writer.dart';
-part 'src/writer/track_writer.dart';
-part 'src/writer/event_writer.dart';
+export 'src/writer/binary_writer.dart';
+export 'src/writer/object_writer.dart';
+export 'src/writer/file_writer.dart';
+export 'src/writer/track_writer.dart';
+export 'src/writer/event_writer.dart';
 
 class MidiWriter extends BinaryBEWriter {
   /**

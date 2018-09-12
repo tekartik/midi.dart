@@ -1,17 +1,17 @@
 library midi_parser;
 
-import 'midi.dart';
-import 'midi_buffer.dart';
+import 'package:tekartik_midi/src/parser/binary_parser.dart';
 
-part 'src/parser/binary_parser.dart';
-part 'src/parser/object_parser.dart';
-part 'src/parser/file_parser.dart';
-part 'src/parser/track_parser.dart';
-part 'src/parser/event_parser.dart';
+import 'midi_buffer.dart';
+export 'src/parser/file_parser.dart';
+export 'src/parser/binary_parser.dart';
+export 'src/parser/event_parser.dart';
+export 'src/parser/track_parser.dart';
 
 class MidiParser extends BinaryBEParser {
   MidiParser(List<int> data) : super(data);
 
+  OutBuffer get outBuffer => _outBuffer;
   OutBuffer _outBuffer = new OutBuffer(256);
 
   void readBuffer(int size) {

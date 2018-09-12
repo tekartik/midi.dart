@@ -1,4 +1,4 @@
-part of midi_writer;
+import 'package:tekartik_midi/midi_writer.dart';
 
 class ObjectWriter {
   MidiWriter _midiWriter;

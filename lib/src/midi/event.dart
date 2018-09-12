@@ -1,4 +1,10 @@
-part of tekartik_midi;
+import 'package:collection/collection.dart';
+import 'package:tekartik_common_utils/hex_utils.dart';
+import 'package:tekartik_common_utils/log_utils.dart';
+import 'package:tekartik_midi/midi_buffer.dart';
+import 'package:tekartik_midi/midi_parser.dart';
+import 'package:tekartik_midi/midi_writer.dart';
+import 'package:tekartik_midi/src/parser/binary_parser.dart';
 
 class TrackEvent {
   int deltaTime;

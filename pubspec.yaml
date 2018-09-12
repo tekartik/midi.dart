@@ -3,15 +3,17 @@ version: 0.1.0
 description: midi
 author: Alexandre Roux <alex@tekartik.com>
 environment:
-  sdk: '>=1.24.3 <2.0.0'
+  sdk: '>=2.0.0-dev.58 <3.0.0'
 dependencies:
   collection: any
   tekartik_common_utils:
     git:
       url: git://github.com/tekartik/common_utils.dart
+      ref: dart2
 
 dev_dependencies:
   dev_test: any
   test: any
   path: any
-
+  build_runner: '>=0.9.0'
+  build_test: '>=0.10.2'

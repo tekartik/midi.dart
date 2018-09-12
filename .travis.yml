@@ -1,8 +1,7 @@
 language: dart
-# with_content_shell: true
-drt:
-  - stable
-#  - dev
+dart:
+#  - stable
+  - dev
 sudo: false
 before_install:
   - export DISPLAY=:99.0

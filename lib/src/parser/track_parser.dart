@@ -1,4 +1,7 @@
-part of midi_parser;
+import 'package:tekartik_midi/midi.dart';
+import 'package:tekartik_midi/midi_parser.dart';
+import 'package:tekartik_midi/src/parser/event_parser.dart';
+import 'package:tekartik_midi/src/parser/object_parser.dart';
 
 class TrackParser extends ObjectParser {
   TrackParser(MidiParser parser) : super(parser);
@@ -16,19 +19,19 @@ class TrackParser extends ObjectParser {
   ];
 
   void parseHeader() {
-    _midiParser.readBuffer(4);
+    midiParser.readBuffer(4);
     if (!buffer.equalsList(trackHeader)) {
       throw new FormatException("Bad track header");
     }
     track = new MidiTrack();
-    trackSize = _midiParser.readUint32();
+    trackSize = midiParser.readUint32();
 
-    endPosition = _midiParser.inBuffer.position + trackSize;
+    endPosition = midiParser.inBuffer.position + trackSize;
   }
 
   void parseEvents() {
-    EventParser eventParser = new EventParser(_midiParser);
-    while (_midiParser.inBuffer.position < endPosition) {
+    EventParser eventParser = new EventParser(midiParser);
+    while (midiParser.inBuffer.position < endPosition) {
       eventParser.parseEvent();
       //print(eventParser.event);
 //      if (eventParser.event is EndOfTrackEvent) {

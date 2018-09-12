@@ -1,4 +1,5 @@
-part of tekartik_midi;
+import 'package:collection/collection.dart';
+import 'package:tekartik_midi/src/midi/track.dart';
 
 class MidiFile {
   /** 0 single track, 1, multi track synchronous, 2, multitrack async */

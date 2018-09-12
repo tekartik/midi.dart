@@ -1,4 +1,4 @@
-part of midi_parser;
+import 'package:tekartik_midi/midi_buffer.dart';
 
 int read3BytesBEInteger(List<int> data, [int offset = 0]) {
   if (data.length - offset < 3) {

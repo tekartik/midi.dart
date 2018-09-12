@@ -1,4 +1,5 @@
-part of midi_writer;
+import 'package:tekartik_midi/midi.dart';
+import 'package:tekartik_midi/midi_writer.dart';
 
 class FileWriter extends ObjectWriter {
   FileWriter(MidiWriter midiWriter) : super(midiWriter);
@@ -27,7 +28,7 @@ class FileWriter extends ObjectWriter {
     }
     writeHeader();
     file.tracks.forEach((MidiTrack track) {
-      TrackWriter trackWriter = new TrackWriter(_midiWriter);
+      TrackWriter trackWriter = new TrackWriter(midiWriter);
       trackWriter.writeTrack(track);
     });
   }

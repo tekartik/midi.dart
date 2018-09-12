@@ -29,6 +29,7 @@ main() {
       //newFileRead.dump();
 
       expect(fileRead, newFileRead);
+      new Directory(outDataPath).createSync(recursive: true);
       new File(outDataFilenamePath(filename)).writeAsBytesSync(newData);
 
       //MidiWriter midiWriter = new MidiWriter();
@@ -72,7 +73,7 @@ main() {
     }, skip: true);
     */
 
-    test('c d e out demo file', () {
+    test('c d e out demo file', () async {
       MidiFile file = new MidiFile();
       file.fileFormat = MidiFile.FORMAT_MULTI_TRACK;
       file.ppq = 240;
@@ -99,6 +100,7 @@ main() {
 
       file.addTrack(track);
 
+      await new Directory(outDataPath).create(recursive: true);
       new File(outDataFilenamePath('c-d-e.midi'))
           .writeAsBytesSync(FileWriter.fileData(file));
     });
