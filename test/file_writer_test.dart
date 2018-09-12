@@ -1,6 +1,7 @@
 @TestOn("vm")
 library file_writer_test;
 
+import 'package:tekartik_common_utils/common_utils_import.dart';
 import 'package:tekartik_midi/midi.dart';
 import 'package:tekartik_midi/midi_writer.dart';
 import 'package:tekartik_midi/midi_parser.dart';
@@ -46,30 +47,32 @@ main() {
       expect(FileParser.dataFile(data), file);
     }
 
-    writeOnFileReadAndCheck(String filename, MidiFile file) {
+    Future writeOnFileReadAndCheck(String filename, MidiFile file) async {
       List<int> data = FileWriter.fileData(file);
-      new File(outDataFilenamePath(filename)).writeAsBytesSync(data);
+      var ioFile = new File(outDataFilenamePath(filename));
+      await ioFile.parent.create(recursive: true);
+      await ioFile.writeAsBytes(data);
 
       //print(data);
       expect(FileParser.dataFile(data), file);
     }
 
-    test('round check', () {
+    test('round check', () async {
       MidiFile file = new MidiFile();
       file.timeDivision = 3;
-      writeReadAndCheck(file);
+      await writeReadAndCheck(file);
 
       MidiTrack track = new MidiTrack();
       file.addTrack(track);
-      writeReadAndCheck(file);
+      await writeReadAndCheck(file);
 
       track.addEvent(1, new NoteOnEvent(2, 42, 60));
-      writeReadAndCheck(file);
+      await writeReadAndCheck(file);
 
       file.addTrack(new MidiTrack());
     });
 
-    test('note on note off', () {
+    test('note on note off', () async {
       MidiFile file = new MidiFile();
       file.timeDivision = 3;
       MidiTrack track = new MidiTrack();
@@ -77,7 +80,7 @@ main() {
       track.addEvent(1, new NoteOnEvent(2, 42, 60));
       track.addEvent(1, new NoteOffEvent(2, 42, 60));
       track.addEvent(1, new EndOfTrackEvent());
-      writeOnFileReadAndCheck('note_on_off.mid', file);
+      await writeOnFileReadAndCheck('note_on_off.mid', file);
     });
   });
 }
