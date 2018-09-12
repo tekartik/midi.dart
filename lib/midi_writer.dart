@@ -1,8 +1,6 @@
-library midi_writer;
+library tekartik_midi_writer;
 
 import 'package:tekartik_midi/src/writer/binary_writer.dart';
-
-import 'midi.dart';
 
 export 'src/writer/binary_writer.dart';
 export 'src/writer/object_writer.dart';

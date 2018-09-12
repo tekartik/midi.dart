@@ -1,4 +1,4 @@
-library webmidi_player_base;
+library tekartik_midi_player_base;
 
 import 'dart:async';
 import 'dart:math';

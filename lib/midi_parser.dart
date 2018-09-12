@@ -1,4 +1,4 @@
-library midi_parser;
+library tekartik_midi_parser;
 
 import 'package:tekartik_midi/src/parser/binary_parser.dart';
 

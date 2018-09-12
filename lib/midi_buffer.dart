@@ -1,4 +1,4 @@
-library midi_buffer;
+library tekartik_midi_buffer;
 
 abstract class Buffer {
   List<int> _data;
