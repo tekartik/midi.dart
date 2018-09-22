@@ -57,12 +57,12 @@ main() {
       parser.parseEvent();
       expect(parser.event is ControlChangeEvent, isTrue);
       ControlChangeEvent cce = parser.event as ControlChangeEvent;
-      expect(cce.controller, ControlChangeEvent.ALL_NOTES_OFF);
+      expect(cce.controller, ControlChangeEvent.allNotesOff);
       expect(cce, ControlChangeEvent.newAllNotesOffEvent(0));
 
       cce = EventParser.dataParseEvent(parseHexString("00 B0 78 00"))
           as ControlChangeEvent;
-      expect(cce.controller, ControlChangeEvent.ALL_SOUND_OFF);
+      expect(cce.controller, ControlChangeEvent.allSoundOff);
       expect(cce, ControlChangeEvent.newAllSoundOffEvent(0));
     });
 

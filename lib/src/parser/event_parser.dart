@@ -29,9 +29,9 @@ class EventParser extends ObjectParser {
       lastCommand = command;
     }
 
-    if (MidiEvent.commandGetCommand(command) == MidiEvent.META_EVENT) {
+    if (MidiEvent.commandGetCommand(command) == MidiEvent.metaEvent) {
       // Handle sysex?
-      if (command != MidiEvent.CMD_META_EVENT) {
+      if (command != MidiEvent.cmdMetaEvent) {
         // sysex?
         event = new SysExEvent.withParam(command);
       } else {

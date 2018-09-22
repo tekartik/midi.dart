@@ -88,7 +88,7 @@ main() {
 
     test('various events', () {
       expect(ControlChangeEvent.newAllResetEvent(0).controller,
-          ControlChangeEvent.ALL_RESET);
+          ControlChangeEvent.allReset);
     });
   });
 }
