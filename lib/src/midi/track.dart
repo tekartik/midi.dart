@@ -36,4 +36,18 @@ class MidiTrack {
   void addEvent(int deltaTime, MidiEvent midiEvent) {
     events.add(new TrackEvent(deltaTime, midiEvent));
   }
+
+  void addAbsolutionEvent(int absoluteTime, MidiEvent midiEvent) {
+    int time = 0;
+    for (int i = 0; i < events.length; i++) {
+      var event = events[i];
+      int newTime = time + event.deltaTime;
+      if (absoluteTime < newTime) {
+        events.insert(i, new TrackEvent(absoluteTime - time, midiEvent));
+        return;
+      }
+      time = newTime;
+    }
+    events.add(new TrackEvent(absoluteTime - time, midiEvent));
+  }
 }
