@@ -40,7 +40,7 @@ abstract class MidiPlayerBase {
   /**
    * Send event when status change and every second
    */
-  StreamController<bool> playingController = new StreamController();
+  StreamController<bool> playingController = StreamController();
   Stream<bool> playingStream;
 
   /**
@@ -65,7 +65,7 @@ abstract class MidiPlayerBase {
   Duration get currentTimestampDuration {
     num _now = currentTimestamp;
     if (_now != null) {
-      return new Duration(milliseconds: _now.toInt());
+      return Duration(milliseconds: _now.toInt());
     }
     return null;
   }
@@ -84,7 +84,7 @@ abstract class MidiPlayerBase {
    */
   void allSoundOff() {
     for (int i = 0; i < MidiEvent.CHANNEL_COUNT; i++) {
-      PlayableEvent playableEvent = new PlayableEvent(
+      PlayableEvent playableEvent = PlayableEvent(
           nowToTimestamp(), ControlChangeEvent.newAllSoundOffEvent(i));
       playEvent(playableEvent);
     }
@@ -92,7 +92,7 @@ abstract class MidiPlayerBase {
 
   void allNotesOff() {
     for (int i = 0; i < MidiEvent.CHANNEL_COUNT; i++) {
-      PlayableEvent playableEvent = new PlayableEvent(
+      PlayableEvent playableEvent = PlayableEvent(
           nowToTimestamp(), ControlChangeEvent.newAllSoundOffEvent(i));
       playEvent(playableEvent);
     }
@@ -100,7 +100,7 @@ abstract class MidiPlayerBase {
 
   void allReset() {
     for (int i = 0; i < MidiEvent.CHANNEL_COUNT; i++) {
-      PlayableEvent playableEvent = new PlayableEvent(
+      PlayableEvent playableEvent = PlayableEvent(
           nowToTimestamp(), ControlChangeEvent.newAllResetEvent(i));
       playEvent(playableEvent);
     }
@@ -113,7 +113,7 @@ abstract class MidiPlayerBase {
     for (int j = 0; j < MidiEvent.NOTE_COUNT; j++) {
       for (int i = 0; i < MidiEvent.CHANNEL_COUNT; i++) {
         PlayableEvent playableEvent =
-            new PlayableEvent(nowToTimestamp(), new NoteOffEvent(i, j, 0));
+            PlayableEvent(nowToTimestamp(), NoteOffEvent(i, j, 0));
         playEvent(playableEvent);
       }
     }
@@ -221,10 +221,10 @@ abstract class MidiPlayerBase {
     _isDone = false;
     _isPlaying = false;
     _isPaused = false;
-    _midiFilePlayer = new MidiFilePlayer(file);
+    _midiFilePlayer = MidiFilePlayer(file);
     //_startNow = null;
 
-    _streamController = new StreamController<PlayableEvent>(sync: true);
+    _streamController = StreamController<PlayableEvent>(sync: true);
 
     _done = _streamController.stream
         .listen((PlayableEvent event) {
@@ -291,10 +291,10 @@ abstract class MidiPlayerBase {
         _currentEvent = _midiFilePlayer.next;
         _playNext();
       } else {
-        Completer nextCompleter = new Completer.sync();
+        Completer nextCompleter = Completer.sync();
         _waitPlayNextCompleter = nextCompleter;
-        new Future.delayed(
-            new Duration(
+        Future.delayed(
+            Duration(
                 milliseconds:
                     (_currentEvent.timestamp - nowTimestamp + _timerResolution)
                         .toInt()), () {
@@ -352,7 +352,7 @@ abstract class MidiPlayerBase {
 
   MidiPlayerBase(this.noteOnLastTimestamp);
 
-  Set<NoteOnKey> noteOnKeys = new Set();
+  Set<NoteOnKey> noteOnKeys = Set();
   num noteOnLastTimestamp;
 
   // to implement
@@ -367,7 +367,7 @@ abstract class MidiPlayerBase {
 
     // And Note on event and remove note off event (and note on with velocity 0)
     if (midiEvent is NoteOnEvent) {
-      NoteOnKey key = new NoteOnKey(midiEvent.channel, midiEvent.note);
+      NoteOnKey key = NoteOnKey(midiEvent.channel, midiEvent.note);
 
       // save last timestamp to queue note off afterwards on pause
       if (noteOnLastTimestamp == null ||
@@ -381,7 +381,7 @@ abstract class MidiPlayerBase {
         noteOnKeys.remove(key);
       }
     } else if (midiEvent is NoteOffEvent) {
-      NoteOnKey key = new NoteOnKey(midiEvent.channel, midiEvent.note);
+      NoteOnKey key = NoteOnKey(midiEvent.channel, midiEvent.note);
       noteOnKeys.remove(key);
     }
   }
@@ -406,8 +406,8 @@ abstract class MidiPlayerBase {
       //devPrint('###### $timestamp - ${nowToTimestamp()}/last: $noteOnLastTimestamp');
       // Clear the notes sent
       for (NoteOnKey key in noteOnKeys) {
-        PlayableEvent event = new PlayableEvent(
-            timestamp, new NoteOffEvent(key.channel, key.note, 0));
+        PlayableEvent event =
+            PlayableEvent(timestamp, NoteOffEvent(key.channel, key.note, 0));
         //devPrint(event);
         rawPlayEvent(event);
       }

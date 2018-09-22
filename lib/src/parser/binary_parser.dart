@@ -2,7 +2,7 @@ import 'package:tekartik_midi/midi_buffer.dart';
 
 int read3BytesBEInteger(List<int> data, [int offset = 0]) {
   if (data.length - offset < 3) {
-    throw new FormatException("not enought data");
+    throw FormatException("not enought data");
   }
   return (((data[offset] & 0xFF) << 16) |
       ((data[offset + 1] & 0xFF) << 8) |
@@ -10,7 +10,7 @@ int read3BytesBEInteger(List<int> data, [int offset = 0]) {
 }
 
 List<int> create3BytesBEIntegerBuffer(int value) {
-  List<int> data = new List();
+  List<int> data = List();
   data.add((value & 0xFF0000) >> 16);
   data.add((value & 0xFF00) >> 8);
   data.add(value & 0xFF);
@@ -24,18 +24,18 @@ abstract class BinaryParser {
   InBuffer get inBuffer => _buffer;
 
   BinaryParser(List<int> data) {
-    _buffer = new InBuffer(data);
+    _buffer = InBuffer(data);
   }
 
   void _checkContains(int size) {
     if (!_buffer.contains(size)) {
-      throw new FormatException("not enought data");
+      throw FormatException("not enought data");
     }
   }
 
   void _checkHasAvailable(OutBuffer buffer, int size) {
     if (!buffer.hasAvailable(size)) {
-      throw new FormatException("not enought space");
+      throw FormatException("not enought space");
     }
   }
 

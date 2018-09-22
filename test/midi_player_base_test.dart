@@ -25,46 +25,46 @@ class _TestMidiPlayer extends MidiPlayerBase {
 main() {
   group('player_base', () {
     test('note_on_key', () {
-      NoteOnKey key = new NoteOnKey(0, 0);
+      NoteOnKey key = NoteOnKey(0, 0);
       expect(key, key);
-      expect(key, new NoteOnKey(0, 0));
-      expect(key, isNot(new NoteOnKey(0, 1)));
-      expect(key, isNot(new NoteOnKey(1, 0)));
-      key = new NoteOnKey(1, 1);
-      expect(key, new NoteOnKey(1, 1));
-      expect(key, isNot(new NoteOnKey(2, 1)));
-      expect(key, isNot(new NoteOnKey(1, 2)));
+      expect(key, NoteOnKey(0, 0));
+      expect(key, isNot(NoteOnKey(0, 1)));
+      expect(key, isNot(NoteOnKey(1, 0)));
+      key = NoteOnKey(1, 1);
+      expect(key, NoteOnKey(1, 1));
+      expect(key, isNot(NoteOnKey(2, 1)));
+      expect(key, isNot(NoteOnKey(1, 2)));
     });
     test('play event keys', () {
-      MidiPlayerBase player = new _TestMidiPlayer(0, null);
+      MidiPlayerBase player = _TestMidiPlayer(0, null);
       expect(player.noteOnKeys.isEmpty, isTrue);
       expect(player.noteOnLastTimestamp, null);
-      player.playEvent(new PlayableEvent(2, new NoteOffEvent(1, 1, 1)));
+      player.playEvent(PlayableEvent(2, NoteOffEvent(1, 1, 1)));
       expect(player.noteOnKeys.isEmpty, isTrue);
       expect(player.noteOnLastTimestamp, null);
-      player.playEvent(new PlayableEvent(2, new NoteOnEvent(1, 2, 1)));
+      player.playEvent(PlayableEvent(2, NoteOnEvent(1, 2, 1)));
       expect(player.noteOnKeys.length, 1);
-      expect(player.noteOnKeys.first, new NoteOnKey(1, 2));
+      expect(player.noteOnKeys.first, NoteOnKey(1, 2));
       expect(player.noteOnLastTimestamp, 2);
-      player.playEvent(new PlayableEvent(3, new NoteOnEvent(1, 2, 1)));
+      player.playEvent(PlayableEvent(3, NoteOnEvent(1, 2, 1)));
       expect(player.noteOnKeys.length, 1);
-      expect(player.noteOnKeys.first, new NoteOnKey(1, 2));
+      expect(player.noteOnKeys.first, NoteOnKey(1, 2));
       expect(player.noteOnLastTimestamp, 3);
-      player.playEvent(new PlayableEvent(4, new NoteOnEvent(1, 3, 1)));
+      player.playEvent(PlayableEvent(4, NoteOnEvent(1, 3, 1)));
       expect(player.noteOnKeys.length, 2);
-      expect(player.noteOnKeys.first, new NoteOnKey(1, 2));
-      expect(player.noteOnKeys.last, new NoteOnKey(1, 3));
+      expect(player.noteOnKeys.first, NoteOnKey(1, 2));
+      expect(player.noteOnKeys.last, NoteOnKey(1, 3));
       expect(player.noteOnLastTimestamp, 4);
       player.pause();
     });
 
     test('now', () {
-      MidiPlayerBase player = new _TestMidiPlayer(4, 1);
+      MidiPlayerBase player = _TestMidiPlayer(4, 1);
       expect(player.now, 4); // ?
     });
 
     test('noteOnLastTimestamp', () {
-      MidiPlayerBase player = new _TestMidiPlayer(10, null);
+      MidiPlayerBase player = _TestMidiPlayer(10, null);
       expect(player.noteOnLastTimestamp, null);
 //      return player.load(getDemoFileCDE()).then((_) {
 //        //player.resume();
@@ -72,7 +72,7 @@ main() {
     });
 
     test('status_play', () {
-      _TestMidiPlayer player = new _TestMidiPlayer(10, null);
+      _TestMidiPlayer player = _TestMidiPlayer(10, null);
       expect(player.noteOnLastTimestamp, null);
       expect(player.isPlaying, false);
       expect(player.isPaused, false);
@@ -98,7 +98,7 @@ main() {
     });
 
     test('status_pause', () {
-      _TestMidiPlayer player = new _TestMidiPlayer(10, null);
+      _TestMidiPlayer player = _TestMidiPlayer(10, null);
       expect(player.noteOnLastTimestamp, null);
       expect(player.isPlaying, false);
       expect(player.isPaused, false);

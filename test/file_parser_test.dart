@@ -11,8 +11,8 @@ main() {
   group('file parser', () {
     test('bad header', () {
       String data = "Dummy";
-      MidiParser midiParser = new MidiParser(data.codeUnits);
-      FileParser parser = new FileParser(midiParser);
+      MidiParser midiParser = MidiParser(data.codeUnits);
+      FileParser parser = FileParser(midiParser);
       try {
         parser.parseHeader();
         fail("dummy header");
@@ -36,8 +36,8 @@ main() {
         0,
         3
       ];
-      MidiParser midiParser = new MidiParser(data);
-      FileParser parser = new FileParser(midiParser);
+      MidiParser midiParser = MidiParser(data);
+      FileParser parser = FileParser(midiParser);
       parser.parseHeader();
       expect(parser.file.fileFormat, equals(1));
       expect(parser.file.trackCount, equals(2));
@@ -54,13 +54,13 @@ main() {
     test('parse file', () {
       List<int> data = parseHexString(
           "4d 54 68 64 00 00 00 06 00 01 00 02 01 e0 4d 54 72 6b 00 00 00 13 00 ff 58 04 04 02 18 08 00 ff 51 03 06 1a 80 00 ff 2f 00 4d 54 72 6b 00 00 00 00");
-      MidiParser midiParser = new MidiParser(data);
-      FileParser parser = new FileParser(midiParser);
+      MidiParser midiParser = MidiParser(data);
+      FileParser parser = FileParser(midiParser);
       parser.parseFile();
     });
 
     test('parse demo file', () {
-      return new File(inDataFilenamePath("simple_in.mid"))
+      return File(inDataFilenamePath("simple_in.mid"))
           .readAsBytes()
           .then((data) {
         MidiFile file = FileParser.dataFile(data);
@@ -69,7 +69,7 @@ main() {
     }, skip: true);
 
     test('parse note on off file', () {
-      return new File(inDataFilenamePath("note_on_off.mid"))
+      return File(inDataFilenamePath("note_on_off.mid"))
           .readAsBytes()
           .then((data) {
         FileParser.dataFile(data);
@@ -79,7 +79,7 @@ main() {
 
     // to skip
     test('parse take 5', () {
-      return new File(inDataFilenamePath("tmp/take_5.mid"))
+      return File(inDataFilenamePath("tmp/take_5.mid"))
           .readAsBytes()
           .then((data) {
         MidiFile file = FileParser.dataFile(data);

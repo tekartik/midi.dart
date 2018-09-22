@@ -10,10 +10,10 @@ import 'io_test_common.dart';
 main() {
   group('file writer', () {
     test('write header', () {
-      MidiWriter midiWriter = new MidiWriter();
-      FileWriter writer = new FileWriter(midiWriter);
+      MidiWriter midiWriter = MidiWriter();
+      FileWriter writer = FileWriter(midiWriter);
 
-      MidiFile file = new MidiFile();
+      MidiFile file = MidiFile();
       file.fileFormat = 1;
       file.trackCount = 2;
       file.timeDivision = 3;
@@ -49,7 +49,7 @@ main() {
 
     Future writeOnFileReadAndCheck(String filename, MidiFile file) async {
       List<int> data = FileWriter.fileData(file);
-      var ioFile = new File(outDataFilenamePath(filename));
+      var ioFile = File(outDataFilenamePath(filename));
       await ioFile.parent.create(recursive: true);
       await ioFile.writeAsBytes(data);
 
@@ -58,28 +58,28 @@ main() {
     }
 
     test('round check', () async {
-      MidiFile file = new MidiFile();
+      MidiFile file = MidiFile();
       file.timeDivision = 3;
       await writeReadAndCheck(file);
 
-      MidiTrack track = new MidiTrack();
+      MidiTrack track = MidiTrack();
       file.addTrack(track);
       await writeReadAndCheck(file);
 
-      track.addEvent(1, new NoteOnEvent(2, 42, 60));
+      track.addEvent(1, NoteOnEvent(2, 42, 60));
       await writeReadAndCheck(file);
 
-      file.addTrack(new MidiTrack());
+      file.addTrack(MidiTrack());
     });
 
     test('note on note off', () async {
-      MidiFile file = new MidiFile();
+      MidiFile file = MidiFile();
       file.timeDivision = 3;
-      MidiTrack track = new MidiTrack();
+      MidiTrack track = MidiTrack();
       file.addTrack(track);
-      track.addEvent(1, new NoteOnEvent(2, 42, 60));
-      track.addEvent(1, new NoteOffEvent(2, 42, 60));
-      track.addEvent(1, new EndOfTrackEvent());
+      track.addEvent(1, NoteOnEvent(2, 42, 60));
+      track.addEvent(1, NoteOffEvent(2, 42, 60));
+      track.addEvent(1, EndOfTrackEvent());
       await writeOnFileReadAndCheck('note_on_off.mid', file);
     });
   });

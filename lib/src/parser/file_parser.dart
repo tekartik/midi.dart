@@ -16,7 +16,7 @@ class FileParser extends ObjectParser {
   ];
 
   void parseTracks() {
-    TrackParser trackParser = new TrackParser(midiParser);
+    TrackParser trackParser = TrackParser(midiParser);
 
     // Clear track count
     int trackCount = file.trackCount;
@@ -36,13 +36,13 @@ class FileParser extends ObjectParser {
   void parseHeader() {
     readBuffer(4);
     if (!buffer.equalsList(fileHeader)) {
-      throw new FormatException("Bad file header");
+      throw FormatException("Bad file header");
     }
     int dataHeaderLen = midiParser.readUint32();
     if (dataHeaderLen < 6) {
-      throw new FormatException("Bad data header len");
+      throw FormatException("Bad data header len");
     }
-    file = new MidiFile();
+    file = MidiFile();
 
     file.fileFormat = readUint16();
     file.trackCount = readUint16();
@@ -56,7 +56,7 @@ class FileParser extends ObjectParser {
    * Parser helper
    */
   static MidiFile dataFile(List<int> data) {
-    FileParser parser = new FileParser(new MidiParser(data));
+    FileParser parser = FileParser(MidiParser(data));
     parser.parseFile();
     return parser.file;
   }

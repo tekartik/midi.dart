@@ -30,7 +30,7 @@ class TrackEvent {
 }
 
 abstract class MidiEvent {
-  List<MidiEvent> events = new List<MidiEvent>();
+  List<MidiEvent> events = List<MidiEvent>();
 
   /** 
    * Delta-Times
@@ -65,7 +65,6 @@ abstract class MidiEvent {
   static const int metaEvent = 0xF;
 
   static const int cmdMetaEvent = 0xFF;
-
 
   // 2018-09-22
   @deprecated
@@ -114,25 +113,25 @@ abstract class MidiEvent {
     int codeCommand = commandGetCommand(command);
     switch (codeCommand) {
       case noteOff:
-        event = new NoteOffEvent._();
+        event = NoteOffEvent._();
         break;
       case noteOn:
-        event = new NoteOnEvent._();
+        event = NoteOnEvent._();
         break;
       case keyAfterTouch:
-        event = new KeyAfterTouchEvent._();
+        event = KeyAfterTouchEvent._();
         break;
       case controlChange:
-        event = new ControlChangeEvent._();
+        event = ControlChangeEvent._();
         break;
       case programChange:
-        event = new ProgramChangeEvent._();
+        event = ProgramChangeEvent._();
         break;
       case channelAfterTouch:
-        event = new ChannelAfterTouchEvent._();
+        event = ChannelAfterTouchEvent._();
         break;
       case pitchWheelChange:
-        event = new PitchWheelChangeEvent._();
+        event = PitchWheelChangeEvent._();
         break;
       default:
         // Meta!
@@ -325,8 +324,7 @@ class NoteOffEvent extends NoteEvent {
 class KeyAfterTouchEvent extends NoteEvent {
   KeyAfterTouchEvent._();
   KeyAfterTouchEvent(int channel, int noteNumber, int velocity) //
-      : super.withParam(
-            MidiEvent.keyAfterTouch, channel, noteNumber, velocity);
+      : super.withParam(MidiEvent.keyAfterTouch, channel, noteNumber, velocity);
 
   @override
   String toString() {
@@ -393,11 +391,11 @@ class ControlChangeEvent extends Param2BytesEvent {
   }
 
   static ControlChangeEvent newAllSoundOffEvent(int channel) =>
-      new ControlChangeEvent.withParam(channel, allSoundOff, 0);
+      ControlChangeEvent.withParam(channel, allSoundOff, 0);
   static ControlChangeEvent newAllNotesOffEvent(int channel) =>
-      new ControlChangeEvent.withParam(channel, allNotesOff, 0);
+      ControlChangeEvent.withParam(channel, allNotesOff, 0);
   static ControlChangeEvent newAllResetEvent(int channel) =>
-      new ControlChangeEvent.withParam(channel, allReset, 0);
+      ControlChangeEvent.withParam(channel, allReset, 0);
   //null;
 
 }
@@ -421,7 +419,7 @@ class SysExEvent extends MidiEvent {
   void readData(MidiParser parser) {
     int dataSize = parser.readVariableLengthData();
     if (dataSize > 0) {
-      OutBuffer buffer = new OutBuffer(dataSize);
+      OutBuffer buffer = OutBuffer(dataSize);
       parser.read(buffer, dataSize);
       data = buffer.data;
     }
@@ -476,7 +474,7 @@ abstract class MetaEvent extends MidiEvent {
             .cmdMetaEvent); // properly use the full command here (i.e. 0xFF)
 
   factory MetaEvent(int metaCommand, [List<int> data]) {
-    MetaEvent event = new MetaEvent.base(MidiEvent.cmdMetaEvent, metaCommand);
+    MetaEvent event = MetaEvent.base(MidiEvent.cmdMetaEvent, metaCommand);
     event.data = data;
     return event;
   }
@@ -485,16 +483,16 @@ abstract class MetaEvent extends MidiEvent {
     MetaEvent event;
     switch (metaCommand) {
       case metaTimeSig:
-        event = new TimeSigEvent._();
+        event = TimeSigEvent._();
         break;
       case metaTempo:
-        event = new TempoEvent._();
+        event = TempoEvent._();
         break;
       case metaEndOfTrack:
-        event = new EndOfTrackEvent._();
+        event = EndOfTrackEvent._();
         break;
       default:
-        event = new _MetaEvent();
+        event = _MetaEvent();
         break;
     }
     event.command = command;
@@ -509,7 +507,7 @@ abstract class MetaEvent extends MidiEvent {
     }
     int dataSize = parser.readVariableLengthData();
     if (dataSize > 0) {
-      OutBuffer buffer = new OutBuffer(dataSize);
+      OutBuffer buffer = OutBuffer(dataSize);
       parser.read(buffer, dataSize);
       data = buffer.data;
     }
@@ -597,7 +595,7 @@ class TimeSigEvent extends MetaEvent {
       denominator++;
     }
     if (1 << denominator != initialBottom) {
-      throw new FormatException("bottom $bottom not supported");
+      throw FormatException("bottom $bottom not supported");
     }
     return denominator;
   }

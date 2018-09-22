@@ -28,14 +28,14 @@ class FileWriter extends ObjectWriter {
     }
     writeHeader();
     file.tracks.forEach((MidiTrack track) {
-      TrackWriter trackWriter = new TrackWriter(midiWriter);
+      TrackWriter trackWriter = TrackWriter(midiWriter);
       trackWriter.writeTrack(track);
     });
   }
 
   static List<int> fileData(MidiFile file) {
-    MidiWriter midiWriter = new MidiWriter();
-    FileWriter writer = new FileWriter(midiWriter);
+    MidiWriter midiWriter = MidiWriter();
+    FileWriter writer = FileWriter(midiWriter);
     writer.writeFile(file);
     return midiWriter.data;
   }

@@ -21,24 +21,23 @@ class TrackParser extends ObjectParser {
   void parseHeader() {
     midiParser.readBuffer(4);
     if (!buffer.equalsList(trackHeader)) {
-      throw new FormatException("Bad track header");
+      throw FormatException("Bad track header");
     }
-    track = new MidiTrack();
+    track = MidiTrack();
     trackSize = midiParser.readUint32();
 
     endPosition = midiParser.inBuffer.position + trackSize;
   }
 
   void parseEvents() {
-    EventParser eventParser = new EventParser(midiParser);
+    EventParser eventParser = EventParser(midiParser);
     while (midiParser.inBuffer.position < endPosition) {
       eventParser.parseEvent();
       //print(eventParser.event);
 //      if (eventParser.event is EndOfTrackEvent) {
 //      print(eventParser.event);
 //      }
-      track.events
-          .add(new TrackEvent(eventParser.deltaTime, eventParser.event));
+      track.events.add(TrackEvent(eventParser.deltaTime, eventParser.event));
     }
     ;
   }

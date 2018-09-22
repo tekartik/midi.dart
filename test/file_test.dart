@@ -6,7 +6,7 @@ import 'package:tekartik_midi/midi.dart';
 main() {
   group('midi file', () {
     test('time divisions ppq', () {
-      MidiFile file = new MidiFile();
+      MidiFile file = MidiFile();
       file.timeDivision = 3;
 
       expect(file.ppq, file.timeDivision);
@@ -19,7 +19,7 @@ main() {
     });
 
     test('time divisions frame', () {
-      MidiFile file = new MidiFile();
+      MidiFile file = MidiFile();
       file.timeDivision = 59176;
 
       expect(file.ppq, null);
@@ -33,10 +33,10 @@ main() {
     });
 
     test('file equals', () {
-      MidiFile file = new MidiFile();
+      MidiFile file = MidiFile();
       expect(file, file);
 
-      MidiFile file2 = new MidiFile();
+      MidiFile file2 = MidiFile();
       expect(file, file2);
 
       file2.timeDivision = 1;
@@ -48,11 +48,11 @@ main() {
       file.fileFormat = 0;
       expect(file, file2);
 
-      MidiTrack track = new MidiTrack();
+      MidiTrack track = MidiTrack();
       file.addTrack(track);
 
       expect(file, isNot(file2));
-      MidiTrack track2 = new MidiTrack();
+      MidiTrack track2 = MidiTrack();
       expect(track, track2);
 //
 //      track.events.add(new TempoEvent(0, 120));
