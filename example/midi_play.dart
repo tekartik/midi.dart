@@ -19,7 +19,7 @@ class _MidiPlayer extends MidiPlayerBase {
   num get now {
     // make the first call 0
     if (stopwatch == null) {
-      stopwatch = new Stopwatch();
+      stopwatch = Stopwatch();
       stopwatch.start();
     }
     return stopwatch.elapsed.inMilliseconds;
@@ -30,14 +30,14 @@ class _MidiPlayer extends MidiPlayerBase {
 
 main(List<String> args) async {
   args.forEach((String arg) async {
-    File file = new File(arg);
+    File file = File(arg);
     if (file.existsSync()) {
       // parse data
       List<int> data = file.readAsBytesSync();
-      FileParser parser = new FileParser(new MidiParser(data));
+      FileParser parser = FileParser(MidiParser(data));
       parser.parseFile();
 
-      _MidiPlayer player = new _MidiPlayer();
+      _MidiPlayer player = _MidiPlayer();
       player.load(parser.file);
       player.resume();
 

@@ -41,7 +41,7 @@ class OutBuffer extends Buffer {
   int get length => _position;
 
   OutBuffer(int size) {
-    _data = new List<int>.filled(size, null);
+    _data = List<int>.filled(size, null);
   }
 
   void restart() {

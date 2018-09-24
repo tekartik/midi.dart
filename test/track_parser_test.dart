@@ -9,8 +9,8 @@ main() {
   group('track parser', () {
     test('bad header', () {
       String data = "Dummy";
-      MidiParser midiParser = new MidiParser(data.codeUnits);
-      TrackParser parser = new TrackParser(midiParser);
+      MidiParser midiParser = MidiParser(data.codeUnits);
+      TrackParser parser = TrackParser(midiParser);
       try {
         parser.parseHeader();
         fail("dummy header");
@@ -30,17 +30,17 @@ main() {
         3,
         4
       ];
-      MidiParser midiParser = new MidiParser(data);
-      TrackParser parser = new TrackParser(midiParser);
+      MidiParser midiParser = MidiParser(data);
+      TrackParser parser = TrackParser(midiParser);
       parser.parseHeader();
       expect(parser.trackSize, equals(0x01020304));
     });
 
     test('parse events', () {
       List<int> data = [0, 0xff, 0x2f, 0, 0, 0xff, 0x2f, 0];
-      MidiParser midiParser = new MidiParser(data);
-      TrackParser parser = new TrackParser(midiParser);
-      parser.track = new MidiTrack();
+      MidiParser midiParser = MidiParser(data);
+      TrackParser parser = TrackParser(midiParser);
+      parser.track = MidiTrack();
       parser.endPosition = 8;
       parser.parseEvents();
       expect(parser.track.events.length, equals(2));
@@ -50,8 +50,8 @@ main() {
       //List<int> data = parseHexString("4d 54 68 64 00 00 00 06 00 01 00 02 01 e0 4d 54 72 6b 00 00 00 13 00 ff 58 04 04 02 18 08 00 ff 51 03 06 1a 80 00 ff 2f 00 4d 54 72 6b 00 00 00");
       List<int> data = parseHexString(
           "4d 54 72 6b 00 00 00 13 00 ff 58 04 04 02 18 08 00 ff 51 03 06 1a 80 00 ff 2f 00");
-      MidiParser midiParser = new MidiParser(data);
-      TrackParser parser = new TrackParser(midiParser);
+      MidiParser midiParser = MidiParser(data);
+      TrackParser parser = TrackParser(midiParser);
       parser.parseTrack();
       expect(parser.track.events[0].midiEvent is TimeSigEvent, isTrue);
       expect(parser.track.events[1].midiEvent is TempoEvent, isTrue);

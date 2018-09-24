@@ -24,7 +24,7 @@ class TrackWriter extends ObjectWriter {
     }
 
     int trackSize = 0;
-    EventWriter eventWriter = new EventWriter(midiWriter);
+    EventWriter eventWriter = EventWriter(midiWriter);
 
     // We'll update header later
     int headerStartPosition = data.length;
@@ -36,7 +36,7 @@ class TrackWriter extends ObjectWriter {
     });
 
     trackSize = data.length - eventsStartPosition;
-    MidiWriter tmp = new MidiWriter();
+    MidiWriter tmp = MidiWriter();
     tmp.writeUint32(trackSize);
 
     // copy size

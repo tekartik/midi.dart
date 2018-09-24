@@ -8,13 +8,13 @@ import 'package:tekartik_midi/midi_parser.dart';
 main() {
   group('track writer', () {
     test('write track', () {
-      MidiWriter midiWriter = new MidiWriter();
-      TrackWriter writer = new TrackWriter(midiWriter);
+      MidiWriter midiWriter = MidiWriter();
+      TrackWriter writer = TrackWriter(midiWriter);
 
-      MidiTrack track = new MidiTrack();
+      MidiTrack track = MidiTrack();
       writer.track = track;
 
-      MetaEvent event = new MetaEvent(0x2F);
+      MetaEvent event = MetaEvent(0x2F);
 
       track.addEvent(0, event);
       track.addEvent(0, event);
@@ -43,32 +43,32 @@ main() {
     });
 
     writeReadAndCheck(MidiTrack track) {
-      MidiWriter midiWriter = new MidiWriter();
-      TrackWriter writer = new TrackWriter(midiWriter);
+      MidiWriter midiWriter = MidiWriter();
+      TrackWriter writer = TrackWriter(midiWriter);
       writer.writeTrack(track);
 
-      MidiParser midiParser = new MidiParser(writer.data);
-      TrackParser parser = new TrackParser(midiParser);
+      MidiParser midiParser = MidiParser(writer.data);
+      TrackParser parser = TrackParser(midiParser);
       expect(parser.parseTrack(), track);
     }
 
     test('round check', () {
-      MidiTrack track = new MidiTrack();
+      MidiTrack track = MidiTrack();
       writeReadAndCheck(track);
 
-      track.addEvent(0, new NoteOnEvent(2, 42, 60));
+      track.addEvent(0, NoteOnEvent(2, 42, 60));
       writeReadAndCheck(track);
 
-      track.addEvent(1, new TempoEvent(120));
+      track.addEvent(1, TempoEvent(120));
       writeReadAndCheck(track);
 
-      track.addEvent(2, new ProgramChangeEvent(1, 2));
+      track.addEvent(2, ProgramChangeEvent(1, 2));
       writeReadAndCheck(track);
 
-      track.addEvent(3, new TimeSigEvent.topBottom(4, 4));
+      track.addEvent(3, TimeSigEvent.topBottom(4, 4));
       writeReadAndCheck(track);
 
-      track.addEvent(4, new EndOfTrackEvent());
+      track.addEvent(4, EndOfTrackEvent());
       writeReadAndCheck(track);
     });
   });

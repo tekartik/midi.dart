@@ -25,7 +25,7 @@ class ObjectWriter {
   }
 
   void write0(int size) {
-    writeBuffer(new List<int>.filled(size, 0));
+    writeBuffer(List<int>.filled(size, 0));
   }
 
   void writeVariableLengthData(int value) {

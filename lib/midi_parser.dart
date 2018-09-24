@@ -12,7 +12,7 @@ class MidiParser extends BinaryBEParser {
   MidiParser(List<int> data) : super(data);
 
   OutBuffer get outBuffer => _outBuffer;
-  OutBuffer _outBuffer = new OutBuffer(256);
+  OutBuffer _outBuffer = OutBuffer(256);
 
   void readBuffer(int size) {
     read(_outBuffer, size);

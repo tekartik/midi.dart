@@ -12,12 +12,12 @@ main() {
     readWriteAndCheck(String filename, {String parentPath}) {
       File file;
       if (parentPath == null) {
-        file = new File(inDataFilenamePath(filename));
+        file = File(inDataFilenamePath(filename));
       } else {
-        file = new File(join(parentPath, filename));
+        file = File(join(parentPath, filename));
       }
       List<int> data = file.readAsBytesSync();
-      FileParser parser = new FileParser(new MidiParser(data));
+      FileParser parser = FileParser(MidiParser(data));
       parser.parseFile();
       //parser.file.dump();
 
@@ -29,8 +29,8 @@ main() {
       //newFileRead.dump();
 
       expect(fileRead, newFileRead);
-      new Directory(outDataPath).createSync(recursive: true);
-      new File(outDataFilenamePath(filename)).writeAsBytesSync(newData);
+      Directory(outDataPath).createSync(recursive: true);
+      File(outDataFilenamePath(filename)).writeAsBytesSync(newData);
 
       //MidiWriter midiWriter = new MidiWriter();
       //new FileWriter(midiWriter).
@@ -39,7 +39,7 @@ main() {
     ;
 
     test('file equals simple', () {
-      new Directory(outDataPath).createSync(recursive: true);
+      Directory(outDataPath).createSync(recursive: true);
       readWriteAndCheck('simple_in.mid');
       readWriteAndCheck('sample.mid');
       //readWriteAndCheck('song.mid');
@@ -74,34 +74,34 @@ main() {
     */
 
     test('c d e out demo file', () async {
-      MidiFile file = new MidiFile();
+      MidiFile file = MidiFile();
       file.fileFormat = MidiFile.FORMAT_MULTI_TRACK;
       file.ppq = 240;
 
-      MidiTrack track = new MidiTrack();
-      track.addEvent(0, new TimeSigEvent(4, 4));
-      track.addEvent(0, new TempoEvent.bpm(120));
-      track.addEvent(0, new EndOfTrackEvent());
+      MidiTrack track = MidiTrack();
+      track.addEvent(0, TimeSigEvent(4, 4));
+      track.addEvent(0, TempoEvent.bpm(120));
+      track.addEvent(0, EndOfTrackEvent());
       file.addTrack(track);
 
-      track = new MidiTrack();
-      track.addEvent(0, new ProgramChangeEvent(1, 25));
-      track.addEvent(0, new NoteOnEvent(1, 42, 127));
-      track.addEvent(240, new NoteOnEvent(1, 44, 127));
-      track.addEvent(240, new NoteOnEvent(1, 46, 127));
-      track.addEvent(240, new NoteOffEvent(1, 42, 127));
-      track.addEvent(0, new NoteOffEvent(1, 44, 127));
-      track.addEvent(480, new NoteOffEvent(1, 46, 127));
+      track = MidiTrack();
+      track.addEvent(0, ProgramChangeEvent(1, 25));
+      track.addEvent(0, NoteOnEvent(1, 42, 127));
+      track.addEvent(240, NoteOnEvent(1, 44, 127));
+      track.addEvent(240, NoteOnEvent(1, 46, 127));
+      track.addEvent(240, NoteOffEvent(1, 42, 127));
+      track.addEvent(0, NoteOffEvent(1, 44, 127));
+      track.addEvent(480, NoteOffEvent(1, 46, 127));
       // track.add(new Event.NoteOn(0, 1, 42, 127));
       // track.add(new Event.NoteOff(480, 1, 42, 127));
       // // track.add(new Event.NoteOn(0, 1, 42, 127));
       // track.add(new Event.NoteOff(120, 1, 42, 127));
-      track.addEvent(0, new EndOfTrackEvent());
+      track.addEvent(0, EndOfTrackEvent());
 
       file.addTrack(track);
 
-      await new Directory(outDataPath).create(recursive: true);
-      new File(outDataFilenamePath('c-d-e.midi'))
+      await Directory(outDataPath).create(recursive: true);
+      File(outDataFilenamePath('c-d-e.midi'))
           .writeAsBytesSync(FileWriter.fileData(file));
     });
   });

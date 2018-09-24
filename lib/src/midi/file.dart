@@ -25,7 +25,7 @@ class MidiFile {
   int get ppq => _ppq;
   void set ppq(int ppq) {
     if ((ppq & 0x8000) != 0) {
-      throw new FormatException("invalid pulses per quarter note");
+      throw FormatException("invalid pulses per quarter note");
     }
     timeDivision = ppq;
   }
@@ -96,7 +96,7 @@ class MidiFile {
           _frameCoundPerSecond = 29.97;
           break;
         default:
-          throw new FormatException("invalid frames per second");
+          throw FormatException("invalid frames per second");
       }
       _divisionCountPerFrame = (timeDivision & 0xFF);
     }
@@ -118,7 +118,7 @@ class MidiFile {
 
   int get timeDivision => _timeDivision;
 
-  List<MidiTrack> tracks = new List();
+  List<MidiTrack> tracks = List();
 
   /**
    * convert a delay in an event to a delay in ms
@@ -147,7 +147,7 @@ class MidiFile {
   }
 
   toString() {
-    StringBuffer out = new StringBuffer();
+    StringBuffer out = StringBuffer();
     out.write('format $fileFormat $trackCount tracks ppq $ppq');
     if (tracks.length > 0) {
       out.write(' ${tracks[0].toString()}');

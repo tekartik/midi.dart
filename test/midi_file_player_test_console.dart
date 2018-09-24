@@ -11,17 +11,17 @@ main() {
   group('midi_file_player_test_console', () {
     // to skip
     test('parse take 5', () {
-      return new File(inDataFilenamePath("tmp/take_5.mid"))
+      return File(inDataFilenamePath("tmp/take_5.mid"))
           .readAsBytes()
           .then((data) {
         MidiFile file = FileParser.dataFile(data);
         expect(file.trackCount, 30);
 
         expect(getMidiFileDuration(file),
-            new Duration(minutes: 2, seconds: 26, milliseconds: 785));
+            Duration(minutes: 2, seconds: 26, milliseconds: 785));
         expect(
-            new Duration(
-                milliseconds: new MidiFilePlayer(file).totalDurationMs.round()),
+            Duration(
+                milliseconds: MidiFilePlayer(file).totalDurationMs.round()),
             getMidiFileDuration(file));
       });
     });

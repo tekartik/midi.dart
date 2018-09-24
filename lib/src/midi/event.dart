@@ -30,7 +30,7 @@ class TrackEvent {
 }
 
 abstract class MidiEvent {
-  List<MidiEvent> events = new List<MidiEvent>();
+  List<MidiEvent> events = List<MidiEvent>();
 
   /** 
    * Delta-Times
@@ -54,16 +54,37 @@ abstract class MidiEvent {
   static const int CHANNEL_COUNT = 16;
   static const int NOTE_COUNT = 128;
 
-  // Control commannd
+  // Control command
+  static const int noteOff = 8;
+  static const int noteOn = 9;
+  static const int keyAfterTouch = 0xA;
+  static const int controlChange = 0xB;
+  static const int programChange = 0xC;
+  static const int channelAfterTouch = 0xD;
+  static const int pitchWheelChange = 0xE;
+  static const int metaEvent = 0xF;
+
+  static const int cmdMetaEvent = 0xFF;
+
+  // 2018-09-22
+  @deprecated
   static const int NOTE_OFF = 8;
+  @deprecated
   static const int NOTE_ON = 9;
+  @deprecated
   static const int KEY_AFTER_TOUCH = 0xA;
+  @deprecated
   static const int CONTROL_CHANGE = 0xB;
+  @deprecated
   static const int PROGRAM_CHANGE = 0xC;
+  @deprecated
   static const int CHANNEL_AFTER_TOUCH = 0xD;
+  @deprecated
   static const int PITCH_WHEEL_CHANGE = 0xE;
+  @deprecated
   static const int META_EVENT = 0xF;
 
+  @deprecated
   static const int CMD_META_EVENT = 0xFF;
 
   MidiEvent();
@@ -91,26 +112,26 @@ abstract class MidiEvent {
 
     int codeCommand = commandGetCommand(command);
     switch (codeCommand) {
-      case NOTE_OFF:
-        event = new NoteOffEvent._();
+      case noteOff:
+        event = NoteOffEvent._();
         break;
-      case NOTE_ON:
-        event = new NoteOnEvent._();
+      case noteOn:
+        event = NoteOnEvent._();
         break;
-      case KEY_AFTER_TOUCH:
-        event = new KeyAfterTouchEvent._();
+      case keyAfterTouch:
+        event = KeyAfterTouchEvent._();
         break;
-      case CONTROL_CHANGE:
-        event = new ControlChangeEvent._();
+      case controlChange:
+        event = ControlChangeEvent._();
         break;
-      case PROGRAM_CHANGE:
-        event = new ProgramChangeEvent._();
+      case programChange:
+        event = ProgramChangeEvent._();
         break;
-      case CHANNEL_AFTER_TOUCH:
-        event = new ChannelAfterTouchEvent._();
+      case channelAfterTouch:
+        event = ChannelAfterTouchEvent._();
         break;
-      case PITCH_WHEEL_CHANGE:
-        event = new PitchWheelChangeEvent._();
+      case pitchWheelChange:
+        event = PitchWheelChangeEvent._();
         break;
       default:
         // Meta!
@@ -191,7 +212,7 @@ class ProgramChangeEvent extends Param1ByteEvent {
 
   ProgramChangeEvent._();
   ProgramChangeEvent(int channel, int program) //
-      : super.withParam(MidiEvent.PROGRAM_CHANGE, channel, program);
+      : super.withParam(MidiEvent.programChange, channel, program);
 
   @override
   String toString() {
@@ -239,7 +260,7 @@ class ChannelAfterTouchEvent extends Param1ByteEvent {
 
   ChannelAfterTouchEvent._();
   ChannelAfterTouchEvent(int command, int channel, int amount) //
-      : super.withParam(MidiEvent.CHANNEL_AFTER_TOUCH, channel, amount);
+      : super.withParam(MidiEvent.channelAfterTouch, channel, amount);
 
   void set amount(int _channel) {
     _param1 = _channel;
@@ -281,7 +302,7 @@ abstract class NoteEvent extends Param2BytesEvent {
 class NoteOnEvent extends NoteEvent {
   NoteOnEvent._();
   NoteOnEvent(int channel, int noteNumber, int velocity) //
-      : super.withParam(MidiEvent.NOTE_ON, channel, noteNumber, velocity);
+      : super.withParam(MidiEvent.noteOn, channel, noteNumber, velocity);
 
   @override
   String toString() {
@@ -292,7 +313,7 @@ class NoteOnEvent extends NoteEvent {
 class NoteOffEvent extends NoteEvent {
   NoteOffEvent._();
   NoteOffEvent(int channel, int noteNumber, int velocity) //
-      : super.withParam(MidiEvent.NOTE_OFF, channel, noteNumber, velocity);
+      : super.withParam(MidiEvent.noteOff, channel, noteNumber, velocity);
 
   @override
   String toString() {
@@ -303,8 +324,7 @@ class NoteOffEvent extends NoteEvent {
 class KeyAfterTouchEvent extends NoteEvent {
   KeyAfterTouchEvent._();
   KeyAfterTouchEvent(int channel, int noteNumber, int velocity) //
-      : super.withParam(
-            MidiEvent.KEY_AFTER_TOUCH, channel, noteNumber, velocity);
+      : super.withParam(MidiEvent.keyAfterTouch, channel, noteNumber, velocity);
 
   @override
   String toString() {
@@ -326,7 +346,7 @@ class PitchWheelChangeEvent extends Param2BytesEvent {
   PitchWheelChangeEvent._();
   PitchWheelChangeEvent(int channel, int noteNumber, int velocity) //
       : super.withParam(
-            MidiEvent.PITCH_WHEEL_CHANGE, channel, noteNumber, velocity);
+            MidiEvent.pitchWheelChange, channel, noteNumber, velocity);
 
   @override
   String toString() {
@@ -342,11 +362,19 @@ class ControlChangeEvent extends Param2BytesEvent {
   ControlChangeEvent.withParam(
       int channel, int controllerType, int controllerValue)
       : super.withParam(
-            MidiEvent.CONTROL_CHANGE, channel, controllerType, controllerValue);
+            MidiEvent.controlChange, channel, controllerType, controllerValue);
 
+  static int allNotesOff = 123; // <= note off
+  static int allReset = 121; // <= reset
+  static int allSoundOff = 120; // <= quick mute
+
+  @deprecated
   static int ALL_NOTES_OFF = 123; // <= note off
+  @deprecated
   static int ALL_RESET = 121; // <= reset
+  @deprecated
   static int ALL_SOUND_OFF = 120; // <= quick mute
+
   int get controller => _param1;
   void set controller(int _controller) {
     _param1 = _controller;
@@ -363,11 +391,11 @@ class ControlChangeEvent extends Param2BytesEvent {
   }
 
   static ControlChangeEvent newAllSoundOffEvent(int channel) =>
-      new ControlChangeEvent.withParam(channel, ALL_SOUND_OFF, 0);
+      ControlChangeEvent.withParam(channel, allSoundOff, 0);
   static ControlChangeEvent newAllNotesOffEvent(int channel) =>
-      new ControlChangeEvent.withParam(channel, ALL_NOTES_OFF, 0);
+      ControlChangeEvent.withParam(channel, allNotesOff, 0);
   static ControlChangeEvent newAllResetEvent(int channel) =>
-      new ControlChangeEvent.withParam(channel, ALL_RESET, 0);
+      ControlChangeEvent.withParam(channel, allReset, 0);
   //null;
 
 }
@@ -391,7 +419,7 @@ class SysExEvent extends MidiEvent {
   void readData(MidiParser parser) {
     int dataSize = parser.readVariableLengthData();
     if (dataSize > 0) {
-      OutBuffer buffer = new OutBuffer(dataSize);
+      OutBuffer buffer = OutBuffer(dataSize);
       parser.read(buffer, dataSize);
       data = buffer.data;
     }
@@ -426,18 +454,27 @@ abstract class MetaEvent extends MidiEvent {
   int metaCommand;
   List<int> data;
 
-  static const int META_TIME_SIG = 0x58;
-  static const int META_TEMPO = 0x51;
-  static const int META_END_OF_TRACK = 0x2F;
+  static const int metaTimeSig = 0x58;
+  // 2018-09-22
+  @deprecated
+  static const int META_TIME_SIG = metaTimeSig;
+  static const int metaTempo = 0x51;
+  // 2018-09-22
+  @deprecated
+  static const int META_TEMPO = metaTempo;
+  static const int metaEndOfTrack = 0x2F;
+  // 2018-09-22
+  @deprecated
+  static const int META_END_OF_TRACK = metaEndOfTrack;
 
   MetaEvent._();
 
   MetaEvent._withParam(this.metaCommand, this.data)
       : super.withParam(MidiEvent
-            .CMD_META_EVENT); // properly use the full command here (i.e. 0xFF)
+            .cmdMetaEvent); // properly use the full command here (i.e. 0xFF)
 
   factory MetaEvent(int metaCommand, [List<int> data]) {
-    MetaEvent event = new MetaEvent.base(MidiEvent.CMD_META_EVENT, metaCommand);
+    MetaEvent event = MetaEvent.base(MidiEvent.cmdMetaEvent, metaCommand);
     event.data = data;
     return event;
   }
@@ -445,17 +482,17 @@ abstract class MetaEvent extends MidiEvent {
   factory MetaEvent.base(int command, int metaCommand) {
     MetaEvent event;
     switch (metaCommand) {
-      case META_TIME_SIG:
-        event = new TimeSigEvent._();
+      case metaTimeSig:
+        event = TimeSigEvent._();
         break;
-      case META_TEMPO:
-        event = new TempoEvent._();
+      case metaTempo:
+        event = TempoEvent._();
         break;
-      case META_END_OF_TRACK:
-        event = new EndOfTrackEvent._();
+      case metaEndOfTrack:
+        event = EndOfTrackEvent._();
         break;
       default:
-        event = new _MetaEvent();
+        event = _MetaEvent();
         break;
     }
     event.command = command;
@@ -470,7 +507,7 @@ abstract class MetaEvent extends MidiEvent {
     }
     int dataSize = parser.readVariableLengthData();
     if (dataSize > 0) {
-      OutBuffer buffer = new OutBuffer(dataSize);
+      OutBuffer buffer = OutBuffer(dataSize);
       parser.read(buffer, dataSize);
       data = buffer.data;
     }
@@ -558,7 +595,7 @@ class TimeSigEvent extends MetaEvent {
       denominator++;
     }
     if (1 << denominator != initialBottom) {
-      throw new FormatException("bottom $bottom not supported");
+      throw FormatException("bottom $bottom not supported");
     }
     return denominator;
   }
@@ -567,7 +604,7 @@ class TimeSigEvent extends MetaEvent {
       : this(top, bottomToDenom(bottom));
   TimeSigEvent(int num, int denom,
       [int tickCount = 24, int num32ndToQuarter = 8])
-      : super._withParam(MetaEvent.META_TIME_SIG,
+      : super._withParam(MetaEvent.metaTimeSig,
             createData(num, denom, tickCount, num32ndToQuarter));
 //  public TimeSig(int num, int denom) {
 //    super(META_TIME_SIG);
@@ -641,7 +678,7 @@ class TempoEvent extends MetaEvent {
 
   TempoEvent(int tempo)
       : super._withParam(
-            MetaEvent.META_TEMPO, create3BytesBEIntegerBuffer(tempo));
+            MetaEvent.metaTempo, create3BytesBEIntegerBuffer(tempo));
 
   static const int MICROSECONDS_PER_MINUTE = 60000000;
 
@@ -672,7 +709,7 @@ class TempoEvent extends MetaEvent {
 class EndOfTrackEvent extends MetaEvent {
   EndOfTrackEvent._() : super._() {}
 
-  EndOfTrackEvent() : super._withParam(MetaEvent.META_END_OF_TRACK, null);
+  EndOfTrackEvent() : super._withParam(MetaEvent.metaEndOfTrack, null);
 
   @override
   String toString() {
