@@ -58,9 +58,7 @@ class NoteOnKey {
   }
 }
 
-/**
- * For all tracks
- */
+/// For all tracks
 class LocatedEvent {
   num absoluteMs; // ms since start without speed ratio affected
 

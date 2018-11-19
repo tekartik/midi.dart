@@ -45,9 +45,7 @@ class EventParser extends ObjectParser {
     return event;
   }
 
-  /**
-   * for testing only
-   */
+  /// for testing only
   static MidiEvent dataParseEvent(List<int> data) {
     MidiParser midiParser = MidiParser(data);
     EventParser parser = EventParser(midiParser);

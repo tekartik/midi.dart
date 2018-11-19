@@ -37,15 +37,11 @@ abstract class MidiPlayerBase {
 
   StreamController<PlayableEvent> _streamController;
 
-  /**
-   * Send event when status change and every second
-   */
+  /// Send event when status change and every second
   StreamController<bool> playingController = StreamController();
   Stream<bool> playingStream;
 
-  /**
-   * time to send the event before the real event occured
-   */
+  /// time to send the event before the real event occured
   int _preFillDuration = 200;
   int _timerResolution = 50;
 
@@ -79,9 +75,7 @@ abstract class MidiPlayerBase {
     //return now - startNow - _nowDelta; // - _preFillDuration - _preFillDuration;
   }
 
-  /**
-   * Send sound off to all channel
-   */
+  /// Send sound off to all channel
   void allSoundOff() {
     for (int i = 0; i < MidiEvent.CHANNEL_COUNT; i++) {
       PlayableEvent playableEvent = PlayableEvent(

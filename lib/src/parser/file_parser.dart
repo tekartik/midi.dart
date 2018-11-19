@@ -52,9 +52,7 @@ class FileParser extends ObjectParser {
     }
   }
 
-  /**
-   * Parser helper
-   */
+  /// Parser helper
   static MidiFile dataFile(List<int> data) {
     FileParser parser = FileParser(MidiParser(data));
     parser.parseFile();
