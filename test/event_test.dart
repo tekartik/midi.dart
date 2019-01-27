@@ -1,9 +1,10 @@
 library event_test;
 
-import 'test_common.dart';
 import 'package:tekartik_midi/midi.dart';
 
-main() {
+import 'test_common.dart';
+
+void main() {
   group('midi event', () {
     NoteOnEvent getNoteOn() {
       return NoteOnEvent(2, 3, 4);

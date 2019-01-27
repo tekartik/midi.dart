@@ -3,9 +3,14 @@ import 'package:tekartik_midi/src/midi/track.dart';
 
 class MidiFile {
   /// 0 single track, 1, multi track synchronous, 2, multitrack async
-  static final int FORMAT_MULTI_TRACK = 1;
+  static const int formatMultiTrack = 1;
 
-  int fileFormat = FORMAT_MULTI_TRACK;
+  /// 0 single track, 1, multi track synchronous, 2, multitrack async
+  @deprecated
+  // ignore: non_constant_identifier_names
+  static final int FORMAT_MULTI_TRACK = formatMultiTrack;
+
+  int fileFormat = formatMultiTrack;
   int trackCount = 0;
 
   /// Pulses per quarter note (PPQ)
@@ -21,9 +26,9 @@ class MidiFile {
   /// then 1 tick = 500,000 / 60 = 8333.33 microseconds.
   int _ppq = 120; // default value
   int get ppq => _ppq;
-  void set ppq(int ppq) {
+  set ppq(int ppq) {
     if ((ppq & 0x8000) != 0) {
-      throw FormatException("invalid pulses per quarter note");
+      throw const FormatException("invalid pulses per quarter note");
     }
     timeDivision = ppq;
   }
@@ -67,7 +72,7 @@ class MidiFile {
 
   int _timeDivision;
 
-  void set timeDivision(int timeDivision) {
+  set timeDivision(int timeDivision) {
     _timeDivision = timeDivision;
     // ppq?
     if ((timeDivision & 0x8000) == 0) {
@@ -92,7 +97,7 @@ class MidiFile {
           _frameCoundPerSecond = 29.97;
           break;
         default:
-          throw FormatException("invalid frames per second");
+          throw const FormatException("invalid frames per second");
       }
       _divisionCountPerFrame = (timeDivision & 0xFF);
     }
@@ -103,6 +108,7 @@ class MidiFile {
   num get frameCountPerSecond => _frameCoundPerSecond;
 
   int get divisionCountPerFrame => _divisionCountPerFrame;
+
   /// @param: frameCountPerSecondEncoded in (24, 25, 29 - meaning 29.97 -, 30)
   void setFrameDivision(
       int frameCountPerSecondEncoded, int divisionCountPerFrame) {
@@ -112,16 +118,17 @@ class MidiFile {
 
   int get timeDivision => _timeDivision;
 
-  List<MidiTrack> tracks = List();
+  List<MidiTrack> tracks = [];
 
   /// convert a delay in an event to a delay in ms
   num delayToMillis(int delay) {
     return delay / ppq;
   }
 
+  @override
   int get hashCode {
     int hash = (fileFormat * 17 + trackCount) * 31;
-    if (tracks.length > 0) {
+    if (tracks.isNotEmpty) {
       hash += tracks.hashCode;
     }
     return hash;
@@ -138,10 +145,11 @@ class MidiFile {
     return false;
   }
 
-  toString() {
+  @override
+  String toString() {
     StringBuffer out = StringBuffer();
     out.write('format $fileFormat $trackCount tracks ppq $ppq');
-    if (tracks.length > 0) {
+    if (tracks.isNotEmpty) {
       out.write(' ${tracks[0].toString()}');
     }
     return out.toString();

@@ -30,7 +30,7 @@ class TrackEvent {
 }
 
 abstract class MidiEvent {
-  List<MidiEvent> events = List<MidiEvent>();
+  List<MidiEvent> events = [];
 
   /// Delta-Times
   ///
@@ -137,6 +137,7 @@ abstract class MidiEvent {
         // event = new MetaEvent();
         return null;
     }
+    // ignore: prefer_initializing_formals
     event.command = command;
     return event;
   }
@@ -177,10 +178,12 @@ abstract class Param1ByteEvent extends ChannelEvent {
   Param1ByteEvent.withParam(int command, int channel, this._param1)
       : super.withParam(command, channel);
 
+  @override
   void readData(MidiParser parser) {
     _param1 = parser.readUint8();
   }
 
+  @override
   void writeData(MidiWriter writer) {
     writer.writeUint8(_param1);
   }
@@ -204,7 +207,7 @@ abstract class Param1ByteEvent extends ChannelEvent {
 
 class ProgramChangeEvent extends Param1ByteEvent {
   int get program => _param1;
-  void set program(int _program) {
+  set program(int _program) {
     _param1 = _program;
   }
 
@@ -226,11 +229,13 @@ abstract class Param2BytesEvent extends Param1ByteEvent {
       int command, int channel, int _param1, this._param2) //
       : super.withParam(command, channel, _param1);
 
+  @override
   void readData(MidiParser parser) {
     super.readData(parser);
     _param2 = parser.readUint8();
   }
 
+  @override
   void writeData(MidiWriter writer) {
     super.writeData(writer);
     writer.writeUint8(_param2);
@@ -260,7 +265,7 @@ class ChannelAfterTouchEvent extends Param1ByteEvent {
   ChannelAfterTouchEvent(int command, int channel, int amount) //
       : super.withParam(MidiEvent.channelAfterTouch, channel, amount);
 
-  void set amount(int _channel) {
+  set amount(int _channel) {
     _param1 = _channel;
   }
 
@@ -280,12 +285,12 @@ class ChannelAfterTouchEvent extends Param1ByteEvent {
 ///
 abstract class NoteEvent extends Param2BytesEvent {
   int get note => _param1;
-  void set note(int _note) {
+  set note(int _note) {
     _param1 = _note;
   }
 
   int get velocity => _param2;
-  void set velocity(int _velocity) {
+  set velocity(int _velocity) {
     _param2 = _velocity;
   }
 
@@ -330,12 +335,12 @@ class KeyAfterTouchEvent extends NoteEvent {
 
 class PitchWheelChangeEvent extends Param2BytesEvent {
   int get bottom => _param1;
-  void set bottom(int _bottom) {
+  set bottom(int _bottom) {
     _param1 = _bottom;
   }
 
   int get top => _param2;
-  void set top(int _top) {
+  set top(int _top) {
     _param2 = _top;
   }
 
@@ -362,20 +367,13 @@ class ControlChangeEvent extends Param2BytesEvent {
   static int allReset = 121; // <= reset
   static int allSoundOff = 120; // <= quick mute
 
-  @deprecated
-  static int ALL_NOTES_OFF = 123; // <= note off
-  @deprecated
-  static int ALL_RESET = 121; // <= reset
-  @deprecated
-  static int ALL_SOUND_OFF = 120; // <= quick mute
-
   int get controller => _param1;
-  void set controller(int _controller) {
+  set controller(int _controller) {
     _param1 = _controller;
   }
 
   int get value => _param2;
-  void set value(int _value) {
+  set value(int _value) {
     _param2 = _value;
   }
 
@@ -410,6 +408,7 @@ class SysExEvent extends MidiEvent {
       : super.withParam(
             command); // properly use the full command here (i.e. 0xFF)
 
+  @override
   void readData(MidiParser parser) {
     int dataSize = parser.readVariableLengthData();
     if (dataSize > 0) {
@@ -419,6 +418,7 @@ class SysExEvent extends MidiEvent {
     }
   }
 
+  @override
   void writeData(MidiWriter writer) {
     int dataSize = data == null ? 0 : data.length;
     writer.writeVariableLengthData(dataSize);
@@ -469,6 +469,7 @@ abstract class MetaEvent extends MidiEvent {
 
   factory MetaEvent(int metaCommand, [List<int> data]) {
     MetaEvent event = MetaEvent.base(MidiEvent.cmdMetaEvent, metaCommand);
+    // ignore: prefer_initializing_formals
     event.data = data;
     return event;
   }
@@ -490,10 +491,12 @@ abstract class MetaEvent extends MidiEvent {
         break;
     }
     event.command = command;
+    // ignore: prefer_initializing_formals
     event.metaCommand = metaCommand;
     return event;
   }
 
+  @override
   void readData(MidiParser parser) {
     // Don't re-read meta command
     if (metaCommand == null) {
@@ -507,6 +510,7 @@ abstract class MetaEvent extends MidiEvent {
     }
   }
 
+  @override
   void writeData(MidiWriter writer) {
     writer.writeUint8(metaCommand);
     int dataSize = data == null ? 0 : data.length;
@@ -695,7 +699,7 @@ class TempoEvent extends MetaEvent {
 /// @author Alex
 ///
 class EndOfTrackEvent extends MetaEvent {
-  EndOfTrackEvent._() : super._() {}
+  EndOfTrackEvent._() : super._();
 
   EndOfTrackEvent() : super._withParam(MetaEvent.metaEndOfTrack, null);
 

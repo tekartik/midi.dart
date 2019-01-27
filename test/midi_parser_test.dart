@@ -1,9 +1,10 @@
 library midi_parser_test;
 
-import 'test_common.dart';
 import 'package:tekartik_midi/midi_parser.dart';
 
-main() {
+import 'test_common.dart';
+
+void main() {
   group('midi parser', () {
     test('variable length data', () {
       MidiParser parser = MidiParser([0]);

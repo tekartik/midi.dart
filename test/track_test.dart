@@ -1,9 +1,10 @@
 library track_test;
 
-import 'test_common.dart';
 import 'package:tekartik_midi/midi.dart';
 
-main() {
+import 'test_common.dart';
+
+void main() {
   group('midi track', () {
     test('track equals', () {
       MidiTrack track = MidiTrack();

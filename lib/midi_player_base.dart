@@ -139,8 +139,8 @@ abstract class MidiPlayerBase {
     //    }
   }
 
-  void resume([num now_]) {
-    num _now = now_ == null ? now : now_;
+  void resume([num time]) {
+    num _now = time == null ? now : time;
     if (isPaused) {
       _nowDelta += _now - _lastPauseTime;
     }

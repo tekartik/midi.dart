@@ -1,13 +1,15 @@
 @TestOn("vm")
 library file_parser_test;
 
+import 'dart:io';
+
+import 'package:tekartik_common_utils/hex_utils.dart';
 import 'package:tekartik_midi/midi.dart';
 import 'package:tekartik_midi/midi_parser.dart';
-import 'package:tekartik_common_utils/hex_utils.dart';
-import 'dart:io';
+
 import 'io_test_common.dart';
 
-main() {
+void main() {
   group('file parser', () {
     test('bad header', () {
       String data = "Dummy";

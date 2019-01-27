@@ -36,11 +36,11 @@ class FileParser extends ObjectParser {
   void parseHeader() {
     readBuffer(4);
     if (!buffer.equalsList(fileHeader)) {
-      throw FormatException("Bad file header");
+      throw const FormatException("Bad file header");
     }
     int dataHeaderLen = midiParser.readUint32();
     if (dataHeaderLen < 6) {
-      throw FormatException("Bad data header len");
+      throw const FormatException("Bad data header len");
     }
     file = MidiFile();
 

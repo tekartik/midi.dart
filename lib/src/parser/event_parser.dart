@@ -19,7 +19,7 @@ class EventParser extends ObjectParser {
     int command = midiParser.readUint8();
     if ((command & 0x80) == 0) {
       if ((lastCommand & 0x80) == 0) {
-        throw FormatException("invalid last command");
+        throw const FormatException("invalid last command");
       }
       command = lastCommand;
       // We go back 1

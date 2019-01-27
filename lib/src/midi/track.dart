@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:tekartik_midi/midi.dart';
 
 class MidiTrack {
-  List<TrackEvent> events = List();
+  List<TrackEvent> events = [];
 
   @override
   int get hashCode {
@@ -27,7 +27,7 @@ class MidiTrack {
   String toString() {
     StringBuffer out = StringBuffer();
     out.write('events ${events.length}');
-    if (events.length > 0) {
+    if (events.isNotEmpty) {
       out.write(' ${events[0].toString()}');
     }
     return out.toString();

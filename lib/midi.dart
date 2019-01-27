@@ -1,5 +1,5 @@
 library tekartik_midi;
 
-export 'src/midi/event.dart';
-export 'src/midi/track.dart';
-export 'src/midi/file.dart';
+export 'package:tekartik_midi/src/midi/event.dart';
+export 'package:tekartik_midi/src/midi/file.dart';
+export 'package:tekartik_midi/src/midi/track.dart';

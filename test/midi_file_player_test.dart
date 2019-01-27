@@ -1,11 +1,12 @@
 library midi_player_test;
 
-import 'test_common.dart';
 import 'package:tekartik_midi/midi.dart';
-import 'demo_file.dart';
 import 'package:tekartik_midi/midi_file_player.dart';
 
-main() {
+import 'demo_file.dart';
+import 'test_common.dart';
+
+void main() {
   group('midi_file_player', () {
     test('ppq delta time to millis', () {
       MidiFile file = MidiFile();

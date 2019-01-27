@@ -4,7 +4,7 @@ import 'package:tekartik_midi/midi.dart';
 
 MidiFile getDemoFileCDE() {
   MidiFile file = MidiFile();
-  file.fileFormat = MidiFile.FORMAT_MULTI_TRACK;
+  file.fileFormat = MidiFile.formatMultiTrack;
   file.ppq = 240;
 
   MidiTrack track = MidiTrack();

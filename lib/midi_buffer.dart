@@ -24,6 +24,7 @@ class InBuffer extends Buffer {
   InBuffer(List<int> data) {
     _data = data;
   }
+  @override
   int get length => _data.length;
 
   //int operator [](int index) => _data[index];
@@ -38,6 +39,7 @@ class InBuffer extends Buffer {
 }
 
 class OutBuffer extends Buffer {
+  @override
   int get length => _position;
 
   OutBuffer(int size) {

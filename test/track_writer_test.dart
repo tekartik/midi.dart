@@ -1,11 +1,12 @@
 library track_writer_test;
 
-import 'test_common.dart';
 import 'package:tekartik_midi/midi.dart';
-import 'package:tekartik_midi/midi_writer.dart';
 import 'package:tekartik_midi/midi_parser.dart';
+import 'package:tekartik_midi/midi_writer.dart';
 
-main() {
+import 'test_common.dart';
+
+void main() {
   group('track writer', () {
     test('write track', () {
       MidiWriter midiWriter = MidiWriter();
@@ -42,7 +43,7 @@ main() {
           ]));
     });
 
-    writeReadAndCheck(MidiTrack track) {
+    void writeReadAndCheck(MidiTrack track) {
       MidiWriter midiWriter = MidiWriter();
       TrackWriter writer = TrackWriter(midiWriter);
       writer.writeTrack(track);

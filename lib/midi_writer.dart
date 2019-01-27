@@ -2,11 +2,11 @@ library tekartik_midi_writer;
 
 import 'package:tekartik_midi/src/writer/binary_writer.dart';
 
-export 'src/writer/binary_writer.dart';
-export 'src/writer/object_writer.dart';
-export 'src/writer/file_writer.dart';
-export 'src/writer/track_writer.dart';
-export 'src/writer/event_writer.dart';
+export 'package:tekartik_midi/src/writer/binary_writer.dart';
+export 'package:tekartik_midi/src/writer/object_writer.dart';
+export 'package:tekartik_midi/src/writer/file_writer.dart';
+export 'package:tekartik_midi/src/writer/track_writer.dart';
+export 'package:tekartik_midi/src/writer/event_writer.dart';
 
 class MidiWriter extends BinaryBEWriter {
   /// Some numbers in MTrk blocks are represented in a form called a variable-
