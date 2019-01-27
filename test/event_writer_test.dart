@@ -1,12 +1,13 @@
 library event_writer_test;
 
-import 'test_common.dart';
-import 'package:tekartik_midi/midi.dart';
-import 'package:tekartik_midi/midi_writer.dart';
-import 'package:tekartik_midi/midi_parser.dart';
 import 'package:tekartik_common_utils/hex_utils.dart';
+import 'package:tekartik_midi/midi.dart';
+import 'package:tekartik_midi/midi_parser.dart';
+import 'package:tekartik_midi/midi_writer.dart';
 
-main() {
+import 'test_common.dart';
+
+void main() {
   group('event writer', () {
     test('write meta', () {
       MidiWriter midiWriter = MidiWriter();
@@ -39,7 +40,7 @@ main() {
       expect(writer.data, parseHexString("01 92 40 60"));
     });
 
-    writeReadAndCheck(TrackEvent event) {
+    void writeReadAndCheck(TrackEvent event) {
       MidiWriter midiWriter = MidiWriter();
       EventWriter writer = EventWriter(midiWriter);
       writer.event = event;
@@ -51,7 +52,7 @@ main() {
       expect(parser.trackEvent, event);
     }
 
-    writeReadAndCheckMidiEvent(MidiEvent midiEvent) {
+    void writeReadAndCheckMidiEvent(MidiEvent midiEvent) {
       writeReadAndCheck(TrackEvent(0, midiEvent));
     }
 

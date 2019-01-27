@@ -9,7 +9,8 @@ import 'package:tekartik_midi/midi_file_player.dart';
 // Display midi event timing
 
 class _MidiPlayer extends MidiPlayerBase {
-  rawPlayEvent(PlayableEvent event) {
+  @override
+  void rawPlayEvent(PlayableEvent event) {
     print(event);
   }
 
@@ -28,7 +29,7 @@ class _MidiPlayer extends MidiPlayerBase {
   _MidiPlayer([num noteOnLastTimestamp]) : super(noteOnLastTimestamp);
 }
 
-main(List<String> args) async {
+Future main(List<String> args) async {
   args.forEach((String arg) async {
     File file = File(arg);
     if (file.existsSync()) {

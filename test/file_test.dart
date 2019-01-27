@@ -1,9 +1,10 @@
 library file_test;
 
-import 'test_common.dart';
 import 'package:tekartik_midi/midi.dart';
 
-main() {
+import 'test_common.dart';
+
+void main() {
   group('midi file', () {
     test('time divisions ppq', () {
       MidiFile file = MidiFile();

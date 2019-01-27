@@ -30,25 +30,23 @@ class TrackEvent {
 }
 
 abstract class MidiEvent {
-  List<MidiEvent> events = List<MidiEvent>();
+  List<MidiEvent> events = [];
 
-  /** 
-   * Delta-Times
-   *
-   * The event delta time is defined by a variable-length value. It determines 
-   * when an event should be played relative to the track's last event. A delta
-   * time of 0 means that it should play simultaneously with the last event.
-   * A track's first event delta time defines the amount of time to wait before
-   * playing this first event. Events unaffected by time are still preceded 
-   * by a delta time, but should always use a value of 0 and come first in the
-   * stream of track events. Examples of this type of event include track 
-   * titles and copyright information. The most important thing to remember 
-   * about delta times is that they are relative values, not absolute times. 
-   * The actual time they represent is determined by a couple factors.
-   * The time division (defined in the MIDI header chunk) and the tempo 
-   * (defined with a track event). If no tempo is define, 120 beats 
-   * per minute is assumed.
-   */
+  /// Delta-Times
+  ///
+  /// The event delta time is defined by a variable-length value. It determines
+  /// when an event should be played relative to the track's last event. A delta
+  /// time of 0 means that it should play simultaneously with the last event.
+  /// A track's first event delta time defines the amount of time to wait before
+  /// playing this first event. Events unaffected by time are still preceded
+  /// by a delta time, but should always use a value of 0 and come first in the
+  /// stream of track events. Examples of this type of event include track
+  /// titles and copyright information. The most important thing to remember
+  /// about delta times is that they are relative values, not absolute times.
+  /// The actual time they represent is determined by a couple factors.
+  /// The time division (defined in the MIDI header chunk) and the tempo
+  /// (defined with a track event). If no tempo is define, 120 beats
+  /// per minute is assumed.
   int command;
 
   static const int CHANNEL_COUNT = 16;
@@ -139,6 +137,7 @@ abstract class MidiEvent {
         // event = new MetaEvent();
         return null;
     }
+    // ignore: prefer_initializing_formals
     event.command = command;
     return event;
   }
@@ -179,10 +178,12 @@ abstract class Param1ByteEvent extends ChannelEvent {
   Param1ByteEvent.withParam(int command, int channel, this._param1)
       : super.withParam(command, channel);
 
+  @override
   void readData(MidiParser parser) {
     _param1 = parser.readUint8();
   }
 
+  @override
   void writeData(MidiWriter writer) {
     writer.writeUint8(_param1);
   }
@@ -206,7 +207,7 @@ abstract class Param1ByteEvent extends ChannelEvent {
 
 class ProgramChangeEvent extends Param1ByteEvent {
   int get program => _param1;
-  void set program(int _program) {
+  set program(int _program) {
     _param1 = _program;
   }
 
@@ -228,11 +229,13 @@ abstract class Param2BytesEvent extends Param1ByteEvent {
       int command, int channel, int _param1, this._param2) //
       : super.withParam(command, channel, _param1);
 
+  @override
   void readData(MidiParser parser) {
     super.readData(parser);
     _param2 = parser.readUint8();
   }
 
+  @override
   void writeData(MidiWriter writer) {
     super.writeData(writer);
     writer.writeUint8(_param2);
@@ -262,7 +265,7 @@ class ChannelAfterTouchEvent extends Param1ByteEvent {
   ChannelAfterTouchEvent(int command, int channel, int amount) //
       : super.withParam(MidiEvent.channelAfterTouch, channel, amount);
 
-  void set amount(int _channel) {
+  set amount(int _channel) {
     _param1 = _channel;
   }
 
@@ -272,24 +275,22 @@ class ChannelAfterTouchEvent extends Param1ByteEvent {
   }
 }
 
-/**
- * Note On: 9x nn vv
- * <ol>
- * <li>nn note number</li>
- * <li>vv velocity</li>
- * </ol>
- * 
- * @author Alex
- * 
- */
+/// Note On: 9x nn vv
+/// <ol>
+/// <li>nn note number</li>
+/// <li>vv velocity</li>
+/// </ol>
+///
+/// @author Alex
+///
 abstract class NoteEvent extends Param2BytesEvent {
   int get note => _param1;
-  void set note(int _note) {
+  set note(int _note) {
     _param1 = _note;
   }
 
   int get velocity => _param2;
-  void set velocity(int _velocity) {
+  set velocity(int _velocity) {
     _param2 = _velocity;
   }
 
@@ -334,12 +335,12 @@ class KeyAfterTouchEvent extends NoteEvent {
 
 class PitchWheelChangeEvent extends Param2BytesEvent {
   int get bottom => _param1;
-  void set bottom(int _bottom) {
+  set bottom(int _bottom) {
     _param1 = _bottom;
   }
 
   int get top => _param2;
-  void set top(int _top) {
+  set top(int _top) {
     _param2 = _top;
   }
 
@@ -354,9 +355,7 @@ class PitchWheelChangeEvent extends Param2BytesEvent {
   }
 }
 
-/**
- * cc control number vv new value
- */
+/// cc control number vv new value
 class ControlChangeEvent extends Param2BytesEvent {
   ControlChangeEvent._();
   ControlChangeEvent.withParam(
@@ -368,20 +367,13 @@ class ControlChangeEvent extends Param2BytesEvent {
   static int allReset = 121; // <= reset
   static int allSoundOff = 120; // <= quick mute
 
-  @deprecated
-  static int ALL_NOTES_OFF = 123; // <= note off
-  @deprecated
-  static int ALL_RESET = 121; // <= reset
-  @deprecated
-  static int ALL_SOUND_OFF = 120; // <= quick mute
-
   int get controller => _param1;
-  void set controller(int _controller) {
+  set controller(int _controller) {
     _param1 = _controller;
   }
 
   int get value => _param2;
-  void set value(int _value) {
+  set value(int _value) {
     _param2 = _value;
   }
 
@@ -416,6 +408,7 @@ class SysExEvent extends MidiEvent {
       : super.withParam(
             command); // properly use the full command here (i.e. 0xFF)
 
+  @override
   void readData(MidiParser parser) {
     int dataSize = parser.readVariableLengthData();
     if (dataSize > 0) {
@@ -425,6 +418,7 @@ class SysExEvent extends MidiEvent {
     }
   }
 
+  @override
   void writeData(MidiWriter writer) {
     int dataSize = data == null ? 0 : data.length;
     writer.writeVariableLengthData(dataSize);
@@ -475,6 +469,7 @@ abstract class MetaEvent extends MidiEvent {
 
   factory MetaEvent(int metaCommand, [List<int> data]) {
     MetaEvent event = MetaEvent.base(MidiEvent.cmdMetaEvent, metaCommand);
+    // ignore: prefer_initializing_formals
     event.data = data;
     return event;
   }
@@ -496,10 +491,12 @@ abstract class MetaEvent extends MidiEvent {
         break;
     }
     event.command = command;
+    // ignore: prefer_initializing_formals
     event.metaCommand = metaCommand;
     return event;
   }
 
+  @override
   void readData(MidiParser parser) {
     // Don't re-read meta command
     if (metaCommand == null) {
@@ -513,6 +510,7 @@ abstract class MetaEvent extends MidiEvent {
     }
   }
 
+  @override
   void writeData(MidiWriter writer) {
     writer.writeUint8(metaCommand);
     int dataSize = data == null ? 0 : data.length;
@@ -542,43 +540,41 @@ abstract class MetaEvent extends MidiEvent {
   }
 }
 
-/**
-   * Time Signature This meta event is used to set a sequences time signature.
-   * 
-   * The time signature defined with 4 bytes, a numerator, a denominator, a
-   * metronome pulse and number of 32nd notes per MIDI quarter-note. The
-   * numerator is specified as a literal value, but the denominator is
-   * specified as (get ready) the value to which the power of 2 must be raised
-   * to equal the number of subdivisions per whole note. For example, a value
-   * of 0 means a whole note because 2 to the power of 0 is 1 (whole note), a
-   * value of 1 means a half-note because 2 to the power of 1 is 2
-   * (half-note), and so on. The metronome pulse specifies how often the
-   * metronome should click in terms of the number of clock signals per click,
-   * which come at a rate of 24 per quarter-note. For example, a value of 24
-   * would mean to click once every quarter-note (beat) and a value of 48
-   * would mean to click once every half-note (2 beats). And finally, the
-   * fourth byte specifies the number of 32nd notes per 24 MIDI clock signals.
-   * This value is usually 8 because there are usually 8 32nd notes in a
-   * quarter-note. At least one Time Signature Event should appear in the
-   * first track chunk (or all track chunks in a Type 2 file) before any
-   * non-zero delta time events. If one is not specified 4/4, 24, 8 should be
-   * assumed.
-   * 
-   * Meta Event Type Length Numer Denom Metro 32nds<br>
-   * 255 (0xFF) 88 (0x58) 4 0-255 0-255 0-255 1-255 Time Signature Meta Event
-   * Values
-   * 
-   * <li>04 nn dd ccbb
-   * <ul>
-   * <li>nn numerator time sig<
-   * <li>denominator time sig (2 quarter, 3 eighth) etc...
-   * <li>cc number of ticks in metronome click
-   * <li>bb number of 32nd notes to the quarter notes
-   * </ul>
-   * 
-   * @author Alex
-   * 
-   */
+/// Time Signature This meta event is used to set a sequences time signature.
+///
+/// The time signature defined with 4 bytes, a numerator, a denominator, a
+/// metronome pulse and number of 32nd notes per MIDI quarter-note. The
+/// numerator is specified as a literal value, but the denominator is
+/// specified as (get ready) the value to which the power of 2 must be raised
+/// to equal the number of subdivisions per whole note. For example, a value
+/// of 0 means a whole note because 2 to the power of 0 is 1 (whole note), a
+/// value of 1 means a half-note because 2 to the power of 1 is 2
+/// (half-note), and so on. The metronome pulse specifies how often the
+/// metronome should click in terms of the number of clock signals per click,
+/// which come at a rate of 24 per quarter-note. For example, a value of 24
+/// would mean to click once every quarter-note (beat) and a value of 48
+/// would mean to click once every half-note (2 beats). And finally, the
+/// fourth byte specifies the number of 32nd notes per 24 MIDI clock signals.
+/// This value is usually 8 because there are usually 8 32nd notes in a
+/// quarter-note. At least one Time Signature Event should appear in the
+/// first track chunk (or all track chunks in a Type 2 file) before any
+/// non-zero delta time events. If one is not specified 4/4, 24, 8 should be
+/// assumed.
+///
+/// Meta Event Type Length Numer Denom Metro 32nds<br>
+/// 255 (0xFF) 88 (0x58) 4 0-255 0-255 0-255 1-255 Time Signature Meta Event
+/// Values
+///
+/// <li>04 nn dd ccbb
+/// <ul>
+/// <li>nn numerator time sig<
+/// <li>denominator time sig (2 quarter, 3 eighth) etc...
+/// <li>cc number of ticks in metronome click
+/// <li>bb number of 32nd notes to the quarter notes
+/// </ul>
+///
+/// @author Alex
+///
 class TimeSigEvent extends MetaEvent {
   TimeSigEvent._() : super._();
 
@@ -648,29 +644,27 @@ class TimeSigEvent extends MetaEvent {
 //    }
 }
 
-/**
-   * Tempo
-   * <p>
-   * 51 03 tttttt tempo
-   * </p>
-   * 
-   * <p>
-   * This meta event sets the sequence tempo in terms of microseconds per
-   * quarter-note which is encoded in three bytes. It usually is found in the
-   * first track chunk, time-aligned to occur at the same time as a MIDI clock
-   * message to promote more accurate synchronization. If no set tempo event
-   * is present, 120 beats per minute is assumed. The following formula's can
-   * be used to translate the tempo from microseconds per quarter-note to
-   * beats per minute and back.
-   * </p>
-   * 
-   * MICROSECONDS_PER_MINUTE = 60000000
-   * 
-   * <ul>
-   * <li>BPM = MICROSECONDS_PER_MINUTE / MPQN</li>
-   * <li>MPQN = * MICROSECONDS_PER_MINUTE / BPM</li>
-   * </ul>
-   */
+/// Tempo
+/// <p>
+/// 51 03 tttttt tempo
+/// </p>
+///
+/// <p>
+/// This meta event sets the sequence tempo in terms of microseconds per
+/// quarter-note which is encoded in three bytes. It usually is found in the
+/// first track chunk, time-aligned to occur at the same time as a MIDI clock
+/// message to promote more accurate synchronization. If no set tempo event
+/// is present, 120 beats per minute is assumed. The following formula's can
+/// be used to translate the tempo from microseconds per quarter-note to
+/// beats per minute and back.
+/// </p>
+///
+/// MICROSECONDS_PER_MINUTE = 60000000
+///
+/// <ul>
+/// <li>BPM = MICROSECONDS_PER_MINUTE / MPQN</li>
+/// <li>MPQN = * MICROSECONDS_PER_MINUTE / BPM</li>
+/// </ul>
 class TempoEvent extends MetaEvent {
   TempoEvent._() : super._();
 
@@ -692,22 +686,20 @@ class TempoEvent extends MetaEvent {
   }
 }
 
-/**
-   * End Of Track
-   * <p>
-   * This meta event is used to signal the end of a track chunk and must
-   * always appear as the last event in every track chunk.
-   * <ul>
-   * <li>Meta Event Type Length</li>
-   * <li>255 (0xFF) 47 (0x2F) 0
-   * <li>End Of Track Meta Event Values
-   * </ul
-   * 
-   * @author Alex
-   * 
-   */
+/// End Of Track
+/// <p>
+/// This meta event is used to signal the end of a track chunk and must
+/// always appear as the last event in every track chunk.
+/// <ul>
+/// <li>Meta Event Type Length</li>
+/// <li>255 (0xFF) 47 (0x2F) 0
+/// <li>End Of Track Meta Event Values
+/// </ul
+///
+/// @author Alex
+///
 class EndOfTrackEvent extends MetaEvent {
-  EndOfTrackEvent._() : super._() {}
+  EndOfTrackEvent._() : super._();
 
   EndOfTrackEvent() : super._withParam(MetaEvent.metaEndOfTrack, null);
 

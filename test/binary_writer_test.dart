@@ -1,9 +1,10 @@
 library binary_writer_test;
 
-import 'test_common.dart';
 import 'package:tekartik_midi/midi_writer.dart';
 
-main() {
+import 'test_common.dart';
+
+void main() {
   group('binary writer', () {
     test('write BE', () {
       BinaryBEWriter writer = BinaryBEWriter();

@@ -1,9 +1,10 @@
 library midi_writer_test;
 
-import 'test_common.dart';
 import 'package:tekartik_midi/midi_writer.dart';
 
-main() {
+import 'test_common.dart';
+
+void main() {
   group('midi writer', () {
     test('write variable length data', () {
       MidiWriter writer = MidiWriter();

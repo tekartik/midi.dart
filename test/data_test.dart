@@ -7,9 +7,9 @@ import 'package:tekartik_midi/midi_parser.dart';
 import 'package:tekartik_midi/midi_writer.dart';
 import 'io_test_common.dart';
 
-main() {
+void main() {
   group('data file', () {
-    readWriteAndCheck(String filename, {String parentPath}) {
+    void readWriteAndCheck(String filename, {String parentPath}) {
       File file;
       if (parentPath == null) {
         file = File(inDataFilenamePath(filename));
@@ -35,8 +35,6 @@ main() {
       //MidiWriter midiWriter = new MidiWriter();
       //new FileWriter(midiWriter).
     }
-
-    ;
 
     test('file equals simple', () {
       Directory(outDataPath).createSync(recursive: true);
@@ -75,7 +73,7 @@ main() {
 
     test('c d e out demo file', () async {
       MidiFile file = MidiFile();
-      file.fileFormat = MidiFile.FORMAT_MULTI_TRACK;
+      file.fileFormat = MidiFile.formatMultiTrack;
       file.ppq = 240;
 
       MidiTrack track = MidiTrack();

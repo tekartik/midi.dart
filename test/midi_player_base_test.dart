@@ -1,12 +1,14 @@
 library player_base_test;
 
-import 'package:tekartik_midi/midi_file_player.dart';
 import 'package:tekartik_midi/midi.dart';
-import 'demo_file.dart';
+import 'package:tekartik_midi/midi_file_player.dart';
 import 'package:tekartik_midi/midi_player_base.dart';
+
+import 'demo_file.dart';
 import 'test_common.dart';
 
 class _TestMidiPlayer extends MidiPlayerBase {
+  @override
   num nowToTimestamp([num now]) {
     if (now == null) {
       now = this.now;
@@ -14,15 +16,19 @@ class _TestMidiPlayer extends MidiPlayerBase {
     return now;
   }
 
-  rawPlayEvent(PlayableEvent event) {
+  @override
+  void rawPlayEvent(PlayableEvent event) {
     //print(event);
   }
+
+  @override
   num now;
+
   _TestMidiPlayer(this.now, num noteOnLastTimestamp)
       : super(noteOnLastTimestamp);
 }
 
-main() {
+void main() {
   group('player_base', () {
     test('note_on_key', () {
       NoteOnKey key = NoteOnKey(0, 0);

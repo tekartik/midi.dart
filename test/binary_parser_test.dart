@@ -1,9 +1,10 @@
 library binary_parser_test;
 
-import 'test_common.dart';
 import 'package:tekartik_midi/midi_parser.dart';
 
-main() {
+import 'test_common.dart';
+
+void main() {
   group('binary parser', () {
     test('read be integer', () {
       List<int> data = [0, 1, 0xCD, 0xEF, 2, 3, 4, 5];

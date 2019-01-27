@@ -1,8 +1,10 @@
 library tekartik_midi_file_player;
 
-import 'midi.dart';
 import 'dart:math';
+
 import 'package:tekartik_common_utils/log_utils.dart';
+
+import 'midi.dart';
 
 class PlayableEvent {
   num timestamp; // ms
@@ -58,9 +60,7 @@ class NoteOnKey {
   }
 }
 
-/**
- * For all tracks
- */
+/// For all tracks
 class LocatedEvent {
   num absoluteMs; // ms since start without speed ratio affected
 
@@ -75,13 +75,14 @@ class LocatedEvent {
 }
 
 class MidiFilePlayer {
-  Map<NoteOnKey, PlayableEvent> notesOn = Map();
+  Map<NoteOnKey, PlayableEvent> notesOn = {};
 
   MidiFile _file;
 
   MidiFilePlayer(this._file);
 
   bool get isPlaying => _startTimestamp != null && _lastPauseTimestamp == null;
+
   // in millis
   // This is changed when paused/resume
   num _startTimestamp;
@@ -123,12 +124,12 @@ class MidiFilePlayer {
 
   List<LocatedEvent> _prepareForLocation() {
     if (_locatedEvents == null) {
-      List<LocatedTrackPlayer> trackPlayers = List();
+      List<LocatedTrackPlayer> trackPlayers = [];
       for (int i = 0; i < _file.tracks.length; i++) {
         trackPlayers.add(LocatedTrackPlayer(_file.tracks[i]));
       }
 
-      _locatedEvents = List();
+      _locatedEvents = [];
 
       while (true) {
         // must be null each time
@@ -170,6 +171,7 @@ class MidiFilePlayer {
 
   // 1 means normal speed, 2 means twice faster, 0.5 means 50% slower
   num _speedRatio = 1;
+
   void setSpeedRatio(num ratio, [num currentTimestamp]) {
     // Change start time according to now
     if (currentTimestamp != null) {
@@ -244,7 +246,7 @@ class MidiFilePlayer {
   }
 
   void start(num timestamp) {
-    notesOn = Map();
+    notesOn = {};
     _locatedEvents = null;
     _startTimestamp = timestamp;
 

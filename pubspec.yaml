@@ -3,7 +3,7 @@ version: 0.1.0
 description: midi
 author: Alexandre Roux <alex@tekartik.com>
 environment:
-  sdk: '>=2.0.0-dev.58 <3.0.0'
+  sdk: '>=2.1.0 <3.0.0'
 dependencies:
   collection: any
   tekartik_common_utils:

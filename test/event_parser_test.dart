@@ -1,12 +1,12 @@
 library event_parser_test;
 
-import 'test_common.dart';
+import 'package:tekartik_common_utils/hex_utils.dart';
 import 'package:tekartik_midi/midi.dart';
 import 'package:tekartik_midi/midi_parser.dart';
 
-import 'package:tekartik_common_utils/hex_utils.dart';
+import 'test_common.dart';
 
-main() {
+void main() {
   group('midi event parser', () {
     test('parse event', () {
       List<int> data = [0, 0xff, 0x2f, 0];

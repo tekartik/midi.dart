@@ -7,7 +7,7 @@ import 'package:tekartik_midi/midi_writer.dart';
 import 'package:tekartik_midi/midi_parser.dart';
 import 'io_test_common.dart';
 
-main() {
+void main() {
   group('file writer', () {
     test('write header', () {
       MidiWriter midiWriter = MidiWriter();
@@ -40,7 +40,7 @@ main() {
           ]));
     });
 
-    writeReadAndCheck(MidiFile file) {
+    void writeReadAndCheck(MidiFile file) {
       List<int> data = FileWriter.fileData(file);
 
       //print(data);
@@ -60,14 +60,14 @@ main() {
     test('round check', () async {
       MidiFile file = MidiFile();
       file.timeDivision = 3;
-      await writeReadAndCheck(file);
+      writeReadAndCheck(file);
 
       MidiTrack track = MidiTrack();
       file.addTrack(track);
-      await writeReadAndCheck(file);
+      writeReadAndCheck(file);
 
       track.addEvent(1, NoteOnEvent(2, 42, 60));
-      await writeReadAndCheck(file);
+      writeReadAndCheck(file);
 
       file.addTrack(MidiTrack());
     });
@@ -80,7 +80,7 @@ main() {
       track.addEvent(1, NoteOnEvent(2, 42, 60));
       track.addEvent(1, NoteOffEvent(2, 42, 60));
       track.addEvent(1, EndOfTrackEvent());
-      await writeOnFileReadAndCheck('note_on_off.mid', file);
+      writeOnFileReadAndCheck('note_on_off.mid', file);
     });
   });
 }

@@ -2,11 +2,12 @@ library midi_player_test;
 
 import 'package:dev_test/test.dart';
 import 'package:tekartik_midi/midi.dart';
-import 'io_test_common.dart';
-import 'package:tekartik_midi/midi_parser.dart';
 import 'package:tekartik_midi/midi_file_player.dart';
+import 'package:tekartik_midi/midi_parser.dart';
 
-main() {
+import 'io_test_common.dart';
+
+void main() {
   // to skip
   group('midi_file_player_test_console', () {
     // to skip
