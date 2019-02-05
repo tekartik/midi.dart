@@ -80,7 +80,7 @@ void main() {
       track.addEvent(1, NoteOnEvent(2, 42, 60));
       track.addEvent(1, NoteOffEvent(2, 42, 60));
       track.addEvent(1, EndOfTrackEvent());
-      writeOnFileReadAndCheck('note_on_off.mid', file);
+      await writeOnFileReadAndCheck('note_on_off.mid', file);
     });
   });
 }

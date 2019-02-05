@@ -1,9 +1,9 @@
 name: tekartik_midi
-version: 0.3.0
+version: 0.3.1
 description: midi
 author: Alexandre Roux <alex@tekartik.com>
 environment:
-  sdk: '>=2.1.0 <3.0.0'
+  sdk: '>=2.1.0-dev <3.0.0'
 dependencies:
   collection: any
   tekartik_common_utils:
@@ -12,6 +12,7 @@ dependencies:
       ref: dart2
 
 dev_dependencies:
+  pedantic:
   dev_test: any
   test: any
   path: any
