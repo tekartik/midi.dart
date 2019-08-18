@@ -1,9 +1,9 @@
 language: dart
+dist: trusty
 dart:
   - stable
   - dev
-sudo: false
-before_install:
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
-script: pub run test -p vm
+before_script:
+  - source $(pub run chrome_travis:env_rc)
+script:
+  - dart tool/travis.dart

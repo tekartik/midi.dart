@@ -2,6 +2,7 @@ library tekartik_midi_player_base;
 
 import 'dart:async';
 import 'dart:math';
+
 import 'package:tekartik_midi/midi.dart';
 import 'package:tekartik_midi/midi_file_player.dart';
 
@@ -77,7 +78,7 @@ abstract class MidiPlayerBase {
 
   /// Send sound off to all channel
   void allSoundOff() {
-    for (int i = 0; i < MidiEvent.CHANNEL_COUNT; i++) {
+    for (int i = 0; i < MidiEvent.channelCount; i++) {
       PlayableEvent playableEvent = PlayableEvent(
           nowToTimestamp(), ControlChangeEvent.newAllSoundOffEvent(i));
       playEvent(playableEvent);
@@ -85,7 +86,7 @@ abstract class MidiPlayerBase {
   }
 
   void allNotesOff() {
-    for (int i = 0; i < MidiEvent.CHANNEL_COUNT; i++) {
+    for (int i = 0; i < MidiEvent.channelCount; i++) {
       PlayableEvent playableEvent = PlayableEvent(
           nowToTimestamp(), ControlChangeEvent.newAllSoundOffEvent(i));
       playEvent(playableEvent);
@@ -93,7 +94,7 @@ abstract class MidiPlayerBase {
   }
 
   void allReset() {
-    for (int i = 0; i < MidiEvent.CHANNEL_COUNT; i++) {
+    for (int i = 0; i < MidiEvent.channelCount; i++) {
       PlayableEvent playableEvent = PlayableEvent(
           nowToTimestamp(), ControlChangeEvent.newAllResetEvent(i));
       playEvent(playableEvent);
@@ -104,8 +105,8 @@ abstract class MidiPlayerBase {
     //allSoundOff();
     //allReset();
 
-    for (int j = 0; j < MidiEvent.NOTE_COUNT; j++) {
-      for (int i = 0; i < MidiEvent.CHANNEL_COUNT; i++) {
+    for (int j = 0; j < MidiEvent.noteCount; j++) {
+      for (int i = 0; i < MidiEvent.channelCount; i++) {
         PlayableEvent playableEvent =
             PlayableEvent(nowToTimestamp(), NoteOffEvent(i, j, 0));
         playEvent(playableEvent);
@@ -346,7 +347,7 @@ abstract class MidiPlayerBase {
 
   MidiPlayerBase(this.noteOnLastTimestamp);
 
-  Set<NoteOnKey> noteOnKeys = Set();
+  final noteOnKeys = <NoteOnKey>{};
   num noteOnLastTimestamp;
 
   // to implement

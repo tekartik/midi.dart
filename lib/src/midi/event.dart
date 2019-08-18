@@ -5,6 +5,7 @@ import 'package:tekartik_midi/midi_buffer.dart';
 import 'package:tekartik_midi/midi_parser.dart';
 import 'package:tekartik_midi/midi_writer.dart';
 import 'package:tekartik_midi/src/parser/binary_parser.dart';
+// ignore_for_file: constant_identifier_names
 
 class TrackEvent {
   int deltaTime;
@@ -49,8 +50,14 @@ abstract class MidiEvent {
   /// per minute is assumed.
   int command;
 
+  // 2018-09-22
+  @deprecated
   static const int CHANNEL_COUNT = 16;
+  static const int channelCount = 16;
+  // 2018-09-22
+  @deprecated
   static const int NOTE_COUNT = 128;
+  static const int noteCount = 128;
 
   // Control command
   static const int noteOff = 8;
