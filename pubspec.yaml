@@ -1,16 +1,16 @@
 name: tekartik_midi
-version: 0.3.1
+version: 0.3.2
 description: midi
 author: Alexandre Roux <alex@tekartik.com>
 environment:
-  sdk: '>=2.1.0-dev <3.0.0'
+  sdk: '>=2.4.0-dev <3.0.0'
 dependencies:
   collection: any
   tekartik_common_utils:
     git:
       url: git://github.com/tekartik/common_utils.dart
       ref: dart2
-    version: '>=0.9.3+2'
+    version: '>=0.10.7'
 
 dev_dependencies:
   pedantic:
@@ -19,3 +19,10 @@ dev_dependencies:
   path: any
   build_runner: '>=0.9.0'
   build_test: '>=0.10.2'
+  process_run: '>=0.10.2'
+  build_web_compilers: '>=0.4.0'
+  chrome_travis:
+    git:
+      url: git://github.com/tekartik/chrome_travis.dart
+      ref: dart2
+    version: '>=0.1.4'

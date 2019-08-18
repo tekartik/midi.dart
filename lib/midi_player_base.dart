@@ -2,6 +2,7 @@ library tekartik_midi_player_base;
 
 import 'dart:async';
 import 'dart:math';
+
 import 'package:tekartik_midi/midi.dart';
 import 'package:tekartik_midi/midi_file_player.dart';
 
@@ -346,7 +347,7 @@ abstract class MidiPlayerBase {
 
   MidiPlayerBase(this.noteOnLastTimestamp);
 
-  Set<NoteOnKey> noteOnKeys = Set();
+  final noteOnKeys = <NoteOnKey>{};
   num noteOnLastTimestamp;
 
   // to implement
