@@ -194,12 +194,12 @@ void main() {
       track.addEvent(240, event);
       file.ppq = 240;
 
-      expect(getMidiFileDuration(file), Duration(milliseconds: 501));
+      expect(getMidiFileDuration(file), const Duration(milliseconds: 501));
       expect(MidiFilePlayer(file).totalDurationMs,
           closeTo(getMidiFileDuration(file).inMilliseconds, 1));
 
       track.addEvent(240, event);
-      expect(getMidiFileDuration(file), Duration(milliseconds: 1001));
+      expect(getMidiFileDuration(file), const Duration(milliseconds: 1001));
       expect(MidiFilePlayer(file).totalDurationMs,
           closeTo(getMidiFileDuration(file).inMilliseconds, 1));
     });

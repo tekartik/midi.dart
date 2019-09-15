@@ -19,7 +19,7 @@ void main() {
         expect(file.trackCount, 30);
 
         expect(getMidiFileDuration(file),
-            Duration(minutes: 2, seconds: 26, milliseconds: 785));
+            const Duration(minutes: 2, seconds: 26, milliseconds: 785));
         expect(
             Duration(
                 milliseconds: MidiFilePlayer(file).totalDurationMs.round()),
