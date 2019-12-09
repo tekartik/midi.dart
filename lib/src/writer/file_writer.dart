@@ -24,18 +24,18 @@ class FileWriter extends ObjectWriter {
 
   void writeFile([MidiFile _file]) {
     if (_file != null) {
-      this.file = _file;
+      file = _file;
     }
     writeHeader();
     file.tracks.forEach((MidiTrack track) {
-      TrackWriter trackWriter = TrackWriter(midiWriter);
+      final trackWriter = TrackWriter(midiWriter);
       trackWriter.writeTrack(track);
     });
   }
 
   static List<int> fileData(MidiFile file) {
-    MidiWriter midiWriter = MidiWriter();
-    FileWriter writer = FileWriter(midiWriter);
+    final midiWriter = MidiWriter();
+    final writer = FileWriter(midiWriter);
     writer.writeFile(file);
     return midiWriter.data;
   }

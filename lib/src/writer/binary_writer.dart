@@ -1,5 +1,5 @@
 abstract class BinaryWriter {
-  List<int> _data = [];
+  final _data = <int>[];
   int position = 0;
 
   List<int> get data => _data;

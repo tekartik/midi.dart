@@ -1,4 +1,4 @@
-@TestOn("vm")
+@TestOn('vm')
 library file_writer_test;
 
 import 'package:tekartik_common_utils/common_utils_import.dart';
@@ -10,10 +10,10 @@ import 'io_test_common.dart';
 void main() {
   group('file writer', () {
     test('write header', () {
-      MidiWriter midiWriter = MidiWriter();
-      FileWriter writer = FileWriter(midiWriter);
+      final midiWriter = MidiWriter();
+      final writer = FileWriter(midiWriter);
 
-      MidiFile file = MidiFile();
+      final file = MidiFile();
       file.fileFormat = 1;
       file.trackCount = 2;
       file.timeDivision = 3;
@@ -41,14 +41,14 @@ void main() {
     });
 
     void writeReadAndCheck(MidiFile file) {
-      List<int> data = FileWriter.fileData(file);
+      final data = FileWriter.fileData(file);
 
       //print(data);
       expect(FileParser.dataFile(data), file);
     }
 
     Future writeOnFileReadAndCheck(String filename, MidiFile file) async {
-      List<int> data = FileWriter.fileData(file);
+      final data = FileWriter.fileData(file);
       var ioFile = File(outDataFilenamePath(filename));
       await ioFile.parent.create(recursive: true);
       await ioFile.writeAsBytes(data);
@@ -58,11 +58,11 @@ void main() {
     }
 
     test('round check', () async {
-      MidiFile file = MidiFile();
+      final file = MidiFile();
       file.timeDivision = 3;
       writeReadAndCheck(file);
 
-      MidiTrack track = MidiTrack();
+      final track = MidiTrack();
       file.addTrack(track);
       writeReadAndCheck(file);
 
@@ -73,9 +73,9 @@ void main() {
     });
 
     test('note on note off', () async {
-      MidiFile file = MidiFile();
+      final file = MidiFile();
       file.timeDivision = 3;
-      MidiTrack track = MidiTrack();
+      final track = MidiTrack();
       file.addTrack(track);
       track.addEvent(1, NoteOnEvent(2, 42, 60));
       track.addEvent(1, NoteOffEvent(2, 42, 60));

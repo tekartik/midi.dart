@@ -3,11 +3,11 @@ library midi_demo_file;
 import 'package:tekartik_midi/midi.dart';
 
 MidiFile getDemoFileCDE() {
-  MidiFile file = MidiFile();
+  final file = MidiFile();
   file.fileFormat = MidiFile.formatMultiTrack;
   file.ppq = 240;
 
-  MidiTrack track = MidiTrack();
+  var track = MidiTrack();
   track.addEvent(0, TimeSigEvent(4, 4));
   track.addEvent(0, TempoEvent.bpm(120));
   track.addEvent(0, EndOfTrackEvent());

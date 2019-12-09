@@ -43,8 +43,8 @@ abstract class MidiPlayerBase {
   Stream<bool> playingStream;
 
   /// time to send the event before the real event occured
-  int _preFillDuration = 200;
-  int _timerResolution = 50;
+  final _preFillDuration = 200;
+  final _timerResolution = 50;
 
   PlayableEvent _currentEvent;
 
@@ -60,7 +60,7 @@ abstract class MidiPlayerBase {
       isPlaying ? (isPaused ? _lastPauseTime : _nowTimestamp) : null;
 
   Duration get currentTimestampDuration {
-    num _now = currentTimestamp;
+    final _now = currentTimestamp;
     if (_now != null) {
       return Duration(milliseconds: _now.toInt());
     }
@@ -69,33 +69,32 @@ abstract class MidiPlayerBase {
 
   // estimation
   num nowToTimestamp([num now]) {
-    if (now == null) {
-      now = this.now;
-    }
+    now ??= this.now;
+
     return now;
     //return now - startNow - _nowDelta; // - _preFillDuration - _preFillDuration;
   }
 
   /// Send sound off to all channel
   void allSoundOff() {
-    for (int i = 0; i < MidiEvent.channelCount; i++) {
-      PlayableEvent playableEvent = PlayableEvent(
+    for (var i = 0; i < MidiEvent.channelCount; i++) {
+      final playableEvent = PlayableEvent(
           nowToTimestamp(), ControlChangeEvent.newAllSoundOffEvent(i));
       playEvent(playableEvent);
     }
   }
 
   void allNotesOff() {
-    for (int i = 0; i < MidiEvent.channelCount; i++) {
-      PlayableEvent playableEvent = PlayableEvent(
+    for (var i = 0; i < MidiEvent.channelCount; i++) {
+      final playableEvent = PlayableEvent(
           nowToTimestamp(), ControlChangeEvent.newAllSoundOffEvent(i));
       playEvent(playableEvent);
     }
   }
 
   void allReset() {
-    for (int i = 0; i < MidiEvent.channelCount; i++) {
-      PlayableEvent playableEvent = PlayableEvent(
+    for (var i = 0; i < MidiEvent.channelCount; i++) {
+      final playableEvent = PlayableEvent(
           nowToTimestamp(), ControlChangeEvent.newAllResetEvent(i));
       playEvent(playableEvent);
     }
@@ -105,9 +104,9 @@ abstract class MidiPlayerBase {
     //allSoundOff();
     //allReset();
 
-    for (int j = 0; j < MidiEvent.noteCount; j++) {
-      for (int i = 0; i < MidiEvent.channelCount; i++) {
-        PlayableEvent playableEvent =
+    for (var j = 0; j < MidiEvent.noteCount; j++) {
+      for (var i = 0; i < MidiEvent.channelCount; i++) {
+        final playableEvent =
             PlayableEvent(nowToTimestamp(), NoteOffEvent(i, j, 0));
         playEvent(playableEvent);
       }
@@ -141,7 +140,7 @@ abstract class MidiPlayerBase {
   }
 
   void resume([num time]) {
-    num _now = time == null ? now : time;
+    final _now = time ?? now;
     if (isPaused) {
       _nowDelta += _now - _lastPauseTime;
     }
@@ -278,15 +277,15 @@ abstract class MidiPlayerBase {
         pause();
       }
     } else {
-      num nowTimestamp = _nowTimestamp; //stopwatch.elapsedMilliseconds;
+      final nowTimestamp = _nowTimestamp; //stopwatch.elapsedMilliseconds;
 
       if (_currentEvent.timestamp < nowTimestamp) {
-        //devPrint("## $now: $_currentEvent");
+        //devPrint('## $now: $_currentEvent');
         _streamController.add(_currentEvent);
         _currentEvent = _midiFilePlayer.next;
         _playNext();
       } else {
-        Completer nextCompleter = Completer.sync();
+        final nextCompleter = Completer.sync();
         _waitPlayNextCompleter = nextCompleter;
         Future.delayed(
             Duration(
@@ -303,7 +302,7 @@ abstract class MidiPlayerBase {
         nextCompleter.future.then((_) {
           _playNext();
         }, onError: (_) {
-          //devPrint("was paused");
+          //devPrint('was paused');
         });
       }
     }
@@ -358,11 +357,11 @@ abstract class MidiPlayerBase {
     // first play it
     rawPlayEvent(event);
 
-    MidiEvent midiEvent = event.midiEvent;
+    final midiEvent = event.midiEvent;
 
     // And Note on event and remove note off event (and note on with velocity 0)
     if (midiEvent is NoteOnEvent) {
-      NoteOnKey key = NoteOnKey(midiEvent.channel, midiEvent.note);
+      final key = NoteOnKey(midiEvent.channel, midiEvent.note);
 
       // save last timestamp to queue note off afterwards on pause
       if (noteOnLastTimestamp == null ||
@@ -376,23 +375,23 @@ abstract class MidiPlayerBase {
         noteOnKeys.remove(key);
       }
     } else if (midiEvent is NoteOffEvent) {
-      NoteOnKey key = NoteOnKey(midiEvent.channel, midiEvent.note);
+      final key = NoteOnKey(midiEvent.channel, midiEvent.note);
       noteOnKeys.remove(key);
     }
   }
 
   void pause() {
     if (isPlaying) {
-      num nowTimestamp = nowToTimestamp();
+      final nowTimestamp = nowToTimestamp();
 
       _midiFilePlayer.pause(nowTimestamp);
 
       // Kill pending _playNext)
       if (_waitPlayNextCompleter != null) {
-        _waitPlayNextCompleter.completeError("paused");
+        _waitPlayNextCompleter.completeError('paused');
         _waitPlayNextCompleter = null;
       }
-      num timestamp = noteOnLastTimestamp;
+      var timestamp = noteOnLastTimestamp;
       if (timestamp == null) {
         timestamp = nowTimestamp;
       } else {
@@ -400,8 +399,8 @@ abstract class MidiPlayerBase {
       }
       //devPrint('###### $timestamp - ${nowToTimestamp()}/last: $noteOnLastTimestamp');
       // Clear the notes sent
-      for (NoteOnKey key in noteOnKeys) {
-        PlayableEvent event =
+      for (final key in noteOnKeys) {
+        final event =
             PlayableEvent(timestamp, NoteOffEvent(key.channel, key.note, 0));
         //devPrint(event);
         rawPlayEvent(event);

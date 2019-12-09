@@ -1,7 +1,7 @@
 import 'package:tekartik_midi/midi_writer.dart';
 
 class ObjectWriter {
-  MidiWriter _midiWriter;
+  final MidiWriter _midiWriter;
   ObjectWriter(this._midiWriter);
 
   MidiWriter get midiWriter => _midiWriter;

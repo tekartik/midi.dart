@@ -20,7 +20,7 @@ class MidiFile {
   /// per beat and the length of one tick is
   ///
   /// 1 tick = microseconds per beat / 60
-  /// The variable "microseconds per beat" is specified by a MIDI event carrying the set tempo meta message.
+  /// The variable 'microseconds per beat' is specified by a MIDI event carrying the set tempo meta message.
   /// If it is not specified then it is 500,000 microseconds by default, which is equivalent to 120 beats per minute.
   /// In the example above, if the MIDI time division is 60 ticks per beat and if the microseconds per beat is 500,000,
   /// then 1 tick = 500,000 / 60 = 8333.33 microseconds.
@@ -28,7 +28,7 @@ class MidiFile {
   int get ppq => _ppq;
   set ppq(int ppq) {
     if ((ppq & 0x8000) != 0) {
-      throw const FormatException("invalid pulses per quarter note");
+      throw const FormatException('invalid pulses per quarter note');
     }
     timeDivision = ppq;
   }
@@ -81,7 +81,7 @@ class MidiFile {
       _divisionCountPerFrame = null;
     } else {
       _ppq = null;
-      int framesPerSecondEncoded = 256 - (timeDivision >> 8) & 0xFF;
+      final framesPerSecondEncoded = 256 - (timeDivision >> 8) & 0xFF;
 
       switch (framesPerSecondEncoded) {
         case 24:
@@ -97,7 +97,7 @@ class MidiFile {
           _frameCoundPerSecond = 29.97;
           break;
         default:
-          throw const FormatException("invalid frames per second");
+          throw const FormatException('invalid frames per second');
       }
       _divisionCountPerFrame = (timeDivision & 0xFF);
     }
@@ -127,7 +127,7 @@ class MidiFile {
 
   @override
   int get hashCode {
-    int hash = (fileFormat * 17 + trackCount) * 31;
+    var hash = (fileFormat * 17 + trackCount) * 31;
     if (tracks.isNotEmpty) {
       hash += tracks.hashCode;
     }
@@ -147,7 +147,7 @@ class MidiFile {
 
   @override
   String toString() {
-    StringBuffer out = StringBuffer();
+    final out = StringBuffer();
     out.write('format $fileFormat $trackCount tracks ppq $ppq');
     if (tracks.isNotEmpty) {
       out.write(' ${tracks[0].toString()}');
@@ -168,7 +168,7 @@ class MidiFile {
       print('framesPerSecond: $frameCountPerSecond');
       print('divisionsPerFrame: $divisionCountPerFrame');
     }
-    int index = 0;
+    var index = 0;
     tracks.forEach((MidiTrack track) {
       print('Track ${++index}');
       track.dump();

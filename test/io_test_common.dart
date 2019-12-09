@@ -6,7 +6,7 @@ export 'dart:io';
 
 export 'test_common.dart';
 
-String inDataFilenamePath(String name) => join('test', "data", name);
+String inDataFilenamePath(String name) => join('test', 'data', name);
 
 String get outDataPath => join('.dart_tool', 'tekartik_midi', 'test');
 

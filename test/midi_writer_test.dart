@@ -7,7 +7,7 @@ import 'test_common.dart';
 void main() {
   group('midi writer', () {
     test('write variable length data', () {
-      MidiWriter writer = MidiWriter();
+      var writer = MidiWriter();
 
       writer.writeVariableLengthData(0);
       expect(writer.data, equals([0]));

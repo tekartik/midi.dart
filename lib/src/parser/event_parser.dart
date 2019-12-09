@@ -16,10 +16,10 @@ class EventParser extends ObjectParser {
 
   MidiEvent parseEvent() {
     deltaTime = midiParser.readVariableLengthData();
-    int command = midiParser.readUint8();
+    var command = midiParser.readUint8();
     if ((command & 0x80) == 0) {
       if ((lastCommand & 0x80) == 0) {
-        throw const FormatException("invalid last command");
+        throw const FormatException('invalid last command');
       }
       command = lastCommand;
       // We go back 1
@@ -35,7 +35,7 @@ class EventParser extends ObjectParser {
         // sysex?
         event = SysExEvent.withParam(command);
       } else {
-        int metaCommand = midiParser.readUint8();
+        final metaCommand = midiParser.readUint8();
         event = MetaEvent.base(command, metaCommand);
       }
     } else {
@@ -47,8 +47,8 @@ class EventParser extends ObjectParser {
 
   /// for testing only
   static MidiEvent dataParseEvent(List<int> data) {
-    MidiParser midiParser = MidiParser(data);
-    EventParser parser = EventParser(midiParser);
+    final midiParser = MidiParser(data);
+    final parser = EventParser(midiParser);
     return parser.parseEvent();
   }
 }

@@ -7,10 +7,10 @@ import 'test_common.dart';
 void main() {
   group('midi track', () {
     test('track equals', () {
-      MidiTrack track = MidiTrack();
+      final track = MidiTrack();
       expect(track, track);
 
-      MidiTrack track2 = MidiTrack();
+      final track2 = MidiTrack();
       expect(track, track2);
 
       track.addEvent(0, TempoEvent(120));

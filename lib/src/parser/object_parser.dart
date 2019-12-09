@@ -3,7 +3,7 @@ import 'package:tekartik_midi/midi_parser.dart';
 
 class ObjectParser {
   MidiParser get midiParser => _midiParser;
-  MidiParser _midiParser;
+  final MidiParser _midiParser;
   ObjectParser(this._midiParser);
 
   void readBuffer(int size) {

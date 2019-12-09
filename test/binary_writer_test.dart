@@ -7,8 +7,8 @@ import 'test_common.dart';
 void main() {
   group('binary writer', () {
     test('write BE', () {
-      BinaryBEWriter writer = BinaryBEWriter();
-      List<int> data = [0xAB, 0, 1, 0xCD, 0xEF, 2, 3, 4, 5];
+      final writer = BinaryBEWriter();
+      final data = <int>[0xAB, 0, 1, 0xCD, 0xEF, 2, 3, 4, 5];
       writer.writeUint8(0xAB);
       writer.writeUint16(1);
       writer.writeUint16(0xCDEF);

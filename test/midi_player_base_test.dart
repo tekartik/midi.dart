@@ -10,9 +10,8 @@ import 'test_common.dart';
 class _TestMidiPlayer extends MidiPlayerBase {
   @override
   num nowToTimestamp([num now]) {
-    if (now == null) {
-      now = this.now;
-    }
+    now ??= this.now;
+
     return now;
   }
 
@@ -31,7 +30,7 @@ class _TestMidiPlayer extends MidiPlayerBase {
 void main() {
   group('player_base', () {
     test('note_on_key', () {
-      NoteOnKey key = NoteOnKey(0, 0);
+      var key = NoteOnKey(0, 0);
       expect(key, key);
       expect(key, NoteOnKey(0, 0));
       expect(key, isNot(NoteOnKey(0, 1)));
@@ -78,7 +77,7 @@ void main() {
     });
 
     test('status_play', () {
-      _TestMidiPlayer player = _TestMidiPlayer(10, null);
+      final player = _TestMidiPlayer(10, null);
       expect(player.noteOnLastTimestamp, null);
       expect(player.isPlaying, false);
       expect(player.isPaused, false);
@@ -104,7 +103,7 @@ void main() {
     });
 
     test('status_pause', () {
-      _TestMidiPlayer player = _TestMidiPlayer(10, null);
+      final player = _TestMidiPlayer(10, null);
       expect(player.noteOnLastTimestamp, null);
       expect(player.isPlaying, false);
       expect(player.isPaused, false);

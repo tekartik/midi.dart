@@ -62,7 +62,7 @@ class OutBuffer extends Buffer {
 
   bool equalsList(List<int> data) {
     if (length == data.length) {
-      for (int i = 0; i < length; i++) {
+      for (var i = 0; i < length; i++) {
         if (data[i] != _data[i]) {
           return false;
         }

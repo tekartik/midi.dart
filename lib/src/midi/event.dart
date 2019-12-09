@@ -115,7 +115,7 @@ abstract class MidiEvent {
   factory MidiEvent.base(int command) {
     MidiEvent event;
 
-    int codeCommand = commandGetCommand(command);
+    final codeCommand = commandGetCommand(command);
     switch (codeCommand) {
       case noteOff:
         event = NoteOffEvent._();
@@ -166,7 +166,7 @@ abstract class MidiEvent {
 
   @override
   String toString() {
-    return "${hexUint8(command)}";
+    return '${hexUint8(command)}';
   }
 }
 
@@ -208,7 +208,7 @@ abstract class Param1ByteEvent extends ChannelEvent {
 
   @override
   String toString() {
-    return "${super.toString()} p1 ${_param1}";
+    return '${super.toString()} p1 ${_param1}';
   }
 }
 
@@ -224,7 +224,7 @@ class ProgramChangeEvent extends Param1ByteEvent {
 
   @override
   String toString() {
-    return "${super.toString()} program change";
+    return '${super.toString()} program change';
   }
 }
 
@@ -261,7 +261,7 @@ abstract class Param2BytesEvent extends Param1ByteEvent {
 
   @override
   String toString() {
-    return "${super.toString()} p2 ${_param2}";
+    return '${super.toString()} p2 ${_param2}';
   }
 }
 
@@ -278,7 +278,7 @@ class ChannelAfterTouchEvent extends Param1ByteEvent {
 
   @override
   String toString() {
-    return "${super.toString()} channel after touch";
+    return '${super.toString()} channel after touch';
   }
 }
 
@@ -314,7 +314,7 @@ class NoteOnEvent extends NoteEvent {
 
   @override
   String toString() {
-    return "${super.toString()} note on";
+    return '${super.toString()} note on';
   }
 }
 
@@ -325,7 +325,7 @@ class NoteOffEvent extends NoteEvent {
 
   @override
   String toString() {
-    return "${super.toString()} note off";
+    return '${super.toString()} note off';
   }
 }
 
@@ -336,7 +336,7 @@ class KeyAfterTouchEvent extends NoteEvent {
 
   @override
   String toString() {
-    return "${super.toString()} after touch";
+    return '${super.toString()} after touch';
   }
 }
 
@@ -358,7 +358,7 @@ class PitchWheelChangeEvent extends Param2BytesEvent {
 
   @override
   String toString() {
-    return "${super.toString()} pitch wheel change";
+    return '${super.toString()} pitch wheel change';
   }
 }
 
@@ -386,7 +386,7 @@ class ControlChangeEvent extends Param2BytesEvent {
 
   @override
   String toString() {
-    return "${super.toString()} control change";
+    return '${super.toString()} control change';
   }
 
   static ControlChangeEvent newAllSoundOffEvent(int channel) =>
@@ -417,9 +417,9 @@ class SysExEvent extends MidiEvent {
 
   @override
   void readData(MidiParser parser) {
-    int dataSize = parser.readVariableLengthData();
+    var dataSize = parser.readVariableLengthData();
     if (dataSize > 0) {
-      OutBuffer buffer = OutBuffer(dataSize);
+      final buffer = OutBuffer(dataSize);
       parser.read(buffer, dataSize);
       data = buffer.data;
     }
@@ -427,7 +427,7 @@ class SysExEvent extends MidiEvent {
 
   @override
   void writeData(MidiWriter writer) {
-    int dataSize = data == null ? 0 : data.length;
+    final dataSize = data == null ? 0 : data.length;
     writer.writeVariableLengthData(dataSize);
     if (dataSize > 0) {
       writer.write(data);
@@ -447,7 +447,7 @@ class SysExEvent extends MidiEvent {
 
   @override
   String toString() {
-    return "${super.toString()} sysex data ${hexQuickView(data)}";
+    return '${super.toString()} sysex data ${hexQuickView(data)}';
   }
 }
 
@@ -475,7 +475,7 @@ abstract class MetaEvent extends MidiEvent {
             .cmdMetaEvent); // properly use the full command here (i.e. 0xFF)
 
   factory MetaEvent(int metaCommand, [List<int> data]) {
-    MetaEvent event = MetaEvent.base(MidiEvent.cmdMetaEvent, metaCommand);
+    final event = MetaEvent.base(MidiEvent.cmdMetaEvent, metaCommand);
     // ignore: prefer_initializing_formals
     event.data = data;
     return event;
@@ -506,12 +506,11 @@ abstract class MetaEvent extends MidiEvent {
   @override
   void readData(MidiParser parser) {
     // Don't re-read meta command
-    if (metaCommand == null) {
-      metaCommand = parser.readUint8();
-    }
-    int dataSize = parser.readVariableLengthData();
+    metaCommand ??= parser.readUint8();
+
+    final dataSize = parser.readVariableLengthData();
     if (dataSize > 0) {
-      OutBuffer buffer = OutBuffer(dataSize);
+      final buffer = OutBuffer(dataSize);
       parser.read(buffer, dataSize);
       data = buffer.data;
     }
@@ -520,7 +519,7 @@ abstract class MetaEvent extends MidiEvent {
   @override
   void writeData(MidiWriter writer) {
     writer.writeUint8(metaCommand);
-    int dataSize = data == null ? 0 : data.length;
+    final dataSize = data == null ? 0 : data.length;
     writer.writeVariableLengthData(dataSize);
     if (dataSize > 0) {
       writer.write(data);
@@ -543,7 +542,7 @@ abstract class MetaEvent extends MidiEvent {
 
   @override
   String toString() {
-    return "${super.toString()} meta ${metaCommand} data ${hexQuickView(data)}";
+    return '${super.toString()} meta ${metaCommand} data ${hexQuickView(data)}';
   }
 }
 
@@ -591,14 +590,14 @@ class TimeSigEvent extends MetaEvent {
   }
 
   static int bottomToDenom(int bottom) {
-    int denominator = 0;
-    int initialBottom = bottom;
+    var denominator = 0;
+    var initialBottom = bottom;
     while (bottom > 1) {
       bottom >>= 1;
       denominator++;
     }
     if (1 << denominator != initialBottom) {
-      throw FormatException("bottom $bottom not supported");
+      throw FormatException('bottom $bottom not supported');
     }
     return denominator;
   }
@@ -640,12 +639,12 @@ class TimeSigEvent extends MetaEvent {
 
   @override
   String toString() {
-    return "${super.toString()} ${top}/${bottom} ${data[2]} ${data[3]}";
+    return '${super.toString()} ${top}/${bottom} ${data[2]} ${data[3]}';
   }
 //
 //    @Override
 //    public String toString() {
-//      return String.format("%s time_sig %d/%d %d %d", super.toString(),
+//      return String.format('%s time_sig %d/%d %d %d', super.toString(),
 //          (int) data[0], getDenominator(), (int) data[2],
 //          (int) data[3]);
 //    }
@@ -689,7 +688,7 @@ class TempoEvent extends MetaEvent {
 
   @override
   String toString() {
-    return "${super.toString()} bpm $tempoBpm";
+    return '${super.toString()} bpm $tempoBpm';
   }
 }
 
@@ -712,7 +711,7 @@ class EndOfTrackEvent extends MetaEvent {
 
   @override
   String toString() {
-    return "${super.toString()} eot";
+    return '${super.toString()} eot';
   }
 }
 
