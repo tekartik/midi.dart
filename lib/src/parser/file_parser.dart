@@ -16,12 +16,12 @@ class FileParser extends ObjectParser {
   ];
 
   void parseTracks() {
-    TrackParser trackParser = TrackParser(midiParser);
+    final trackParser = TrackParser(midiParser);
 
     // Clear track count
-    int trackCount = file.trackCount;
+    final trackCount = file.trackCount;
     file.trackCount = 0;
-    for (int i = 0; i < trackCount; i++) {
+    for (var i = 0; i < trackCount; i++) {
       //print(hexPretty(_midiParser.inBuffer.buildRemainingData().sublist(0, 20)));
       trackParser.parseTrack();
       file.addTrack(trackParser.track);
@@ -36,11 +36,11 @@ class FileParser extends ObjectParser {
   void parseHeader() {
     readBuffer(4);
     if (!buffer.equalsList(fileHeader)) {
-      throw const FormatException("Bad file header");
+      throw const FormatException('Bad file header');
     }
-    int dataHeaderLen = midiParser.readUint32();
+    final dataHeaderLen = midiParser.readUint32();
     if (dataHeaderLen < 6) {
-      throw const FormatException("Bad data header len");
+      throw const FormatException('Bad data header len');
     }
     file = MidiFile();
 
@@ -54,7 +54,7 @@ class FileParser extends ObjectParser {
 
   /// Parser helper
   static MidiFile dataFile(List<int> data) {
-    FileParser parser = FileParser(MidiParser(data));
+    final parser = FileParser(MidiParser(data));
     parser.parseFile();
     return parser.file;
   }

@@ -7,7 +7,7 @@ import 'test_common.dart';
 void main() {
   group('midi file', () {
     test('time divisions ppq', () {
-      MidiFile file = MidiFile();
+      final file = MidiFile();
       file.timeDivision = 3;
 
       expect(file.ppq, file.timeDivision);
@@ -20,7 +20,7 @@ void main() {
     });
 
     test('time divisions frame', () {
-      MidiFile file = MidiFile();
+      final file = MidiFile();
       file.timeDivision = 59176;
 
       expect(file.ppq, null);
@@ -34,10 +34,10 @@ void main() {
     });
 
     test('file equals', () {
-      MidiFile file = MidiFile();
+      final file = MidiFile();
       expect(file, file);
 
-      MidiFile file2 = MidiFile();
+      final file2 = MidiFile();
       expect(file, file2);
 
       file2.timeDivision = 1;
@@ -49,11 +49,11 @@ void main() {
       file.fileFormat = 0;
       expect(file, file2);
 
-      MidiTrack track = MidiTrack();
+      final track = MidiTrack();
       file.addTrack(track);
 
       expect(file, isNot(file2));
-      MidiTrack track2 = MidiTrack();
+      final track2 = MidiTrack();
       expect(track, track2);
 //
 //      track.events.add(new TempoEvent(0, 120));

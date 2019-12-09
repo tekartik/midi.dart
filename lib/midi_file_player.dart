@@ -30,7 +30,7 @@ class LocatedTrackPlayer {
   LocatedEvent current(num timeUnitInMs) {
     if (_current == null) {
       if (_currentEventIndex < track.events.length) {
-        TrackEvent trackEvent = track.events[_currentEventIndex];
+        final trackEvent = track.events[_currentEventIndex];
         _currentEventMs += trackEvent.deltaTime * timeUnitInMs;
         _current = LocatedEvent(_currentEventMs, trackEvent.midiEvent);
       }
@@ -77,7 +77,7 @@ class LocatedEvent {
 class MidiFilePlayer {
   Map<NoteOnKey, PlayableEvent> notesOn = {};
 
-  MidiFile _file;
+  final MidiFile _file;
 
   MidiFilePlayer(this._file);
 
@@ -114,7 +114,7 @@ class MidiFilePlayer {
 
   // from 0 to 1
   num getProgress(num currentTimestamp) {
-    num totalDuration = totalDurationMs;
+    final totalDuration = totalDurationMs;
     if (totalDuration == 0) {
       return 0;
     }
@@ -124,8 +124,8 @@ class MidiFilePlayer {
 
   List<LocatedEvent> _prepareForLocation() {
     if (_locatedEvents == null) {
-      List<LocatedTrackPlayer> trackPlayers = [];
-      for (int i = 0; i < _file.tracks.length; i++) {
+      final trackPlayers = <LocatedTrackPlayer>[];
+      for (var i = 0; i < _file.tracks.length; i++) {
         trackPlayers.add(LocatedTrackPlayer(_file.tracks[i]));
       }
 
@@ -137,10 +137,9 @@ class MidiFilePlayer {
         num nextMs;
 
         trackPlayers.forEach((LocatedTrackPlayer trackPlayer) {
-          LocatedEvent event =
-              trackPlayer.current(currentDeltaTimeUnitInMillis);
+          final event = trackPlayer.current(currentDeltaTimeUnitInMillis);
           if (event != null) {
-            num trackNextMs = event.absoluteMs;
+            final trackNextMs = event.absoluteMs;
             if (nextMs == null || (trackNextMs < nextMs)) {
               nextMs = trackNextMs;
               nextTrackPlayer = trackPlayer;
@@ -149,14 +148,13 @@ class MidiFilePlayer {
         });
 
         if (nextTrackPlayer != null) {
-          LocatedEvent event =
-              nextTrackPlayer.current(currentDeltaTimeUnitInMillis);
+          final event = nextTrackPlayer.current(currentDeltaTimeUnitInMillis);
           // if no next, remove track
           if (nextTrackPlayer.next(currentDeltaTimeUnitInMillis) == null) {
             trackPlayers.remove(nextTrackPlayer);
           }
 
-          MidiEvent midiEvent = event.midiEvent;
+          final midiEvent = event.midiEvent;
           if (midiEvent is TempoEvent) {
             _setCurrentTempoEvent(midiEvent);
           }
@@ -178,7 +176,7 @@ class MidiFilePlayer {
       // The delta has the old ratio
       // start        current
       //   |------------|
-      num currentMs = timestampToAbsoluteMs(currentTimestamp);
+      final currentMs = timestampToAbsoluteMs(currentTimestamp);
       _speedRatio = ratio;
       _startTimestamp -= (absoluteMsToTimestamp(currentMs) - currentTimestamp);
     } else {
@@ -206,7 +204,7 @@ class MidiFilePlayer {
   num get currentDeltaTimeUnitInMillis {
     if (_currentDeltaTimeUnitInMillis == null) {
       // beat = quarter note
-      num beatPerMillis = _currentTempoEvent.beatPerMillis;
+      final beatPerMillis = _currentTempoEvent.beatPerMillis;
 
       // check midi docs here
       if (_file.ppq != null) {
@@ -240,9 +238,7 @@ class MidiFilePlayer {
 
   // don't pause if not paused yet
   void pause(num timestamp) {
-    if (_lastPauseTimestamp == null) {
-      _lastPauseTimestamp = timestamp;
-    }
+    _lastPauseTimestamp ??= timestamp;
   }
 
   void start(num timestamp) {
@@ -275,15 +271,15 @@ class MidiFilePlayer {
       currentLocatedEventIndex++;
     }
     if (currentLocatedEventIndex < locatedEvents.length) {
-      LocatedEvent locatedEvent = locatedEvents[currentLocatedEventIndex];
-      num timestamp = absoluteMsToTimestamp(locatedEvent.absoluteMs);
+      final locatedEvent = locatedEvents[currentLocatedEventIndex];
+      final timestamp = absoluteMsToTimestamp(locatedEvent.absoluteMs);
 
-      PlayableEvent event = PlayableEvent(timestamp, locatedEvent.midiEvent);
-      MidiEvent midiEvent = locatedEvent.midiEvent;
+      final event = PlayableEvent(timestamp, locatedEvent.midiEvent);
+      final midiEvent = locatedEvent.midiEvent;
 
 // And Note on event and remove note off event (and note on with velocity 0)
       if (midiEvent is NoteOnEvent) {
-        NoteOnKey key = NoteOnKey(midiEvent.channel, midiEvent.note);
+        final key = NoteOnKey(midiEvent.channel, midiEvent.note);
 
         if (midiEvent.velocity > 0) {
           notesOn[key] = event;
@@ -291,7 +287,7 @@ class MidiFilePlayer {
           notesOn.remove(key);
         }
       } else if (midiEvent is NoteOffEvent) {
-        NoteOnKey key = NoteOnKey(midiEvent.channel, midiEvent.note);
+        final key = NoteOnKey(midiEvent.channel, midiEvent.note);
         notesOn.remove(key);
       }
 
@@ -302,6 +298,6 @@ class MidiFilePlayer {
 }
 
 Duration getMidiFileDuration(MidiFile file) {
-  MidiFilePlayer player = MidiFilePlayer(file);
+  final player = MidiFilePlayer(file);
   return Duration(milliseconds: player.totalDurationMs.ceil());
 }

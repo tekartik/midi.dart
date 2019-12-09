@@ -7,7 +7,7 @@ import 'test_common.dart';
 void main() {
   group('midi parser', () {
     test('variable length data', () {
-      MidiParser parser = MidiParser([0]);
+      final parser = MidiParser([0]);
       expect(parser.readVariableLengthData(), equals(0));
 
       expect(MidiParser([0x40]).readVariableLengthData(), equals(0x40));

@@ -9,16 +9,16 @@ import 'test_common.dart';
 void main() {
   group('midi_file_player', () {
     test('ppq delta time to millis', () {
-      MidiFile file = MidiFile();
+      final file = MidiFile();
       file.ppq = 240;
-      MidiFilePlayer player = MidiFilePlayer(file);
+      final player = MidiFilePlayer(file);
 
       expect(player.currentDeltaTimeUnitInMillis, closeTo(1000 / 480, 0.0001));
     });
 
     test('timestamp to absolute ms', () {
-      MidiFile file = MidiFile();
-      MidiFilePlayer player = MidiFilePlayer(file);
+      final file = MidiFile();
+      final player = MidiFilePlayer(file);
       player.start(0);
       expect(player.absoluteMsToTimestamp(10), 10);
 
@@ -42,8 +42,8 @@ void main() {
     });
 
     test('speed ratio', () {
-      MidiFile file = MidiFile();
-      MidiFilePlayer player = MidiFilePlayer(file);
+      final file = MidiFile();
+      final player = MidiFilePlayer(file);
       file.ppq = 240;
       expect(player.tempoBpm, closeTo(120, 0.001));
       expect(player.currentDeltaTimeUnitInMillis, closeTo(1000 / 480, 0.0001));
@@ -54,9 +54,9 @@ void main() {
     });
 
     test('smtp delta time to millis', () {
-      MidiFile file = MidiFile();
+      final file = MidiFile();
       file.setFrameDivision(25, 40);
-      MidiFilePlayer player = MidiFilePlayer(file);
+      final player = MidiFilePlayer(file);
 
       expect(player.currentDeltaTimeUnitInMillis, closeTo(.5, 0.0001));
 
@@ -66,14 +66,14 @@ void main() {
     });
 
     test('get next event simple', () {
-      MidiFile file = MidiFile();
-      MidiFilePlayer player = MidiFilePlayer(file);
+      final file = MidiFile();
+      final player = MidiFilePlayer(file);
       file.ppq = 240;
 
       player.start(0);
       expect(player.next, isNull);
 
-      MidiTrack track = MidiTrack();
+      final track = MidiTrack();
       file.addTrack(track);
 
       player.start(0);
@@ -83,7 +83,7 @@ void main() {
       track.addEvent(0, event);
 
       player.start(0);
-      PlayableEvent readEvent = player.next;
+      var readEvent = player.next;
       expect(readEvent.midiEvent, event);
       expect(readEvent.timestamp, 0);
       expect(player.next, isNull);
@@ -102,13 +102,13 @@ void main() {
     });
 
     test('get next event 2 tracks', () {
-      MidiFile file = MidiFile();
-      MidiFilePlayer player = MidiFilePlayer(file);
+      final file = MidiFile();
+      final player = MidiFilePlayer(file);
       file.ppq = 240;
 
-      MidiTrack track1 = MidiTrack();
+      final track1 = MidiTrack();
       file.addTrack(track1);
-      MidiTrack track2 = MidiTrack();
+      final track2 = MidiTrack();
       file.addTrack(track2);
 
       player.start(0);
@@ -124,7 +124,7 @@ void main() {
       track1.addEvent(240, event3);
 
       player.start(0);
-      PlayableEvent readEvent = player.next;
+      var readEvent = player.next;
       expect(readEvent.midiEvent, event1);
       expect(readEvent.timestamp, 0);
       readEvent = player.next;
@@ -137,11 +137,11 @@ void main() {
     });
 
     test('get next change tempo', () {
-      MidiFile file = MidiFile();
-      MidiTrack track = MidiTrack();
+      final file = MidiFile();
+      final track = MidiTrack();
       file.addTrack(track);
 
-      MidiFilePlayer player = MidiFilePlayer(file);
+      final player = MidiFilePlayer(file);
       file.ppq = 240;
 
       MidiEvent event = NoteOnEvent(1, 42, 127);
@@ -149,20 +149,20 @@ void main() {
 
       player.start(0);
       player.setSpeedRatio(.5, 250);
-      PlayableEvent readEvent = player.next;
+      final readEvent = player.next;
       expect(readEvent.midiEvent, event);
       expect(readEvent.timestamp, closeTo(750, 0.001));
       expect(player.next, isNull);
     });
 
     test('pause/resume', () {
-      MidiFile file = MidiFile();
-      MidiTrack track = MidiTrack();
+      final file = MidiFile();
+      final track = MidiTrack();
       file.addTrack(track);
       MidiEvent event = NoteOnEvent(1, 42, 127);
       track.addEvent(0, event);
 
-      MidiFilePlayer player = MidiFilePlayer(file);
+      final player = MidiFilePlayer(file);
       file.ppq = 240;
 
       player.start(0);
@@ -171,23 +171,23 @@ void main() {
       expect(player.next, isNull);
 
       player.resume(2);
-      PlayableEvent readEvent = player.next;
-      List<PlayableEvent> noteOnEvents = player.currentNoteOnEvents.toList();
+      final readEvent = player.next;
+      final noteOnEvents = player.currentNoteOnEvents.toList();
 
       expect(noteOnEvents.length, 1);
       expect(noteOnEvents[0], readEvent);
     });
 
     test('load', () {
-      MidiFile file = getDemoFileCDE();
-      MidiFilePlayer player = MidiFilePlayer(file);
+      final file = getDemoFileCDE();
+      final player = MidiFilePlayer(file);
       player.start(1);
       //player.pause();
     });
 
     test('get duration', () {
-      MidiFile file = MidiFile();
-      MidiTrack track = MidiTrack();
+      final file = MidiFile();
+      final track = MidiTrack();
       file.addTrack(track);
       MidiEvent event = NoteOnEvent(1, 42, 127);
       // add twice
@@ -205,11 +205,11 @@ void main() {
     });
 
     test('one_located_events', () {
-      MidiFile file = MidiFile();
-      MidiTrack track = MidiTrack();
+      final file = MidiFile();
+      final track = MidiTrack();
       file.addTrack(track);
 
-      MidiFilePlayer player = MidiFilePlayer(file);
+      final player = MidiFilePlayer(file);
 
       MidiEvent event = NoteOnEvent(1, 42, 127);
       track.addEvent(240, event);
@@ -221,11 +221,11 @@ void main() {
     });
 
     test('two_located_events', () {
-      MidiFile file = MidiFile();
-      MidiTrack track = MidiTrack();
+      final file = MidiFile();
+      final track = MidiTrack();
       file.addTrack(track);
 
-      MidiFilePlayer player = MidiFilePlayer(file);
+      final player = MidiFilePlayer(file);
 
       MidiEvent event = NoteOnEvent(1, 42, 127);
       track.addEvent(240, event);
@@ -242,12 +242,12 @@ void main() {
     });
 
     test('2 tracks located event', () {
-      MidiFile file = MidiFile();
-      MidiFilePlayer player = MidiFilePlayer(file);
+      final file = MidiFile();
+      final player = MidiFilePlayer(file);
 
-      MidiTrack track1 = MidiTrack();
+      final track1 = MidiTrack();
       file.addTrack(track1);
-      MidiTrack track2 = MidiTrack();
+      final track2 = MidiTrack();
       file.addTrack(track2);
 
       MidiEvent event1 = NoteOnEvent(1, 42, 127);

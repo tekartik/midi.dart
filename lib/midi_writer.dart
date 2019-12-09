@@ -32,11 +32,11 @@ class MidiWriter extends BinaryBEWriter {
   /// @throws MidiException
   void writeVariableLengthData(int value) {
     if (value >= 0x80) {
-      int byte2 = value >> 7;
+      final byte2 = value >> 7;
       if (byte2 >= 0x80) {
-        int byte3 = byte2 >> 7;
+        final byte3 = byte2 >> 7;
         if (byte3 >= 0x80) {
-          int byte4 = byte3 >> 7;
+          final byte4 = byte3 >> 7;
           writeUint8((byte4 & 0x7F) | 0x80);
         }
         writeUint8((byte3 & 0x7F) | 0x80);

@@ -10,10 +10,10 @@ import 'test_common.dart';
 void main() {
   group('event writer', () {
     test('write meta', () {
-      MidiWriter midiWriter = MidiWriter();
-      EventWriter writer = EventWriter(midiWriter);
+      final midiWriter = MidiWriter();
+      final writer = EventWriter(midiWriter);
 
-      MetaEvent event = MetaEvent(0x2F, null);
+      final event = MetaEvent(0x2F, null);
       writer.event = TrackEvent(0, event);
 
       writer.writeEvent();
@@ -21,33 +21,33 @@ void main() {
     });
 
     test('write note on', () {
-      MidiWriter midiWriter = MidiWriter();
-      EventWriter writer = EventWriter(midiWriter);
+      final midiWriter = MidiWriter();
+      final writer = EventWriter(midiWriter);
 
       writer.event = TrackEvent(1, NoteOnEvent(2, 64, 96));
 
       writer.writeEvent();
-      expect(writer.data, parseHexString("01 92 40 60"));
+      expect(writer.data, parseHexString('01 92 40 60'));
     });
 
     test('write note off', () {
-      MidiWriter midiWriter = MidiWriter();
-      EventWriter writer = EventWriter(midiWriter);
+      final midiWriter = MidiWriter();
+      final writer = EventWriter(midiWriter);
 
       writer.event = TrackEvent(1, NoteOnEvent(2, 64, 96));
 
       writer.writeEvent();
-      expect(writer.data, parseHexString("01 92 40 60"));
+      expect(writer.data, parseHexString('01 92 40 60'));
     });
 
     void writeReadAndCheck(TrackEvent event) {
-      MidiWriter midiWriter = MidiWriter();
-      EventWriter writer = EventWriter(midiWriter);
+      final midiWriter = MidiWriter();
+      final writer = EventWriter(midiWriter);
       writer.event = event;
       writer.writeEvent();
 
-      MidiParser midiParser = MidiParser(writer.data);
-      EventParser parser = EventParser(midiParser);
+      final midiParser = MidiParser(writer.data);
+      final parser = EventParser(midiParser);
       parser.parseEvent();
       expect(parser.trackEvent, event);
     }

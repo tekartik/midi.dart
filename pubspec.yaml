@@ -1,9 +1,9 @@
 name: tekartik_midi
-version: 0.3.2
+version: 0.3.3
 description: midi
 author: Alexandre Roux <alex@tekartik.com>
 environment:
-  sdk: '>=2.4.0-dev <3.0.0'
+  sdk: '>=2.5.0 <3.0.0'
 dependencies:
   collection: any
   tekartik_common_utils:

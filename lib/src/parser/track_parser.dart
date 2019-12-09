@@ -21,7 +21,7 @@ class TrackParser extends ObjectParser {
   void parseHeader() {
     midiParser.readBuffer(4);
     if (!buffer.equalsList(trackHeader)) {
-      throw const FormatException("Bad track header");
+      throw const FormatException('Bad track header');
     }
     track = MidiTrack();
     trackSize = midiParser.readUint32();
@@ -30,7 +30,7 @@ class TrackParser extends ObjectParser {
   }
 
   void parseEvents() {
-    EventParser eventParser = EventParser(midiParser);
+    final eventParser = EventParser(midiParser);
     while (midiParser.inBuffer.position < endPosition) {
       eventParser.parseEvent();
       //print(eventParser.event);

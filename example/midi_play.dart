@@ -31,14 +31,14 @@ class _MidiPlayer extends MidiPlayerBase {
 
 Future main(List<String> args) async {
   args.forEach((String arg) async {
-    File file = File(arg);
+    final file = File(arg);
     if (file.existsSync()) {
       // parse data
       List<int> data = file.readAsBytesSync();
-      FileParser parser = FileParser(MidiParser(data));
+      final parser = FileParser(MidiParser(data));
       parser.parseFile();
 
-      _MidiPlayer player = _MidiPlayer();
+      final player = _MidiPlayer();
       player.load(parser.file);
       player.resume();
 

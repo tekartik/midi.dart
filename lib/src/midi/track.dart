@@ -25,7 +25,7 @@ class MidiTrack {
 
   @override
   String toString() {
-    StringBuffer out = StringBuffer();
+    final out = StringBuffer();
     out.write('events ${events.length}');
     if (events.isNotEmpty) {
       out.write(' ${events[0].toString()}');
@@ -38,10 +38,10 @@ class MidiTrack {
   }
 
   void addAbsolutionEvent(int absoluteTime, MidiEvent midiEvent) {
-    int time = 0;
-    for (int i = 0; i < events.length; i++) {
+    var time = 0;
+    for (var i = 0; i < events.length; i++) {
       var event = events[i];
-      int newTime = time + event.deltaTime;
+      final newTime = time + event.deltaTime;
       if (absoluteTime < newTime) {
         events.insert(i, TrackEvent(absoluteTime - time, midiEvent));
         return;

@@ -1,4 +1,4 @@
-@TestOn("vm")
+@TestOn('vm')
 library file_test;
 
 import 'package:path/path.dart';
@@ -17,15 +17,15 @@ void main() {
         file = File(join(parentPath, filename));
       }
       List<int> data = file.readAsBytesSync();
-      FileParser parser = FileParser(MidiParser(data));
+      final parser = FileParser(MidiParser(data));
       parser.parseFile();
       //parser.file.dump();
 
-      MidiFile fileRead = FileParser.dataFile(data);
+      final fileRead = FileParser.dataFile(data);
       //fileRead.dump();
-      List<int> newData = FileWriter.fileData(fileRead);
+      final newData = FileWriter.fileData(fileRead);
 
-      MidiFile newFileRead = FileParser.dataFile(newData);
+      final newFileRead = FileParser.dataFile(newData);
       //newFileRead.dump();
 
       expect(fileRead, newFileRead);
@@ -72,11 +72,11 @@ void main() {
     */
 
     test('c d e out demo file', () async {
-      MidiFile file = MidiFile();
+      final file = MidiFile();
       file.fileFormat = MidiFile.formatMultiTrack;
       file.ppq = 240;
 
-      MidiTrack track = MidiTrack();
+      var track = MidiTrack();
       track.addEvent(0, TimeSigEvent(4, 4));
       track.addEvent(0, TempoEvent.bpm(120));
       track.addEvent(0, EndOfTrackEvent());

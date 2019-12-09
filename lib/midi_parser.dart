@@ -12,7 +12,7 @@ class MidiParser extends BinaryBEParser {
   MidiParser(List<int> data) : super(data);
 
   OutBuffer get outBuffer => _outBuffer;
-  OutBuffer _outBuffer = OutBuffer(256);
+  final _outBuffer = OutBuffer(256);
 
   void readBuffer(int size) {
     read(_outBuffer, size);
@@ -40,10 +40,10 @@ class MidiParser extends BinaryBEParser {
   /// @return
   /// @throws MidiException
   int readVariableLengthData() {
-    int value = readUint8();
+    var value = readUint8();
     if ((value & 0x80) != 0) {
       value = (value & 0x7F) << 7;
-      int next = readUint8();
+      var next = readUint8();
       if ((next & 0x80) != 0) {
         value = (value + (next & 0x7F)) << 7;
         next = readUint8();

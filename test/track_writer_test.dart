@@ -9,13 +9,13 @@ import 'test_common.dart';
 void main() {
   group('track writer', () {
     test('write track', () {
-      MidiWriter midiWriter = MidiWriter();
-      TrackWriter writer = TrackWriter(midiWriter);
+      final midiWriter = MidiWriter();
+      final writer = TrackWriter(midiWriter);
 
-      MidiTrack track = MidiTrack();
+      final track = MidiTrack();
       writer.track = track;
 
-      MetaEvent event = MetaEvent(0x2F);
+      final event = MetaEvent(0x2F);
 
       track.addEvent(0, event);
       track.addEvent(0, event);
@@ -44,17 +44,17 @@ void main() {
     });
 
     void writeReadAndCheck(MidiTrack track) {
-      MidiWriter midiWriter = MidiWriter();
-      TrackWriter writer = TrackWriter(midiWriter);
+      final midiWriter = MidiWriter();
+      final writer = TrackWriter(midiWriter);
       writer.writeTrack(track);
 
-      MidiParser midiParser = MidiParser(writer.data);
-      TrackParser parser = TrackParser(midiParser);
+      final midiParser = MidiParser(writer.data);
+      final parser = TrackParser(midiParser);
       expect(parser.parseTrack(), track);
     }
 
     test('round check', () {
-      MidiTrack track = MidiTrack();
+      final track = MidiTrack();
       writeReadAndCheck(track);
 
       track.addEvent(0, NoteOnEvent(2, 42, 60));

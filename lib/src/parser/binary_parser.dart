@@ -2,7 +2,7 @@ import 'package:tekartik_midi/midi_buffer.dart';
 
 int read3BytesBEInteger(List<int> data, [int offset = 0]) {
   if (data.length - offset < 3) {
-    throw const FormatException("not enought data");
+    throw const FormatException('not enought data');
   }
   return (((data[offset] & 0xFF) << 16) |
       ((data[offset + 1] & 0xFF) << 8) |
@@ -10,7 +10,7 @@ int read3BytesBEInteger(List<int> data, [int offset = 0]) {
 }
 
 List<int> create3BytesBEIntegerBuffer(int value) {
-  List<int> data = [];
+  final data = <int>[];
   data.add((value & 0xFF0000) >> 16);
   data.add((value & 0xFF00) >> 8);
   data.add(value & 0xFF);
@@ -29,13 +29,13 @@ abstract class BinaryParser {
 
   void _checkContains(int size) {
     if (!_buffer.contains(size)) {
-      throw const FormatException("not enought data");
+      throw const FormatException('not enought data');
     }
   }
 
   void _checkHasAvailable(OutBuffer buffer, int size) {
     if (!buffer.hasAvailable(size)) {
-      throw const FormatException("not enought space");
+      throw const FormatException('not enought space');
     }
   }
 
@@ -71,8 +71,8 @@ abstract class BinaryParser {
   }
 
   int _read2BytesBEInteger() {
-    int byte1 = _read1ByteInteger();
-    int byte2 = _read1ByteInteger();
+    final byte1 = _read1ByteInteger();
+    final byte2 = _read1ByteInteger();
     return byte1 << 8 | byte2;
   }
 
@@ -82,8 +82,8 @@ abstract class BinaryParser {
   }
 
   int _read4BytesBEInteger() {
-    int short1 = _read2BytesBEInteger();
-    int short2 = _read2BytesBEInteger();
+    final short1 = _read2BytesBEInteger();
+    final short2 = _read2BytesBEInteger();
     return short1 << 16 | short2;
   }
 
