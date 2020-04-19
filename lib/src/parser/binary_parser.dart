@@ -1,4 +1,4 @@
-import 'package:tekartik_midi/midi_buffer.dart';
+import 'package:tekartik_midi/src/buffer/midi_buffer.dart';
 
 int read3BytesBEInteger(List<int> data, [int offset = 0]) {
   if (data.length - offset < 3) {

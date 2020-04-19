@@ -8,6 +8,7 @@ export 'package:tekartik_midi/src/writer/file_writer.dart';
 export 'package:tekartik_midi/src/writer/track_writer.dart';
 export 'package:tekartik_midi/src/writer/event_writer.dart';
 
+/// Midi file writer.
 class MidiWriter extends BinaryBEWriter {
   /// Some numbers in MTrk blocks are represented in a form called a variable-
   /// length quantity. These numbers are represented 7 bits per byte, most

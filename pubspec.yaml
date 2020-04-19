@@ -1,5 +1,5 @@
 name: tekartik_midi
-version: 0.3.3
+version: 0.3.4
 description: midi event and file parser
 author: Alexandre Roux <alex@tekartik.com>
 environment:
@@ -14,7 +14,6 @@ dependencies:
 
 dev_dependencies:
   pedantic:
-  dev_test: any
   test: any
   path: any
   build_runner: '>=0.9.0'
