@@ -1,6 +1,6 @@
 name: tekartik_midi
 version: 0.3.3
-description: midi
+description: midi event and file parser
 author: Alexandre Roux <alex@tekartik.com>
 environment:
   sdk: '>=2.5.0 <3.0.0'

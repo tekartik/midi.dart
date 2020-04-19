@@ -241,6 +241,47 @@ void main() {
       expect(player.locatedEvents[1].absoluteMs, closeTo(750, 0.01));
     });
 
+    test('two_located_events_with_tempo_no_change', () {
+      final file = MidiFile();
+      final track = MidiTrack();
+      file.addTrack(track);
+
+      final player = MidiFilePlayer(file);
+
+      MidiEvent event = TempoEvent.bpm(120);
+      track.addEvent(240, event);
+      MidiEvent event2 = NoteOnEvent(1, 43, 127);
+      track.addEvent(120, event2);
+      file.ppq = 240;
+
+      expect(player.locatedEvents.length, 2);
+      expect(player.locatedEvents.first.midiEvent, event);
+      expect(player.locatedEvents.first.absoluteMs, closeTo(500, 0.01));
+      expect(player.locatedEvents[1].midiEvent, event2);
+      expect(player.locatedEvents[1].absoluteMs, closeTo(750, 0.01));
+    });
+
+    test('two_located_events_with_tempo_change', () {
+      final file = MidiFile();
+      final track = MidiTrack();
+      file.addTrack(track);
+
+      final player = MidiFilePlayer(file);
+
+      // twice the speed
+      MidiEvent event = TempoEvent.bpm(240);
+      track.addEvent(240, event);
+      MidiEvent event2 = NoteOnEvent(1, 43, 127);
+      track.addEvent(120, event2);
+      file.ppq = 240;
+
+      expect(player.locatedEvents.length, 2);
+      expect(player.locatedEvents.first.midiEvent, event);
+      expect(player.locatedEvents.first.absoluteMs, closeTo(500, 0.01));
+      expect(player.locatedEvents[1].midiEvent, event2);
+      expect(player.locatedEvents[1].absoluteMs, closeTo(625, 0.01));
+    });
+
     test('2 tracks located event', () {
       final file = MidiFile();
       final player = MidiFilePlayer(file);

@@ -191,7 +191,7 @@ class MidiFilePlayer {
 //  }
 
   void _setCurrentTempoEvent(TempoEvent event) {
-    // invalidate param
+    // invalidate param so that it gets computed again
     currentDeltaTimeUnitInMillis = null;
     _currentTempoEvent = event;
   }
