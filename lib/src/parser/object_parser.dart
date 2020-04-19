@@ -1,5 +1,5 @@
-import 'package:tekartik_midi/midi_buffer.dart';
 import 'package:tekartik_midi/midi_parser.dart';
+import 'package:tekartik_midi/src/buffer/midi_buffer.dart';
 
 class ObjectParser {
   MidiParser get midiParser => _midiParser;

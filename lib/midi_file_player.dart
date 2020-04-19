@@ -2,6 +2,7 @@ library tekartik_midi_file_player;
 
 import 'dart:math';
 
+import 'package:tekartik_common_utils/common_utils_import.dart';
 import 'package:tekartik_common_utils/log_utils.dart';
 
 import 'midi.dart';
@@ -74,7 +75,10 @@ class LocatedEvent {
   }
 }
 
+/// Basic player, computing event real time location.
+///
 class MidiFilePlayer {
+  @visibleForTesting
   Map<NoteOnKey, PlayableEvent> notesOn = {};
 
   final MidiFile _file;
@@ -95,16 +99,21 @@ class MidiFilePlayer {
   // default tempo
   TempoEvent _currentTempoEvent = TempoEvent.bpm(120);
 
+  @visibleForTesting
   Iterable<PlayableEvent> get currentNoteOnEvents => notesOn.values;
 
   List<LocatedEvent> _locatedEvents;
+
+  @visibleForTesting
   int currentLocatedEventIndex;
 
+  /// List of events with their absolute computed location.
   List<LocatedEvent> get locatedEvents {
     _prepareForLocation();
     return _locatedEvents;
   }
 
+  /// Midi file total duration in millis.
   num get totalDurationMs {
     if (locatedEvents.isNotEmpty) {
       return locatedEvents.last.absoluteMs;
@@ -112,7 +121,7 @@ class MidiFilePlayer {
     return 0;
   }
 
-  // from 0 to 1
+  /// from 0 to 1.
   num getProgress(num currentTimestamp) {
     final totalDuration = totalDurationMs;
     if (totalDuration == 0) {
@@ -171,6 +180,7 @@ class MidiFilePlayer {
   // 1 means normal speed, 2 means twice faster, 0.5 means 50% slower
   num _speedRatio = 1;
 
+  /// Allow changing speed ratio without altering the tempo.
   void setSpeedRatio(num ratio, [num currentTimestamp]) {
     // Change start time according to now
     if (currentTimestamp != null) {
@@ -185,23 +195,20 @@ class MidiFilePlayer {
     }
   }
 
-  //TODO
-//  void setSpeedRatio(num ratio, num timestamp) {
-//    _speedRatio = ratio;
-//  }
-
   void _setCurrentTempoEvent(TempoEvent event) {
-    // invalidate param
+    // invalidate param so that it gets computed again
     currentDeltaTimeUnitInMillis = null;
     _currentTempoEvent = event;
   }
 
+  /// Current tempo in bmp.
   num get tempoBpm => _currentTempoEvent.tempoBpm;
 
   num _currentDeltaTimeUnitInMillis; // no ratio
   //num _currentTimeUnitInMillis;
 
-  // no ratio
+  /// no ratio
+  @visibleForTesting
   num get currentDeltaTimeUnitInMillis {
     if (_currentDeltaTimeUnitInMillis == null) {
       // beat = quarter note
@@ -220,6 +227,7 @@ class MidiFilePlayer {
     return _currentDeltaTimeUnitInMillis;
   }
 
+  @visibleForTesting
   set currentDeltaTimeUnitInMillis(num value) {
     _currentDeltaTimeUnitInMillis = value;
   }
@@ -228,20 +236,22 @@ class MidiFilePlayer {
 //    return delay * _currentTimeUnitInMillis;
 //  }
 
-  // apply ratio
+  /// Find the player timestamp given a millisecond location.
   num absoluteMsToTimestamp(num absoluteMs) {
     return startTimestamp + absoluteMs / _speedRatio;
   }
 
+  /// Convert a player timestamp to a millisecond location
   num timestampToAbsoluteMs(num timestamp) {
     return (timestamp - startTimestamp) * _speedRatio;
   }
 
-  // don't pause if not paused yet
+  /// Pause. Don't pause if not paused yet
   void pause(num timestamp) {
     _lastPauseTimestamp ??= timestamp;
   }
 
+  /// Start player.
   void start(num timestamp) {
     notesOn = {};
     _locatedEvents = null;
@@ -250,7 +260,7 @@ class MidiFilePlayer {
     currentLocatedEventIndex = null;
   }
 
-  // Todo
+  /// Result (TODO)
   void resume(num timestamp) {
     if (_startTimestamp == null) {
       start(timestamp);
@@ -262,6 +272,7 @@ class MidiFilePlayer {
     }
   }
 
+  /// get the next event
   PlayableEvent get next {
     if (!isPlaying) {
       return null;
@@ -298,6 +309,7 @@ class MidiFilePlayer {
   }
 }
 
+/// Get a file duration.
 Duration getMidiFileDuration(MidiFile file) {
   final player = MidiFilePlayer(file);
   return Duration(milliseconds: player.totalDurationMs.ceil());

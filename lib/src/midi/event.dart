@@ -1,13 +1,32 @@
 import 'package:collection/collection.dart';
+import 'package:tekartik_common_utils/common_utils_import.dart';
 import 'package:tekartik_common_utils/hex_utils.dart';
 import 'package:tekartik_common_utils/log_utils.dart';
-import 'package:tekartik_midi/midi_buffer.dart';
 import 'package:tekartik_midi/midi_parser.dart';
 import 'package:tekartik_midi/midi_writer.dart';
+import 'package:tekartik_midi/src/buffer/midi_buffer.dart';
 import 'package:tekartik_midi/src/parser/binary_parser.dart';
 // ignore_for_file: constant_identifier_names
 
+/// Track event.
+///
+/// Midi event with its delta time information.
 class TrackEvent {
+  /// Delta-Times
+  ///
+  /// The event delta time is defined by a variable-length value. It determines
+  /// when an event should be played relative to the track's last event. A delta
+  /// time of 0 means that it should play simultaneously with the last event.
+  /// A track's first event delta time defines the amount of time to wait before
+  /// playing this first event. Events unaffected by time are still preceded
+  /// by a delta time, but should always use a value of 0 and come first in the
+  /// stream of track events. Examples of this type of event include track
+  /// titles and copyright information. The most important thing to remember
+  /// about delta times is that they are relative values, not absolute times.
+  /// The actual time they represent is determined by a couple factors.
+  /// The time division (defined in the MIDI header chunk) and the tempo
+  /// (defined with a track event). If no tempo is define, 120 beats
+  /// per minute is assumed.
   int deltaTime;
   MidiEvent midiEvent;
 
@@ -30,78 +49,59 @@ class TrackEvent {
   }
 }
 
+/// Base midi event.
 abstract class MidiEvent {
   List<MidiEvent> events = [];
 
-  /// Delta-Times
-  ///
-  /// The event delta time is defined by a variable-length value. It determines
-  /// when an event should be played relative to the track's last event. A delta
-  /// time of 0 means that it should play simultaneously with the last event.
-  /// A track's first event delta time defines the amount of time to wait before
-  /// playing this first event. Events unaffected by time are still preceded
-  /// by a delta time, but should always use a value of 0 and come first in the
-  /// stream of track events. Examples of this type of event include track
-  /// titles and copyright information. The most important thing to remember
-  /// about delta times is that they are relative values, not absolute times.
-  /// The actual time they represent is determined by a couple factors.
-  /// The time division (defined in the MIDI header chunk) and the tempo
-  /// (defined with a track event). If no tempo is define, 120 beats
-  /// per minute is assumed.
+  /// Event command combining channel and event type (called command too).
   int command;
 
-  // 2018-09-22
-  @deprecated
-  static const int CHANNEL_COUNT = 16;
+  /// Available channel count.
   static const int channelCount = 16;
-  // 2018-09-22
-  @deprecated
-  static const int NOTE_COUNT = 128;
+
+  /// Available note count.
   static const int noteCount = 128;
 
-  // Control command
+  /// Note off event type.
   static const int noteOff = 8;
+
+  /// Note on event type.
   static const int noteOn = 9;
+
+  /// Key after touch event type.
   static const int keyAfterTouch = 0xA;
+
+  /// Control change event type.
   static const int controlChange = 0xB;
+
+  /// Program change event type.
   static const int programChange = 0xC;
+
+  /// Channel after touch event type.
   static const int channelAfterTouch = 0xD;
+
+  /// Pitch wheel event type.
   static const int pitchWheelChange = 0xE;
+
+  /// Meta event event type.
   static const int metaEvent = 0xF;
 
+  /// Meta command.
   static const int cmdMetaEvent = 0xFF;
-
-  // 2018-09-22
-  @deprecated
-  static const int NOTE_OFF = 8;
-  @deprecated
-  static const int NOTE_ON = 9;
-  @deprecated
-  static const int KEY_AFTER_TOUCH = 0xA;
-  @deprecated
-  static const int CONTROL_CHANGE = 0xB;
-  @deprecated
-  static const int PROGRAM_CHANGE = 0xC;
-  @deprecated
-  static const int CHANNEL_AFTER_TOUCH = 0xD;
-  @deprecated
-  static const int PITCH_WHEEL_CHANGE = 0xE;
-  @deprecated
-  static const int META_EVENT = 0xF;
-
-  @deprecated
-  static const int CMD_META_EVENT = 0xFF;
 
   MidiEvent();
 
   MidiEvent.withParam(this.command);
 
-  static int commandChannel(int command, int channel) {
-    return ((command << 4) | (channel & 0xF));
+  /// Compute command from an event type and a channel
+  static int commandChannel(int eventType, int channel) {
+    return ((eventType << 4) | (channel & 0xF));
   }
 
-  static int commandGetCommand(int command) {
-    // ((command & 0xF) >> 4)
+  @Deprecated('use commandGetEventType')
+  static int commandGetCommand(int command) => commandGetEventType(command);
+
+  static int commandGetEventType(int command) {
     return ((command & 0xF0) >> 4);
   }
 
@@ -110,13 +110,15 @@ abstract class MidiEvent {
     return (command & 0xF);
   }
 
-  int get codeCommand => commandGetCommand(command);
+  int get eventType => commandGetEventType(command);
+  @Deprecated('user event type instead')
+  int get codeCommand => eventType;
 
   factory MidiEvent.base(int command) {
     MidiEvent event;
 
-    final codeCommand = commandGetCommand(command);
-    switch (codeCommand) {
+    final eventType = commandGetEventType(command);
+    switch (eventType) {
       case noteOff:
         event = NoteOffEvent._();
         break;
@@ -144,13 +146,14 @@ abstract class MidiEvent {
         // event = new MetaEvent();
         return null;
     }
-    // ignore: prefer_initializing_formals
     event.command = command;
     return event;
   }
 
+  /// Read data from a parser.
   void readData(MidiParser parser);
 
+  /// Write data from a parser.
   void writeData(MidiWriter writer);
 
   @override
@@ -170,6 +173,7 @@ abstract class MidiEvent {
   }
 }
 
+/// Channel event.
 abstract class ChannelEvent extends MidiEvent {
   int get channel => MidiEvent.commandGetChannel(command);
   ChannelEvent();
@@ -265,6 +269,7 @@ abstract class Param2BytesEvent extends Param1ByteEvent {
   }
 }
 
+/// Channel after touch event.
 class ChannelAfterTouchEvent extends Param1ByteEvent {
   int get amount => _param1;
 
@@ -307,6 +312,7 @@ abstract class NoteEvent extends Param2BytesEvent {
       : super.withParam(command, channel, noteNumber, velocity);
 }
 
+/// Note on event.
 class NoteOnEvent extends NoteEvent {
   NoteOnEvent._();
   NoteOnEvent(int channel, int noteNumber, int velocity) //
@@ -318,6 +324,7 @@ class NoteOnEvent extends NoteEvent {
   }
 }
 
+/// Note off event.
 class NoteOffEvent extends NoteEvent {
   NoteOffEvent._();
   NoteOffEvent(int channel, int noteNumber, int velocity) //
@@ -329,6 +336,7 @@ class NoteOffEvent extends NoteEvent {
   }
 }
 
+/// Key after touch event.
 class KeyAfterTouchEvent extends NoteEvent {
   KeyAfterTouchEvent._();
   KeyAfterTouchEvent(int channel, int noteNumber, int velocity) //
@@ -340,6 +348,7 @@ class KeyAfterTouchEvent extends NoteEvent {
   }
 }
 
+/// Pitch wheel change event
 class PitchWheelChangeEvent extends Param2BytesEvent {
   int get bottom => _param1;
   set bottom(int _bottom) {
@@ -399,15 +408,16 @@ class ControlChangeEvent extends Param2BytesEvent {
 
 }
 
-// Normal SysEx Events
-// These are the most common type of SysEx event and are used to hold a single
-// block of manufacturer specific data. The first byte is always 0xF0 and the
-// second is a variable-length value that specifies the length of the following
-// SysEx data in bytes. The SysEx data bytes must always end with a 0xF7 byte
-// to signal the end of the message.
-// SysEx Event Length  Data
-// 240 (0xF0)  variable-length data bytes, 0xF7
-// Normal SysEx Event Values
+/// Normal SysEx Events.
+///
+/// These are the most common type of SysEx event and are used to hold a single
+/// block of manufacturer specific data. The first byte is always 0xF0 and the
+/// second is a variable-length value that specifies the length of the following
+/// SysEx data in bytes. The SysEx data bytes must always end with a 0xF7 byte
+/// to signal the end of the message.
+/// SysEx Event Length  Data
+/// 240 (0xF0)  variable-length data bytes, 0xF7
+/// Normal SysEx Event Values
 class SysExEvent extends MidiEvent {
   List<int> data;
 
@@ -451,6 +461,7 @@ class SysExEvent extends MidiEvent {
   }
 }
 
+/// A Meta mide event.
 abstract class MetaEvent extends MidiEvent {
   int metaCommand;
   List<int> data;
@@ -476,7 +487,6 @@ abstract class MetaEvent extends MidiEvent {
 
   factory MetaEvent(int metaCommand, [List<int> data]) {
     final event = MetaEvent.base(MidiEvent.cmdMetaEvent, metaCommand);
-    // ignore: prefer_initializing_formals
     event.data = data;
     return event;
   }
@@ -498,7 +508,6 @@ abstract class MetaEvent extends MidiEvent {
         break;
     }
     event.command = command;
-    // ignore: prefer_initializing_formals
     event.metaCommand = metaCommand;
     return event;
   }

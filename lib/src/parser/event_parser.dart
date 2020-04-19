@@ -29,7 +29,7 @@ class EventParser extends ObjectParser {
       lastCommand = command;
     }
 
-    if (MidiEvent.commandGetCommand(command) == MidiEvent.metaEvent) {
+    if (MidiEvent.commandGetEventType(command) == MidiEvent.metaEvent) {
       // Handle sysex?
       if (command != MidiEvent.cmdMetaEvent) {
         // sysex?

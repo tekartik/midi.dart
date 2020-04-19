@@ -5,11 +5,6 @@ class MidiFile {
   /// 0 single track, 1, multi track synchronous, 2, multitrack async
   static const int formatMultiTrack = 1;
 
-  /// 0 single track, 1, multi track synchronous, 2, multitrack async
-  @deprecated
-  // ignore: non_constant_identifier_names
-  static final int FORMAT_MULTI_TRACK = formatMultiTrack;
-
   int fileFormat = formatMultiTrack;
   int trackCount = 0;
 
