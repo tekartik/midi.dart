@@ -149,15 +149,16 @@ class MidiFilePlayer {
 
         if (nextTrackPlayer != null) {
           final event = nextTrackPlayer.current(currentDeltaTimeUnitInMillis);
+          final midiEvent = event.midiEvent;
+          if (midiEvent is TempoEvent) {
+            _setCurrentTempoEvent(midiEvent);
+          }
+
           // if no next, remove track
           if (nextTrackPlayer.next(currentDeltaTimeUnitInMillis) == null) {
             trackPlayers.remove(nextTrackPlayer);
           }
 
-          final midiEvent = event.midiEvent;
-          if (midiEvent is TempoEvent) {
-            _setCurrentTempoEvent(midiEvent);
-          }
           _locatedEvents.add(event);
         } else {
           break;
