@@ -1,4 +1,5 @@
 #!/usr/bin/env dart
+
 library midi_dump;
 
 import 'dart:io';
