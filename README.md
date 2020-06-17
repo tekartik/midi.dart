@@ -6,6 +6,18 @@ Library for parsing, manipulation Midi files and for sequencing midi event
 
 *API subject to change*
 
+## Setup
+
+`pubspec.yaml`:
+
+```yaml
+dependencies:
+  tekartik_midi:
+    git:
+      url: git://github.com/tekartik/midi.dart
+      ref: dart2
+```
+
 ## Usage example
 
 ### Creating a midi file
