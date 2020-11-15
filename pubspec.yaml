@@ -2,6 +2,7 @@ name: tekartik_midi
 version: 0.3.4
 description: midi event and file parser
 author: Alexandre Roux <alex@tekartik.com>
+publish_to: none
 environment:
   sdk: '>=2.5.0 <3.0.0'
 dependencies:
