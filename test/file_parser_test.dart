@@ -40,14 +40,14 @@ void main() {
       final midiParser = MidiParser(data);
       final parser = FileParser(midiParser);
       parser.parseHeader();
-      expect(parser.file.fileFormat, equals(1));
-      expect(parser.file.trackCount, equals(2));
-      expect(parser.file.timeDivision, equals(3));
+      expect(parser.file!.fileFormat, equals(1));
+      expect(parser.file!.trackCount, equals(2));
+      expect(parser.file!.timeDivision, equals(3));
     });
 
     test('parse header SMPTE frames per seconds', () {
       final file = FileParser.dataFile(
-          parseHexString('4D 54 68 64  00 00 00 06  00 01 00 00  E7 28'));
+          parseHexString('4D 54 68 64  00 00 00 06  00 01 00 00  E7 28'))!;
       expect(file.frameCountPerSecond, 25);
       expect(file.divisionCountPerFrame, 40);
     });
@@ -64,7 +64,7 @@ void main() {
       return File(inDataFilenamePath('simple_in.mid'))
           .readAsBytes()
           .then((data) {
-        final file = FileParser.dataFile(data);
+        final file = FileParser.dataFile(data)!;
         file.dump();
       });
     }, skip: true);
@@ -83,7 +83,7 @@ void main() {
       return File(inDataFilenamePath('tmp/take_5.mid'))
           .readAsBytes()
           .then((data) {
-        final file = FileParser.dataFile(data);
+        final file = FileParser.dataFile(data)!;
         expect(file.trackCount, 30);
         //file.dump();
       });

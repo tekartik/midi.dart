@@ -4,7 +4,7 @@ import 'package:tekartik_midi/midi_writer.dart';
 class FileWriter extends ObjectWriter {
   FileWriter(MidiWriter midiWriter) : super(midiWriter);
 
-  MidiFile file;
+  late MidiFile file;
 
   static final List<int> fileHeader = [
     'M'.codeUnitAt(0),
@@ -22,18 +22,18 @@ class FileWriter extends ObjectWriter {
     writeUint16(file.timeDivision);
   }
 
-  void writeFile([MidiFile _file]) {
+  void writeFile([MidiFile? _file]) {
     if (_file != null) {
       file = _file;
     }
     writeHeader();
-    file.tracks.forEach((MidiTrack track) {
+    file.tracks.forEach((MidiTrack? track) {
       final trackWriter = TrackWriter(midiWriter);
       trackWriter.writeTrack(track);
     });
   }
 
-  static List<int> fileData(MidiFile file) {
+  static List<int> fileData(MidiFile? file) {
     final midiWriter = MidiWriter();
     final writer = FileWriter(midiWriter);
     writer.writeFile(file);

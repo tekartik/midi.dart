@@ -1,5 +1,5 @@
 abstract class Buffer {
-  List<int> _data;
+  late List<int> _data;
   int _position = 0;
 
   int get length;
@@ -41,7 +41,7 @@ class OutBuffer extends Buffer {
   int get length => _position;
 
   OutBuffer(int size) {
-    _data = List<int>.filled(size, null);
+    _data = List<int>.filled(size, 0);
   }
 
   void restart() {

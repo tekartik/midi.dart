@@ -41,7 +41,7 @@ class MidiTrack {
     var time = 0;
     for (var i = 0; i < events.length; i++) {
       var event = events[i];
-      final newTime = time + event.deltaTime;
+      final newTime = time + event.deltaTime!;
       if (absoluteTime < newTime) {
         events.insert(i, TrackEvent(absoluteTime - time, midiEvent));
         return;

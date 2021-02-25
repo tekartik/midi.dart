@@ -9,7 +9,7 @@ import 'io_test_common.dart';
 
 void main() {
   group('data file', () {
-    void readWriteAndCheck(String filename, {String parentPath}) {
+    void readWriteAndCheck(String filename, {String? parentPath}) {
       File file;
       if (parentPath == null) {
         file = File(inDataFilenamePath(filename));

@@ -14,7 +14,7 @@ void main() {
       return File(inDataFilenamePath('tmp/take_5.mid'))
           .readAsBytes()
           .then((data) {
-        final file = FileParser.dataFile(data);
+        final file = FileParser.dataFile(data)!;
         expect(file.trackCount, 30);
 
         expect(getMidiFileDuration(file),

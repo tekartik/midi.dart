@@ -6,7 +6,7 @@ import 'package:tekartik_midi/src/parser/track_parser.dart';
 class FileParser extends ObjectParser {
   FileParser(MidiParser midiParser) : super(midiParser);
 
-  MidiFile file;
+  MidiFile? file;
 
   static final List<int> fileHeader = [
     'M'.codeUnitAt(0),
@@ -19,12 +19,12 @@ class FileParser extends ObjectParser {
     final trackParser = TrackParser(midiParser);
 
     // Clear track count
-    final trackCount = file.trackCount;
-    file.trackCount = 0;
+    final trackCount = file!.trackCount;
+    file!.trackCount = 0;
     for (var i = 0; i < trackCount; i++) {
       //print(hexPretty(_midiParser.inBuffer.buildRemainingData().sublist(0, 20)));
       trackParser.parseTrack();
-      file.addTrack(trackParser.track);
+      file!.addTrack(trackParser.track);
     }
   }
 
@@ -44,16 +44,16 @@ class FileParser extends ObjectParser {
     }
     file = MidiFile();
 
-    file.fileFormat = readUint16();
-    file.trackCount = readUint16();
-    file.timeDivision = readUint16();
+    file!.fileFormat = readUint16();
+    file!.trackCount = readUint16();
+    file!.timeDivision = readUint16();
     if (dataHeaderLen > 6) {
       skip(dataHeaderLen - 6);
     }
   }
 
   /// Parser helper
-  static MidiFile dataFile(List<int> data) {
+  static MidiFile? dataFile(List<int> data) {
     final parser = FileParser(MidiParser(data));
     parser.parseFile();
     return parser.file;

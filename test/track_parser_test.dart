@@ -44,7 +44,7 @@ void main() {
       parser.track = MidiTrack();
       parser.endPosition = 8;
       parser.parseEvents();
-      expect(parser.track.events.length, equals(2));
+      expect(parser.track!.events.length, equals(2));
     });
 
     test('parse track', () {
@@ -54,9 +54,9 @@ void main() {
       final midiParser = MidiParser(data);
       final parser = TrackParser(midiParser);
       parser.parseTrack();
-      expect(parser.track.events[0].midiEvent is TimeSigEvent, isTrue);
-      expect(parser.track.events[1].midiEvent is TempoEvent, isTrue);
-      expect(parser.track.events[2].midiEvent is EndOfTrackEvent, isTrue);
+      expect(parser.track!.events[0].midiEvent is TimeSigEvent, isTrue);
+      expect(parser.track!.events[1].midiEvent is TempoEvent, isTrue);
+      expect(parser.track!.events[2].midiEvent is EndOfTrackEvent, isTrue);
 //      parser.track.events.forEach((MidiEvent e) {
 //        print(e);
 //      });

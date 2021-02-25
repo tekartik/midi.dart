@@ -83,7 +83,7 @@ void main() {
       track.addEvent(0, event);
 
       player.start(0);
-      var readEvent = player.next;
+      var readEvent = player.next!;
       expect(readEvent.midiEvent, event);
       expect(readEvent.timestamp, 0);
       expect(player.next, isNull);
@@ -92,10 +92,10 @@ void main() {
       track.addEvent(240, event2);
 
       player.start(0);
-      readEvent = player.next;
+      readEvent = player.next!;
       expect(readEvent.midiEvent, event);
       expect(readEvent.timestamp, 0);
-      readEvent = player.next;
+      readEvent = player.next!;
       expect(readEvent.midiEvent, event2);
       expect(readEvent.timestamp, closeTo(500, 0.001));
       expect(player.next, isNull);
@@ -124,13 +124,13 @@ void main() {
       track1.addEvent(240, event3);
 
       player.start(0);
-      var readEvent = player.next;
+      var readEvent = player.next!;
       expect(readEvent.midiEvent, event1);
       expect(readEvent.timestamp, 0);
-      readEvent = player.next;
+      readEvent = player.next!;
       expect(readEvent.midiEvent, event2);
       expect(readEvent.timestamp, closeTo(250, 0.001));
-      readEvent = player.next;
+      readEvent = player.next!;
       expect(readEvent.midiEvent, event3);
       expect(readEvent.timestamp, closeTo(500, 0.001));
       expect(player.next, isNull);
@@ -149,7 +149,7 @@ void main() {
 
       player.start(0);
       player.setSpeedRatio(.5, 250);
-      final readEvent = player.next;
+      final readEvent = player.next!;
       expect(readEvent.midiEvent, event);
       expect(readEvent.timestamp, closeTo(750, 0.001));
       expect(player.next, isNull);
@@ -215,9 +215,9 @@ void main() {
       track.addEvent(240, event);
 
       //devPrint(player.locatedEvents);
-      expect(player.locatedEvents.length, 1);
-      expect(player.locatedEvents.first.midiEvent, event);
-      expect(player.locatedEvents.first.absoluteMs, closeTo(1000, 0.01));
+      expect(player.locatedEvents!.length, 1);
+      expect(player.locatedEvents!.first.midiEvent, event);
+      expect(player.locatedEvents!.first.absoluteMs, closeTo(1000, 0.01));
     });
 
     test('two_located_events', () {
@@ -234,11 +234,11 @@ void main() {
       file.ppq = 240;
 
       //devPrint(player.locatedEvents);
-      expect(player.locatedEvents.length, 2);
-      expect(player.locatedEvents.first.midiEvent, event);
-      expect(player.locatedEvents.first.absoluteMs, closeTo(500, 0.01));
-      expect(player.locatedEvents[1].midiEvent, event2);
-      expect(player.locatedEvents[1].absoluteMs, closeTo(750, 0.01));
+      expect(player.locatedEvents!.length, 2);
+      expect(player.locatedEvents!.first.midiEvent, event);
+      expect(player.locatedEvents!.first.absoluteMs, closeTo(500, 0.01));
+      expect(player.locatedEvents![1].midiEvent, event2);
+      expect(player.locatedEvents![1].absoluteMs, closeTo(750, 0.01));
     });
 
     test('two_located_events_with_tempo_no_change', () {
@@ -254,11 +254,11 @@ void main() {
       track.addEvent(120, event2);
       file.ppq = 240;
 
-      expect(player.locatedEvents.length, 2);
-      expect(player.locatedEvents.first.midiEvent, event);
-      expect(player.locatedEvents.first.absoluteMs, closeTo(500, 0.01));
-      expect(player.locatedEvents[1].midiEvent, event2);
-      expect(player.locatedEvents[1].absoluteMs, closeTo(750, 0.01));
+      expect(player.locatedEvents!.length, 2);
+      expect(player.locatedEvents!.first.midiEvent, event);
+      expect(player.locatedEvents!.first.absoluteMs, closeTo(500, 0.01));
+      expect(player.locatedEvents![1].midiEvent, event2);
+      expect(player.locatedEvents![1].absoluteMs, closeTo(750, 0.01));
     });
 
     test('two_located_events_with_tempo_change', () {
@@ -275,11 +275,11 @@ void main() {
       track.addEvent(120, event2);
       file.ppq = 240;
 
-      expect(player.locatedEvents.length, 2);
-      expect(player.locatedEvents.first.midiEvent, event);
-      expect(player.locatedEvents.first.absoluteMs, closeTo(500, 0.01));
-      expect(player.locatedEvents[1].midiEvent, event2);
-      expect(player.locatedEvents[1].absoluteMs, closeTo(625, 0.01));
+      expect(player.locatedEvents!.length, 2);
+      expect(player.locatedEvents!.first.midiEvent, event);
+      expect(player.locatedEvents!.first.absoluteMs, closeTo(500, 0.01));
+      expect(player.locatedEvents![1].midiEvent, event2);
+      expect(player.locatedEvents![1].absoluteMs, closeTo(625, 0.01));
     });
 
     test('2 tracks located event', () {
@@ -300,13 +300,13 @@ void main() {
       MidiEvent event3 = NoteOnEvent(1, 44, 127);
       track1.addEvent(240, event3);
 
-      expect(player.locatedEvents.length, 3);
-      expect(player.locatedEvents.first.midiEvent, event1);
-      expect(player.locatedEvents.first.absoluteMs, 0);
-      expect(player.locatedEvents[1].midiEvent, event2);
-      expect(player.locatedEvents[1].absoluteMs, closeTo(500, 0.01));
-      expect(player.locatedEvents[2].midiEvent, event3);
-      expect(player.locatedEvents[2].absoluteMs, closeTo(1000, 0.01));
+      expect(player.locatedEvents!.length, 3);
+      expect(player.locatedEvents!.first.midiEvent, event1);
+      expect(player.locatedEvents!.first.absoluteMs, 0);
+      expect(player.locatedEvents![1].midiEvent, event2);
+      expect(player.locatedEvents![1].absoluteMs, closeTo(500, 0.01));
+      expect(player.locatedEvents![2].midiEvent, event3);
+      expect(player.locatedEvents![2].absoluteMs, closeTo(1000, 0.01));
     });
   });
 }

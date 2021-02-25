@@ -19,10 +19,11 @@ class MidiFile {
   /// If it is not specified then it is 500,000 microseconds by default, which is equivalent to 120 beats per minute.
   /// In the example above, if the MIDI time division is 60 ticks per beat and if the microseconds per beat is 500,000,
   /// then 1 tick = 500,000 / 60 = 8333.33 microseconds.
-  int _ppq = 120; // default value
-  int get ppq => _ppq;
-  set ppq(int ppq) {
-    if ((ppq & 0x8000) != 0) {
+  int? _ppq = 120; // default value
+  int? get ppq => _ppq;
+  set ppq(int? ppq) {
+    assert(ppq != null);
+    if ((ppq! & 0x8000) != 0) {
       throw const FormatException('invalid pulses per quarter note');
     }
     timeDivision = ppq;
@@ -65,7 +66,7 @@ class MidiFile {
   /// is being specified rather than regular ticks-per-quarter note.
   // int get framePerSecond;
 
-  int _timeDivision;
+  int? _timeDivision;
 
   set timeDivision(int timeDivision) {
     _timeDivision = timeDivision;
@@ -98,11 +99,11 @@ class MidiFile {
     }
   }
 
-  num _frameCoundPerSecond;
-  int _divisionCountPerFrame;
-  num get frameCountPerSecond => _frameCoundPerSecond;
+  num? _frameCoundPerSecond;
+  int? _divisionCountPerFrame;
+  num? get frameCountPerSecond => _frameCoundPerSecond;
 
-  int get divisionCountPerFrame => _divisionCountPerFrame;
+  int? get divisionCountPerFrame => _divisionCountPerFrame;
 
   /// @param: frameCountPerSecondEncoded in (24, 25, 29 - meaning 29.97 -, 30)
   void setFrameDivision(
@@ -111,13 +112,13 @@ class MidiFile {
         ((256 - frameCountPerSecondEncoded) << 8) | divisionCountPerFrame;
   }
 
-  int get timeDivision => _timeDivision;
+  int get timeDivision => _timeDivision!;
 
-  List<MidiTrack> tracks = [];
+  List<MidiTrack?> tracks = [];
 
   /// convert a delay in an event to a delay in ms
   num delayToMillis(int delay) {
-    return delay / ppq;
+    return delay / ppq!;
   }
 
   @override
@@ -150,13 +151,14 @@ class MidiFile {
     return out.toString();
   }
 
-  void addTrack(MidiTrack track) {
+  void addTrack(MidiTrack? track) {
     trackCount++;
     tracks.add(track);
   }
 
   void dump() {
     print('format: $fileFormat');
+    // ignore: unnecessary_null_comparison
     if (ppq != null) {
       print('ppq: $ppq');
     } else {
@@ -164,9 +166,9 @@ class MidiFile {
       print('divisionsPerFrame: $divisionCountPerFrame');
     }
     var index = 0;
-    tracks.forEach((MidiTrack track) {
+    tracks.forEach((MidiTrack? track) {
       print('Track ${++index}');
-      track.dump();
+      track!.dump();
     });
   }
 }

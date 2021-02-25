@@ -6,10 +6,10 @@ import 'package:tekartik_midi/src/parser/object_parser.dart';
 class TrackParser extends ObjectParser {
   TrackParser(MidiParser parser) : super(parser);
 
-  MidiTrack track;
-  int trackSize;
+  MidiTrack? track;
+  int? trackSize;
 
-  int endPosition;
+  late int endPosition;
 
   static final List<int> trackHeader = [
     'M'.codeUnitAt(0),
@@ -26,22 +26,22 @@ class TrackParser extends ObjectParser {
     track = MidiTrack();
     trackSize = midiParser.readUint32();
 
-    endPosition = midiParser.inBuffer.position + trackSize;
+    endPosition = midiParser.inBuffer!.position + trackSize!;
   }
 
   void parseEvents() {
     final eventParser = EventParser(midiParser);
-    while (midiParser.inBuffer.position < endPosition) {
+    while (midiParser.inBuffer!.position < endPosition) {
       eventParser.parseEvent();
       //print(eventParser.event);
 //      if (eventParser.event is EndOfTrackEvent) {
 //      print(eventParser.event);
 //      }
-      track.events.add(TrackEvent(eventParser.deltaTime, eventParser.event));
+      track!.events.add(TrackEvent(eventParser.deltaTime, eventParser.event));
     }
   }
 
-  MidiTrack parseTrack() {
+  MidiTrack? parseTrack() {
     parseHeader();
     parseEvents();
     return track;

@@ -18,17 +18,17 @@ List<int> create3BytesBEIntegerBuffer(int value) {
 }
 
 abstract class BinaryParser {
-  InBuffer _buffer;
-  int get length => _buffer.length;
+  InBuffer? _buffer;
+  int get length => _buffer!.length;
 
-  InBuffer get inBuffer => _buffer;
+  InBuffer? get inBuffer => _buffer;
 
   BinaryParser(List<int> data) {
     _buffer = InBuffer(data);
   }
 
   void _checkContains(int size) {
-    if (!_buffer.contains(size)) {
+    if (!_buffer!.contains(size)) {
       throw const FormatException('not enought data');
     }
   }
@@ -44,7 +44,7 @@ abstract class BinaryParser {
     _checkHasAvailable(buffer, size);
     buffer.restart();
     while (size-- > 0) {
-      buffer.add(_buffer.next());
+      buffer.add(_buffer!.next());
     }
   }
 
@@ -54,11 +54,11 @@ abstract class BinaryParser {
 
   void skip(int size) {
     _checkContains(size);
-    _buffer.skip(size);
+    _buffer!.skip(size);
   }
 
   int _read1ByteInteger() {
-    return _buffer.next();
+    return _buffer!.next();
   }
 
   int read1ByteInteger() {

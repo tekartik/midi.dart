@@ -7,13 +7,13 @@ import 'package:tekartik_midi/midi.dart';
 import 'package:tekartik_midi/midi_file_player.dart';
 
 abstract class MidiPlayerBase {
-  int _fileIndex;
+  int? _fileIndex;
 
   bool fileMatches(int fileIndex) {
     return _fileIndex == fileIndex;
   }
 
-  MidiFilePlayer _midiFilePlayer;
+  MidiFilePlayer? _midiFilePlayer;
   //Stopwatch stopwatch;
 
   // True when play has started once already
@@ -29,37 +29,37 @@ abstract class MidiPlayerBase {
   bool get isDone => _isDone;
 
   // null when not load yet
-  Future _done;
-  Future get done => _done;
+  Future? _done;
+  Future? get done => _done;
 
   // Created when playing
   // killed on pause
-  Completer _waitPlayNextCompleter;
+  Completer? _waitPlayNextCompleter;
 
-  StreamController<PlayableEvent> _streamController;
+  StreamController<PlayableEvent?>? _streamController;
 
   /// Send event when status change and every second
   StreamController<bool> playingController = StreamController();
-  Stream<bool> playingStream;
+  Stream<bool>? playingStream;
 
   /// time to send the event before the real event occured
   final _preFillDuration = 200;
   final _timerResolution = 50;
 
-  PlayableEvent _currentEvent;
+  PlayableEvent? _currentEvent;
 
   // timestamp is relative to _startNow;
   //num _startNow;
 
-  num _nextRatio;
+  num? _nextRatio;
 
-  num _lastPauseTime;
+  num? _lastPauseTime;
   num _nowDelta = 0; // delta from now, pausing increases delta
 
-  num get currentTimestamp =>
+  num? get currentTimestamp =>
       isPlaying ? (isPaused ? _lastPauseTime : _nowTimestamp) : null;
 
-  Duration get currentTimestampDuration {
+  Duration? get currentTimestampDuration {
     final _now = currentTimestamp;
     if (_now != null) {
       return Duration(milliseconds: _now.toInt());
@@ -68,7 +68,7 @@ abstract class MidiPlayerBase {
   }
 
   // estimation
-  num nowToTimestamp([num now]) {
+  num nowToTimestamp([num? now]) {
     now ??= this.now;
 
     return now;
@@ -119,7 +119,7 @@ abstract class MidiPlayerBase {
   void _unload() {
     // unload the current file
     if (_streamController != null) {
-      _streamController.close();
+      _streamController!.close();
     }
   }
 
@@ -139,18 +139,18 @@ abstract class MidiPlayerBase {
     //    }
   }
 
-  void resume([num time]) {
+  void resume([num? time]) {
     final _now = time ?? now;
     if (isPaused) {
-      _nowDelta += _now - _lastPauseTime;
+      _nowDelta += _now - _lastPauseTime!;
     }
     // TODO
-    _midiFilePlayer.resume(_now);
+    _midiFilePlayer!.resume(_now);
     _isPlaying = true;
     _isPaused = false;
     //stopwatch.start();
     playingController.add(true);
-    _currentEvent = _midiFilePlayer.next;
+    _currentEvent = _midiFilePlayer!.next;
     _playNext();
   }
 
@@ -171,7 +171,7 @@ abstract class MidiPlayerBase {
 //    _playNext();
 //  }
 
-  void load(MidiFile file) {
+  void load(MidiFile? file) {
     // Pause current
     pause();
 
@@ -211,18 +211,18 @@ abstract class MidiPlayerBase {
 //    return _startNow;
 //  }
 
-  void _load(MidiFile file) {
+  void _load(MidiFile? file) {
     _isDone = false;
     _isPlaying = false;
     _isPaused = false;
     _midiFilePlayer = MidiFilePlayer(file);
     //_startNow = null;
 
-    _streamController = StreamController<PlayableEvent>(sync: true);
+    _streamController = StreamController<PlayableEvent?>(sync: true);
 
-    _done = _streamController.stream
-        .listen((PlayableEvent event) {
-          playEvent(event);
+    _done = _streamController!.stream
+        .listen((PlayableEvent? event) {
+          playEvent(event!);
         }, onDone: () {
           //pause();
         })
@@ -247,7 +247,7 @@ abstract class MidiPlayerBase {
 //    _playNext();
 //  }
 
-  num get currentSpeedRadio => _nextRatio; // ?
+  num? get currentSpeedRadio => _nextRatio; // ?
 
   void setNextSpeedRadio(num ratio) {
     _nextRatio = ratio;
@@ -257,7 +257,7 @@ abstract class MidiPlayerBase {
     if (_midiFilePlayer == null) {
       _nextRatio = ratio;
     } else {
-      _midiFilePlayer.setSpeedRatio(ratio, now);
+      _midiFilePlayer!.setSpeedRatio(ratio, now);
       //?
       _nextRatio = ratio;
     }
@@ -272,26 +272,27 @@ abstract class MidiPlayerBase {
         //TODO? Wait for all events to be played closing stream
         //int fileIndex = this._fileIndex;
         //new Future.
-        _streamController.close();
+        _streamController!.close();
       } else {
         pause();
       }
     } else {
       final nowTimestamp = _nowTimestamp; //stopwatch.elapsedMilliseconds;
 
-      if (_currentEvent.timestamp < nowTimestamp) {
+      if (_currentEvent!.timestamp! < nowTimestamp) {
         //devPrint('## $now: $_currentEvent');
-        _streamController.add(_currentEvent);
-        _currentEvent = _midiFilePlayer.next;
+        _streamController!.add(_currentEvent);
+        _currentEvent = _midiFilePlayer!.next;
         _playNext();
       } else {
         final nextCompleter = Completer.sync();
         _waitPlayNextCompleter = nextCompleter;
         Future.delayed(
             Duration(
-                milliseconds:
-                    (_currentEvent.timestamp - nowTimestamp + _timerResolution)
-                        .toInt()), () {
+                milliseconds: (_currentEvent!.timestamp! -
+                        nowTimestamp +
+                        _timerResolution)
+                    .toInt()), () {
           if (!nextCompleter.isCompleted) {
             nextCompleter.complete();
           }
@@ -310,7 +311,7 @@ abstract class MidiPlayerBase {
 
   num eventTimestampToOutputTimestamp(PlayableEvent event) {
     //return event.timestamp + _startNow + _nowDelta + _preFillDuration + _preFillDuration;
-    return event.timestamp + _nowDelta + _preFillDuration + _preFillDuration;
+    return event.timestamp! + _nowDelta + _preFillDuration + _preFillDuration;
   }
 
 //  MidiFile _currentFile;
@@ -347,7 +348,7 @@ abstract class MidiPlayerBase {
   MidiPlayerBase(this.noteOnLastTimestamp);
 
   final noteOnKeys = <NoteOnKey>{};
-  num noteOnLastTimestamp;
+  num? noteOnLastTimestamp;
 
   // to implement
   void rawPlayEvent(PlayableEvent midiEvent) {}
@@ -365,11 +366,11 @@ abstract class MidiPlayerBase {
 
       // save last timestamp to queue note off afterwards on pause
       if (noteOnLastTimestamp == null ||
-          event.timestamp > noteOnLastTimestamp) {
+          event.timestamp! > noteOnLastTimestamp!) {
         noteOnLastTimestamp = event.timestamp;
       }
 
-      if (midiEvent.velocity > 0) {
+      if (midiEvent.velocity! > 0) {
         noteOnKeys.add(key);
       } else {
         noteOnKeys.remove(key);
@@ -384,11 +385,11 @@ abstract class MidiPlayerBase {
     if (isPlaying) {
       final nowTimestamp = nowToTimestamp();
 
-      _midiFilePlayer.pause(nowTimestamp);
+      _midiFilePlayer!.pause(nowTimestamp);
 
       // Kill pending _playNext)
       if (_waitPlayNextCompleter != null) {
-        _waitPlayNextCompleter.completeError('paused');
+        _waitPlayNextCompleter!.completeError('paused');
         _waitPlayNextCompleter = null;
       }
       var timestamp = noteOnLastTimestamp;
@@ -413,13 +414,13 @@ abstract class MidiPlayerBase {
   }
 
   num get totalDurationMs {
-    return _midiFilePlayer.totalDurationMs;
+    return _midiFilePlayer!.totalDurationMs;
   }
 
   num get currentAbsoluteMs {
     if (!_isPlaying) {
       return 0;
     }
-    return _midiFilePlayer.timestampToAbsoluteMs(nowToTimestamp());
+    return _midiFilePlayer!.timestampToAbsoluteMs(nowToTimestamp());
   }
 }

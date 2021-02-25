@@ -9,7 +9,7 @@ import 'test_common.dart';
 
 class _TestMidiPlayer extends MidiPlayerBase {
   @override
-  num nowToTimestamp([num now]) {
+  num nowToTimestamp([num? now]) {
     now ??= this.now;
 
     return now;
@@ -23,7 +23,7 @@ class _TestMidiPlayer extends MidiPlayerBase {
   @override
   num now;
 
-  _TestMidiPlayer(this.now, num noteOnLastTimestamp)
+  _TestMidiPlayer(this.now, num? noteOnLastTimestamp)
       : super(noteOnLastTimestamp);
 }
 
@@ -94,7 +94,7 @@ void main() {
       expect(player.isDone, false);
 // Forward enough
       player.now = 5000;
-      return player.done.then((_) {
+      return player.done!.then((_) {
         expect(player.isPlaying, false);
         expect(player.isPaused, false);
         expect(player.isDone, true);
@@ -125,7 +125,7 @@ void main() {
       player.resume();
       // Forward enough
       player.now = 5000;
-      return player.done.then((_) {
+      return player.done!.then((_) {
         expect(player.isPlaying, false);
         expect(player.isPaused, false);
         expect(player.isDone, true);

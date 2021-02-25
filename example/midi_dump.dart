@@ -13,7 +13,7 @@ void main(List<String> args) {
       List<int> data = file.readAsBytesSync();
       final parser = FileParser(MidiParser(data));
       parser.parseFile();
-      parser.file.dump();
+      parser.file!.dump();
     }
   });
 }

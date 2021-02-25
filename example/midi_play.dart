@@ -15,19 +15,19 @@ class _MidiPlayer extends MidiPlayerBase {
     print(event);
   }
 
-  Stopwatch stopwatch;
+  Stopwatch? stopwatch;
 
   @override
   num get now {
     // make the first call 0
     if (stopwatch == null) {
       stopwatch = Stopwatch();
-      stopwatch.start();
+      stopwatch!.start();
     }
-    return stopwatch.elapsed.inMilliseconds;
+    return stopwatch!.elapsed.inMilliseconds;
   }
 
-  _MidiPlayer([num noteOnLastTimestamp]) : super(noteOnLastTimestamp);
+  _MidiPlayer([num? noteOnLastTimestamp]) : super(noteOnLastTimestamp);
 }
 
 Future main(List<String> args) async {

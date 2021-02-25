@@ -27,8 +27,8 @@ class TrackEvent {
   /// The time division (defined in the MIDI header chunk) and the tempo
   /// (defined with a track event). If no tempo is define, 120 beats
   /// per minute is assumed.
-  int deltaTime;
-  MidiEvent midiEvent;
+  int? deltaTime;
+  MidiEvent? midiEvent;
 
   TrackEvent(this.deltaTime, this.midiEvent);
 
@@ -38,7 +38,7 @@ class TrackEvent {
   }
 
   @override
-  int get hashCode => deltaTime + midiEvent.hashCode;
+  int get hashCode => deltaTime! + midiEvent.hashCode;
 
   @override
   bool operator ==(other) {
@@ -54,7 +54,7 @@ abstract class MidiEvent {
   List<MidiEvent> events = [];
 
   /// Event command combining channel and event type (called command too).
-  int command;
+  int? command;
 
   /// Available channel count.
   static const int channelCount = 16;
@@ -110,7 +110,7 @@ abstract class MidiEvent {
     return (command & 0xF);
   }
 
-  int get eventType => commandGetEventType(command);
+  int get eventType => commandGetEventType(command!);
   @Deprecated('user event type instead')
   int get codeCommand => eventType;
 
@@ -144,7 +144,8 @@ abstract class MidiEvent {
         // Meta!
         // not handled here
         // event = new MetaEvent();
-        return null;
+        // return null;
+        throw 'Event $eventType not supported in MidiEvent.base';
     }
     event.command = command;
     return event;
@@ -157,7 +158,7 @@ abstract class MidiEvent {
   void writeData(MidiWriter writer);
 
   @override
-  int get hashCode => command;
+  int get hashCode => command!;
 
   @override
   bool operator ==(other) {
@@ -169,13 +170,13 @@ abstract class MidiEvent {
 
   @override
   String toString() {
-    return '${hexUint8(command)}';
+    return '${hexUint8(command!)}';
   }
 }
 
 /// Channel event.
 abstract class ChannelEvent extends MidiEvent {
-  int get channel => MidiEvent.commandGetChannel(command);
+  int get channel => MidiEvent.commandGetChannel(command!);
   ChannelEvent();
 
   ChannelEvent.withParam(int comand, int channel)
@@ -183,7 +184,7 @@ abstract class ChannelEvent extends MidiEvent {
 }
 
 abstract class Param1ByteEvent extends ChannelEvent {
-  int _param1;
+  int? _param1;
 
   Param1ByteEvent();
   Param1ByteEvent.withParam(int command, int channel, this._param1)
@@ -196,15 +197,15 @@ abstract class Param1ByteEvent extends ChannelEvent {
 
   @override
   void writeData(MidiWriter writer) {
-    writer.writeUint8(_param1);
+    writer.writeUint8(_param1!);
   }
 
   @override
-  int get hashCode => super.hashCode * 17 + _param1;
+  int get hashCode => super.hashCode * 17 + _param1!;
 
   @override
   bool operator ==(other) {
-    if (super == (other)) {
+    if (super == (other) && other is Param1ByteEvent) {
       return other._param1 == _param1;
     }
     return false;
@@ -217,8 +218,8 @@ abstract class Param1ByteEvent extends ChannelEvent {
 }
 
 class ProgramChangeEvent extends Param1ByteEvent {
-  int get program => _param1;
-  set program(int _program) {
+  int? get program => _param1;
+  set program(int? _program) {
     _param1 = _program;
   }
 
@@ -233,11 +234,11 @@ class ProgramChangeEvent extends Param1ByteEvent {
 }
 
 abstract class Param2BytesEvent extends Param1ByteEvent {
-  int _param2;
+  int? _param2;
 
   Param2BytesEvent();
   Param2BytesEvent.withParam(
-      int command, int channel, int _param1, this._param2) //
+      int command, int channel, int? _param1, this._param2) //
       : super.withParam(command, channel, _param1);
 
   @override
@@ -249,19 +250,19 @@ abstract class Param2BytesEvent extends Param1ByteEvent {
   @override
   void writeData(MidiWriter writer) {
     super.writeData(writer);
-    writer.writeUint8(_param2);
+    writer.writeUint8(_param2!);
   }
 
   @override
   bool operator ==(other) {
-    if (super == (other)) {
+    if (super == (other) && other is Param2BytesEvent) {
       return other._param2 == _param2;
     }
     return false;
   }
 
   @override
-  int get hashCode => super.hashCode * 31 + _param2;
+  int get hashCode => super.hashCode * 31 + _param2!;
 
   @override
   String toString() {
@@ -271,13 +272,13 @@ abstract class Param2BytesEvent extends Param1ByteEvent {
 
 /// Channel after touch event.
 class ChannelAfterTouchEvent extends Param1ByteEvent {
-  int get amount => _param1;
+  int? get amount => _param1;
 
   ChannelAfterTouchEvent._();
   ChannelAfterTouchEvent(int command, int channel, int amount) //
       : super.withParam(MidiEvent.channelAfterTouch, channel, amount);
 
-  set amount(int _channel) {
+  set amount(int? _channel) {
     _param1 = _channel;
   }
 
@@ -296,19 +297,19 @@ class ChannelAfterTouchEvent extends Param1ByteEvent {
 /// @author Alex
 ///
 abstract class NoteEvent extends Param2BytesEvent {
-  int get note => _param1;
-  set note(int _note) {
+  int? get note => _param1;
+  set note(int? _note) {
     _param1 = _note;
   }
 
-  int get velocity => _param2;
-  set velocity(int _velocity) {
+  int? get velocity => _param2;
+  set velocity(int? _velocity) {
     _param2 = _velocity;
   }
 
   NoteEvent();
 
-  NoteEvent.withParam(int command, int channel, int noteNumber, int velocity)
+  NoteEvent.withParam(int command, int channel, int? noteNumber, int velocity)
       : super.withParam(command, channel, noteNumber, velocity);
 }
 
@@ -327,7 +328,7 @@ class NoteOnEvent extends NoteEvent {
 /// Note off event.
 class NoteOffEvent extends NoteEvent {
   NoteOffEvent._();
-  NoteOffEvent(int channel, int noteNumber, int velocity) //
+  NoteOffEvent(int channel, int? noteNumber, int velocity) //
       : super.withParam(MidiEvent.noteOff, channel, noteNumber, velocity);
 
   @override
@@ -350,13 +351,13 @@ class KeyAfterTouchEvent extends NoteEvent {
 
 /// Pitch wheel change event
 class PitchWheelChangeEvent extends Param2BytesEvent {
-  int get bottom => _param1;
-  set bottom(int _bottom) {
+  int? get bottom => _param1;
+  set bottom(int? _bottom) {
     _param1 = _bottom;
   }
 
-  int get top => _param2;
-  set top(int _top) {
+  int? get top => _param2;
+  set top(int? _top) {
     _param2 = _top;
   }
 
@@ -383,13 +384,13 @@ class ControlChangeEvent extends Param2BytesEvent {
   static int allReset = 121; // <= reset
   static int allSoundOff = 120; // <= quick mute
 
-  int get controller => _param1;
-  set controller(int _controller) {
+  int? get controller => _param1;
+  set controller(int? _controller) {
     _param1 = _controller;
   }
 
-  int get value => _param2;
-  set value(int _value) {
+  int? get value => _param2;
+  set value(int? _value) {
     _param2 = _value;
   }
 
@@ -419,7 +420,7 @@ class ControlChangeEvent extends Param2BytesEvent {
 /// 240 (0xF0)  variable-length data bytes, 0xF7
 /// Normal SysEx Event Values
 class SysExEvent extends MidiEvent {
-  List<int> data;
+  List<int>? data;
 
   SysExEvent.withParam(int command, [this.data])
       : super.withParam(
@@ -437,15 +438,15 @@ class SysExEvent extends MidiEvent {
 
   @override
   void writeData(MidiWriter writer) {
-    final dataSize = data == null ? 0 : data.length;
+    final dataSize = data == null ? 0 : data!.length;
     writer.writeVariableLengthData(dataSize);
     if (dataSize > 0) {
-      writer.write(data);
+      writer.write(data!);
     }
   }
 
   @override
-  int get hashCode => super.hashCode * 17 + data.length;
+  int get hashCode => super.hashCode * 17 + data!.length;
 
   @override
   bool operator ==(other) {
@@ -463,8 +464,8 @@ class SysExEvent extends MidiEvent {
 
 /// A Meta mide event.
 abstract class MetaEvent extends MidiEvent {
-  int metaCommand;
-  List<int> data;
+  int? metaCommand;
+  List<int>? data;
 
   static const int metaTimeSig = 0x58;
   // 2018-09-22
@@ -485,7 +486,7 @@ abstract class MetaEvent extends MidiEvent {
       : super.withParam(MidiEvent
             .cmdMetaEvent); // properly use the full command here (i.e. 0xFF)
 
-  factory MetaEvent(int metaCommand, [List<int> data]) {
+  factory MetaEvent(int metaCommand, [List<int>? data]) {
     final event = MetaEvent.base(MidiEvent.cmdMetaEvent, metaCommand);
     event.data = data;
     return event;
@@ -527,16 +528,16 @@ abstract class MetaEvent extends MidiEvent {
 
   @override
   void writeData(MidiWriter writer) {
-    writer.writeUint8(metaCommand);
-    final dataSize = data == null ? 0 : data.length;
+    writer.writeUint8(metaCommand!);
+    final dataSize = data == null ? 0 : data!.length;
     writer.writeVariableLengthData(dataSize);
     if (dataSize > 0) {
-      writer.write(data);
+      writer.write(data!);
     }
   }
 
   @override
-  int get hashCode => super.hashCode * 17 + metaCommand;
+  int get hashCode => super.hashCode * 17 + metaCommand!;
 
   @override
   bool operator ==(other) {
@@ -641,14 +642,14 @@ class TimeSigEvent extends MetaEvent {
 //    }
 //
   int get bottom {
-    return 1 << data[1];
+    return 1 << data![1];
   }
 
-  int get top => data[0];
+  int get top => data![0];
 
   @override
   String toString() {
-    return '${super.toString()} ${top}/${bottom} ${data[2]} ${data[3]}';
+    return '${super.toString()} ${top}/${bottom} ${data![2]} ${data![3]}';
   }
 //
 //    @Override
@@ -692,7 +693,7 @@ class TempoEvent extends MetaEvent {
   static const int MICROSECONDS_PER_MINUTE = 60000000;
 
   num get beatPerMillis => 1000 / tempo;
-  int get tempo => read3BytesBEInteger(data);
+  int get tempo => read3BytesBEInteger(data!);
   num get tempoBpm => MICROSECONDS_PER_MINUTE / tempo;
 
   @override
