@@ -212,7 +212,7 @@ abstract class Param1ByteEvent extends ChannelEvent {
 
   @override
   String toString() {
-    return '${super.toString()} p1 ${_param1}';
+    return '${super.toString()} p1 $_param1';
   }
 }
 
@@ -265,7 +265,7 @@ abstract class Param2BytesEvent extends Param1ByteEvent {
 
   @override
   String toString() {
-    return '${super.toString()} p2 ${_param2}';
+    return '${super.toString()} p2 $_param2';
   }
 }
 
@@ -551,7 +551,7 @@ abstract class MetaEvent extends MidiEvent {
 
   @override
   String toString() {
-    return '${super.toString()} meta ${metaCommand} data ${hexQuickView(data)}';
+    return '${super.toString()} meta $metaCommand data ${hexQuickView(data)}';
   }
 }
 
@@ -648,7 +648,7 @@ class TimeSigEvent extends MetaEvent {
 
   @override
   String toString() {
-    return '${super.toString()} ${top}/${bottom} ${data[2]} ${data[3]}';
+    return '${super.toString()} $top/$bottom ${data[2]} ${data[3]}';
   }
 //
 //    @Override
