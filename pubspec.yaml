@@ -1,5 +1,5 @@
 name: tekartik_midi
-version: 0.4.0
+version: 0.4.1
 description: midi event and file parser
 author: Alexandre Roux <alex@tekartik.com>
 publish_to: none

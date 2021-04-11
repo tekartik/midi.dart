@@ -279,7 +279,7 @@ abstract class MidiPlayerBase {
     } else {
       final nowTimestamp = _nowTimestamp; //stopwatch.elapsedMilliseconds;
 
-      if (_currentEvent!.timestamp! < nowTimestamp) {
+      if (_currentEvent!.timestamp < nowTimestamp) {
         //devPrint('## $now: $_currentEvent');
         _streamController!.add(_currentEvent);
         _currentEvent = _midiFilePlayer!.next;
@@ -289,10 +289,9 @@ abstract class MidiPlayerBase {
         _waitPlayNextCompleter = nextCompleter;
         Future.delayed(
             Duration(
-                milliseconds: (_currentEvent!.timestamp! -
-                        nowTimestamp +
-                        _timerResolution)
-                    .toInt()), () {
+                milliseconds:
+                    (_currentEvent!.timestamp - nowTimestamp + _timerResolution)
+                        .toInt()), () {
           if (!nextCompleter.isCompleted) {
             nextCompleter.complete();
           }
@@ -311,7 +310,7 @@ abstract class MidiPlayerBase {
 
   num eventTimestampToOutputTimestamp(PlayableEvent event) {
     //return event.timestamp + _startNow + _nowDelta + _preFillDuration + _preFillDuration;
-    return event.timestamp! + _nowDelta + _preFillDuration + _preFillDuration;
+    return event.timestamp + _nowDelta + _preFillDuration + _preFillDuration;
   }
 
 //  MidiFile _currentFile;
@@ -366,7 +365,7 @@ abstract class MidiPlayerBase {
 
       // save last timestamp to queue note off afterwards on pause
       if (noteOnLastTimestamp == null ||
-          event.timestamp! > noteOnLastTimestamp!) {
+          event.timestamp > noteOnLastTimestamp!) {
         noteOnLastTimestamp = event.timestamp;
       }
 

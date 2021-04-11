@@ -7,13 +7,13 @@ class EventWriter extends ObjectWriter {
   late TrackEvent event;
 
   void writeEvent() {
-    writeVariableLengthData(event.deltaTime!);
-    writeUint8(event.midiEvent!.command!);
-    event.midiEvent!.writeData(midiWriter);
+    writeVariableLengthData(event.deltaTime);
+    writeUint8(event.midiEvent.command);
+    event.midiEvent.writeData(midiWriter);
   }
 
   void writeMidiEvent(MidiEvent midiEvent) {
-    writeUint8(midiEvent.command!);
+    writeUint8(midiEvent.command);
     midiEvent.writeData(midiWriter);
   }
 }
