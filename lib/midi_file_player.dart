@@ -8,8 +8,8 @@ import 'package:tekartik_common_utils/log_utils.dart';
 import 'midi.dart';
 
 class PlayableEvent {
-  num? timestamp; // ms
-  MidiEvent? midiEvent;
+  final num timestamp; // ms
+  final MidiEvent midiEvent;
 
   PlayableEvent(this.timestamp, this.midiEvent);
 
@@ -32,7 +32,7 @@ class LocatedTrackPlayer {
     if (_current == null) {
       if (_currentEventIndex < track!.events.length) {
         final trackEvent = track!.events[_currentEventIndex];
-        _currentEventMs += trackEvent.deltaTime! * timeUnitInMs!;
+        _currentEventMs += trackEvent.deltaTime * timeUnitInMs!;
         _current = LocatedEvent(_currentEventMs, trackEvent.midiEvent);
       }
     }
@@ -63,9 +63,9 @@ class NoteOnKey {
 
 /// For all tracks
 class LocatedEvent {
-  num absoluteMs; // ms since start without speed ratio affected
+  final num absoluteMs; // ms since start without speed ratio affected
 
-  MidiEvent? midiEvent;
+  final MidiEvent midiEvent;
 
   LocatedEvent(this.absoluteMs, this.midiEvent);
 

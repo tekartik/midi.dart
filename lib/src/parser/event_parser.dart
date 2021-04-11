@@ -3,8 +3,8 @@ import 'package:tekartik_midi/midi_parser.dart';
 import 'package:tekartik_midi/src/parser/object_parser.dart';
 
 class EventParser extends ObjectParser {
-  int? deltaTime;
-  MidiEvent? event;
+  late int deltaTime;
+  late MidiEvent event;
 
   TrackEvent get trackEvent => TrackEvent(deltaTime, event);
 
@@ -41,7 +41,7 @@ class EventParser extends ObjectParser {
     } else {
       event = MidiEvent.base(command);
     }
-    event!.readData(midiParser);
+    event.readData(midiParser);
     return event;
   }
 

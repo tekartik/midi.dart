@@ -1,5 +1,3 @@
-library event_test;
-
 import 'package:tekartik_midi/midi.dart';
 
 import 'test_common.dart';
@@ -48,11 +46,12 @@ void main() {
     });
 
     test('meta', () {
-      final event = MetaEvent(0xF1, null);
+      final event = MetaEvent(0xF1);
       expect(event, event);
-      expect(event, MetaEvent(0xF1, null));
-      expect(event, isNot(MetaEvent(0xF1, [])));
-      expect(event, isNot(MetaEvent(0xF2, null)));
+      expect(event, MetaEvent(0xF1));
+      expect(event, MetaEvent(0xF1, []));
+      expect(event, isNot(MetaEvent(0xF1, [1])));
+      expect(event, isNot(MetaEvent(0xF2)));
       expect(MetaEvent(0xF2, [1]), MetaEvent(0xF2, [1]));
       expect(MetaEvent(0xF2, [1]), isNot(MetaEvent(0xF2, [2])));
     });
@@ -66,7 +65,7 @@ void main() {
 
     test('eot', () {
       final event = EndOfTrackEvent();
-      expect(event, MetaEvent(47, null));
+      expect(event, MetaEvent(47));
     });
 
     test('time sig', () {

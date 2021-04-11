@@ -27,8 +27,8 @@ class TrackEvent {
   /// The time division (defined in the MIDI header chunk) and the tempo
   /// (defined with a track event). If no tempo is define, 120 beats
   /// per minute is assumed.
-  int? deltaTime;
-  MidiEvent? midiEvent;
+  final int deltaTime;
+  final MidiEvent midiEvent;
 
   TrackEvent(this.deltaTime, this.midiEvent);
 
@@ -38,7 +38,7 @@ class TrackEvent {
   }
 
   @override
-  int get hashCode => deltaTime! + midiEvent.hashCode;
+  int get hashCode => deltaTime + midiEvent.hashCode;
 
   @override
   bool operator ==(other) {
@@ -54,7 +54,7 @@ abstract class MidiEvent {
   List<MidiEvent> events = [];
 
   /// Event command combining channel and event type (called command too).
-  int? command;
+  late int command;
 
   /// Available channel count.
   static const int channelCount = 16;
@@ -110,7 +110,8 @@ abstract class MidiEvent {
     return (command & 0xF);
   }
 
-  int get eventType => commandGetEventType(command!);
+  int get eventType => commandGetEventType(command);
+
   @Deprecated('user event type instead')
   int get codeCommand => eventType;
 
@@ -147,6 +148,7 @@ abstract class MidiEvent {
         // return null;
         throw 'Event $eventType not supported in MidiEvent.base';
     }
+    // ignore: prefer_initializing_formals
     event.command = command;
     return event;
   }
@@ -158,7 +160,7 @@ abstract class MidiEvent {
   void writeData(MidiWriter writer);
 
   @override
-  int get hashCode => command!;
+  int get hashCode => command;
 
   @override
   bool operator ==(other) {
@@ -170,13 +172,14 @@ abstract class MidiEvent {
 
   @override
   String toString() {
-    return '${hexUint8(command!)}';
+    return '${hexUint8(command)}';
   }
 }
 
 /// Channel event.
 abstract class ChannelEvent extends MidiEvent {
-  int get channel => MidiEvent.commandGetChannel(command!);
+  int get channel => MidiEvent.commandGetChannel(command);
+
   ChannelEvent();
 
   ChannelEvent.withParam(int comand, int channel)
@@ -187,6 +190,7 @@ abstract class Param1ByteEvent extends ChannelEvent {
   int? _param1;
 
   Param1ByteEvent();
+
   Param1ByteEvent.withParam(int command, int channel, this._param1)
       : super.withParam(command, channel);
 
@@ -219,11 +223,13 @@ abstract class Param1ByteEvent extends ChannelEvent {
 
 class ProgramChangeEvent extends Param1ByteEvent {
   int? get program => _param1;
+
   set program(int? _program) {
     _param1 = _program;
   }
 
   ProgramChangeEvent._();
+
   ProgramChangeEvent(int channel, int program) //
       : super.withParam(MidiEvent.programChange, channel, program);
 
@@ -237,6 +243,7 @@ abstract class Param2BytesEvent extends Param1ByteEvent {
   int? _param2;
 
   Param2BytesEvent();
+
   Param2BytesEvent.withParam(
       int command, int channel, int? _param1, this._param2) //
       : super.withParam(command, channel, _param1);
@@ -275,6 +282,7 @@ class ChannelAfterTouchEvent extends Param1ByteEvent {
   int? get amount => _param1;
 
   ChannelAfterTouchEvent._();
+
   ChannelAfterTouchEvent(int command, int channel, int amount) //
       : super.withParam(MidiEvent.channelAfterTouch, channel, amount);
 
@@ -298,11 +306,13 @@ class ChannelAfterTouchEvent extends Param1ByteEvent {
 ///
 abstract class NoteEvent extends Param2BytesEvent {
   int? get note => _param1;
+
   set note(int? _note) {
     _param1 = _note;
   }
 
   int? get velocity => _param2;
+
   set velocity(int? _velocity) {
     _param2 = _velocity;
   }
@@ -316,6 +326,7 @@ abstract class NoteEvent extends Param2BytesEvent {
 /// Note on event.
 class NoteOnEvent extends NoteEvent {
   NoteOnEvent._();
+
   NoteOnEvent(int channel, int noteNumber, int velocity) //
       : super.withParam(MidiEvent.noteOn, channel, noteNumber, velocity);
 
@@ -328,6 +339,7 @@ class NoteOnEvent extends NoteEvent {
 /// Note off event.
 class NoteOffEvent extends NoteEvent {
   NoteOffEvent._();
+
   NoteOffEvent(int channel, int? noteNumber, int velocity) //
       : super.withParam(MidiEvent.noteOff, channel, noteNumber, velocity);
 
@@ -340,6 +352,7 @@ class NoteOffEvent extends NoteEvent {
 /// Key after touch event.
 class KeyAfterTouchEvent extends NoteEvent {
   KeyAfterTouchEvent._();
+
   KeyAfterTouchEvent(int channel, int noteNumber, int velocity) //
       : super.withParam(MidiEvent.keyAfterTouch, channel, noteNumber, velocity);
 
@@ -352,16 +365,19 @@ class KeyAfterTouchEvent extends NoteEvent {
 /// Pitch wheel change event
 class PitchWheelChangeEvent extends Param2BytesEvent {
   int? get bottom => _param1;
+
   set bottom(int? _bottom) {
     _param1 = _bottom;
   }
 
   int? get top => _param2;
+
   set top(int? _top) {
     _param2 = _top;
   }
 
   PitchWheelChangeEvent._();
+
   PitchWheelChangeEvent(int channel, int noteNumber, int velocity) //
       : super.withParam(
             MidiEvent.pitchWheelChange, channel, noteNumber, velocity);
@@ -375,6 +391,7 @@ class PitchWheelChangeEvent extends Param2BytesEvent {
 /// cc control number vv new value
 class ControlChangeEvent extends Param2BytesEvent {
   ControlChangeEvent._();
+
   ControlChangeEvent.withParam(
       int channel, int controllerType, int controllerValue)
       : super.withParam(
@@ -385,11 +402,13 @@ class ControlChangeEvent extends Param2BytesEvent {
   static int allSoundOff = 120; // <= quick mute
 
   int? get controller => _param1;
+
   set controller(int? _controller) {
     _param1 = _controller;
   }
 
   int? get value => _param2;
+
   set value(int? _value) {
     _param2 = _value;
   }
@@ -401,11 +420,13 @@ class ControlChangeEvent extends Param2BytesEvent {
 
   static ControlChangeEvent newAllSoundOffEvent(int channel) =>
       ControlChangeEvent.withParam(channel, allSoundOff, 0);
+
   static ControlChangeEvent newAllNotesOffEvent(int channel) =>
       ControlChangeEvent.withParam(channel, allNotesOff, 0);
+
   static ControlChangeEvent newAllResetEvent(int channel) =>
       ControlChangeEvent.withParam(channel, allReset, 0);
-  //null;
+//null;
 
 }
 
@@ -420,9 +441,9 @@ class ControlChangeEvent extends Param2BytesEvent {
 /// 240 (0xF0)  variable-length data bytes, 0xF7
 /// Normal SysEx Event Values
 class SysExEvent extends MidiEvent {
-  List<int>? data;
+  List<int> data;
 
-  SysExEvent.withParam(int command, [this.data])
+  SysExEvent.withParam(int command, [this.data = const <int>[]])
       : super.withParam(
             command); // properly use the full command here (i.e. 0xFF)
 
@@ -438,15 +459,15 @@ class SysExEvent extends MidiEvent {
 
   @override
   void writeData(MidiWriter writer) {
-    final dataSize = data == null ? 0 : data!.length;
+    final dataSize = data.length;
     writer.writeVariableLengthData(dataSize);
     if (dataSize > 0) {
-      writer.write(data!);
+      writer.write(data);
     }
   }
 
   @override
-  int get hashCode => super.hashCode * 17 + data!.length;
+  int get hashCode => super.hashCode * 17 + data.length;
 
   @override
   bool operator ==(other) {
@@ -465,29 +486,33 @@ class SysExEvent extends MidiEvent {
 /// A Meta mide event.
 abstract class MetaEvent extends MidiEvent {
   int? metaCommand;
-  List<int>? data;
+  List<int> data;
 
   static const int metaTimeSig = 0x58;
+
   // 2018-09-22
   @deprecated
   static const int META_TIME_SIG = metaTimeSig;
   static const int metaTempo = 0x51;
+
   // 2018-09-22
   @deprecated
   static const int META_TEMPO = metaTempo;
   static const int metaEndOfTrack = 0x2F;
+
   // 2018-09-22
   @deprecated
   static const int META_END_OF_TRACK = metaEndOfTrack;
 
-  MetaEvent._();
+  MetaEvent._() : data = <int>[];
 
-  MetaEvent._withParam(this.metaCommand, this.data)
+  MetaEvent._withParam(this.metaCommand, [this.data = const <int>[]])
       : super.withParam(MidiEvent
             .cmdMetaEvent); // properly use the full command here (i.e. 0xFF)
 
-  factory MetaEvent(int metaCommand, [List<int>? data]) {
+  factory MetaEvent(int metaCommand, [List<int> data = const <int>[]]) {
     final event = MetaEvent.base(MidiEvent.cmdMetaEvent, metaCommand);
+    // ignore: prefer_initializing_formals
     event.data = data;
     return event;
   }
@@ -509,6 +534,7 @@ abstract class MetaEvent extends MidiEvent {
         break;
     }
     event.command = command;
+    // ignore: prefer_initializing_formals
     event.metaCommand = metaCommand;
     return event;
   }
@@ -529,10 +555,10 @@ abstract class MetaEvent extends MidiEvent {
   @override
   void writeData(MidiWriter writer) {
     writer.writeUint8(metaCommand!);
-    final dataSize = data == null ? 0 : data!.length;
+    final dataSize = data.length;
     writer.writeVariableLengthData(dataSize);
     if (dataSize > 0) {
-      writer.write(data!);
+      writer.write(data);
     }
   }
 
@@ -614,10 +640,12 @@ class TimeSigEvent extends MetaEvent {
 
   TimeSigEvent.topBottom(int top, int bottom)
       : this(top, bottomToDenom(bottom));
+
   TimeSigEvent(int num, int denom,
       [int tickCount = 24, int num32ndToQuarter = 8])
       : super._withParam(MetaEvent.metaTimeSig,
             createData(num, denom, tickCount, num32ndToQuarter));
+
 //  public TimeSig(int num, int denom) {
 //    super(META_TIME_SIG);
 //      data = new byte[4];
@@ -642,14 +670,14 @@ class TimeSigEvent extends MetaEvent {
 //    }
 //
   int get bottom {
-    return 1 << data![1];
+    return 1 << data[1];
   }
 
-  int get top => data![0];
+  int get top => data[0];
 
   @override
   String toString() {
-    return '${super.toString()} $top/$bottom ${data![2]} ${data![3]}';
+    return '${super.toString()} $top/$bottom ${data[2]} ${data[3]}';
   }
 //
 //    @Override
@@ -693,7 +721,9 @@ class TempoEvent extends MetaEvent {
   static const int MICROSECONDS_PER_MINUTE = 60000000;
 
   num get beatPerMillis => 1000 / tempo;
-  int get tempo => read3BytesBEInteger(data!);
+
+  int get tempo => read3BytesBEInteger(data);
+
   num get tempoBpm => MICROSECONDS_PER_MINUTE / tempo;
 
   @override
@@ -717,7 +747,7 @@ class TempoEvent extends MetaEvent {
 class EndOfTrackEvent extends MetaEvent {
   EndOfTrackEvent._() : super._();
 
-  EndOfTrackEvent() : super._withParam(MetaEvent.metaEndOfTrack, null);
+  EndOfTrackEvent() : super._withParam(MetaEvent.metaEndOfTrack);
 
   @override
   String toString() {

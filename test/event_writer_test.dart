@@ -13,7 +13,7 @@ void main() {
       final midiWriter = MidiWriter();
       final writer = EventWriter(midiWriter);
 
-      final event = MetaEvent(0x2F, null);
+      final event = MetaEvent(0x2F);
       writer.event = TrackEvent(0, event);
 
       writer.writeEvent();
