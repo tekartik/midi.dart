@@ -1,12 +1,13 @@
 import 'dart:typed_data';
 
-import 'package:test/test.dart';
+import 'package:tekartik_common_utils/hex_utils.dart';
 import 'package:tekartik_midi/midi.dart';
 import 'package:tekartik_midi/midi_parser.dart';
-import 'package:tekartik_common_utils/hex_utils.dart';
+import 'package:test/test.dart';
 
 final sampleData = Uint8List.fromList(parseHexString(
     '4d 54 68 64 00 00 00 06 00 01 00 02 01 e0 4d 54 72 6b 00 00 00 13 00 ff 58 04 04 02 18 08 00 ff 51 03 06 1a 80 00 ff 2f 00 4d 54 72 6b 00 00 00 00'));
+
 void main() {
   group('doc', () {
     test('README creating midi file', () {

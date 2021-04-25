@@ -3,9 +3,9 @@ library tekartik_midi_parser;
 import 'package:tekartik_midi/src/buffer/midi_buffer.dart';
 import 'package:tekartik_midi/src/parser/binary_parser.dart';
 
-export 'package:tekartik_midi/src/parser/file_parser.dart';
 export 'package:tekartik_midi/src/parser/binary_parser.dart';
 export 'package:tekartik_midi/src/parser/event_parser.dart';
+export 'package:tekartik_midi/src/parser/file_parser.dart';
 export 'package:tekartik_midi/src/parser/track_parser.dart';
 
 /// Midi file parser.
