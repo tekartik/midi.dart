@@ -3,10 +3,10 @@ library tekartik_midi_writer;
 import 'package:tekartik_midi/src/writer/binary_writer.dart';
 
 export 'package:tekartik_midi/src/writer/binary_writer.dart';
-export 'package:tekartik_midi/src/writer/object_writer.dart';
-export 'package:tekartik_midi/src/writer/file_writer.dart';
-export 'package:tekartik_midi/src/writer/track_writer.dart';
 export 'package:tekartik_midi/src/writer/event_writer.dart';
+export 'package:tekartik_midi/src/writer/file_writer.dart';
+export 'package:tekartik_midi/src/writer/object_writer.dart';
+export 'package:tekartik_midi/src/writer/track_writer.dart';
 
 /// Midi file writer.
 class MidiWriter extends BinaryBEWriter {

@@ -3,9 +3,10 @@
 library midi_dump;
 
 import 'dart:io';
+
+import 'package:tekartik_midi/midi_file_player.dart';
 import 'package:tekartik_midi/midi_parser.dart';
 import 'package:tekartik_midi/midi_player_base.dart';
-import 'package:tekartik_midi/midi_file_player.dart';
 
 // Display midi event timing
 
