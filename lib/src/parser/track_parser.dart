@@ -1,6 +1,5 @@
 import 'package:tekartik_midi/midi.dart';
 import 'package:tekartik_midi/midi_parser.dart';
-import 'package:tekartik_midi/src/parser/event_parser.dart';
 import 'package:tekartik_midi/src/parser/object_parser.dart';
 
 class TrackParser extends ObjectParser {

@@ -1,7 +1,6 @@
 import 'package:tekartik_midi/midi.dart';
 import 'package:tekartik_midi/midi_parser.dart';
 import 'package:tekartik_midi/src/parser/object_parser.dart';
-import 'package:tekartik_midi/src/parser/track_parser.dart';
 
 class FileParser extends ObjectParser {
   FileParser(MidiParser midiParser) : super(midiParser);

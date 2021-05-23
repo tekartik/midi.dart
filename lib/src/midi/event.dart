@@ -5,8 +5,6 @@ import 'package:tekartik_common_utils/log_utils.dart';
 import 'package:tekartik_midi/midi_parser.dart';
 import 'package:tekartik_midi/midi_writer.dart';
 import 'package:tekartik_midi/src/buffer/midi_buffer.dart';
-import 'package:tekartik_midi/src/parser/binary_parser.dart';
-// ignore_for_file: constant_identifier_names
 
 /// Track event.
 ///
