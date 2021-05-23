@@ -3,7 +3,6 @@ library tekartik_midi_file_player;
 import 'dart:math';
 
 import 'package:tekartik_common_utils/common_utils_import.dart';
-import 'package:tekartik_common_utils/log_utils.dart';
 
 import 'midi.dart';
 

@@ -1,7 +1,6 @@
 @TestOn('vm')
 library file_writer_test;
 
-import 'package:tekartik_common_utils/common_utils_import.dart';
 import 'package:tekartik_midi/midi.dart';
 import 'package:tekartik_midi/midi_parser.dart';
 import 'package:tekartik_midi/midi_writer.dart';
