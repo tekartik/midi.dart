@@ -3,6 +3,7 @@ abstract class Buffer {
   int _position = 0;
 
   int get length;
+
   int get remaining => length - _position;
 
   bool contains(int size) {
@@ -22,6 +23,7 @@ class InBuffer extends Buffer {
   InBuffer(List<int> data) {
     _data = data;
   }
+
   @override
   int get length => _data.length;
 

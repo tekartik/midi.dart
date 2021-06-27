@@ -21,6 +21,7 @@ class MidiFile {
   /// then 1 tick = 500,000 / 60 = 8333.33 microseconds.
   int? _ppq = 120; // default value
   int? get ppq => _ppq;
+
   set ppq(int? ppq) {
     assert(ppq != null);
     if ((ppq! & 0x8000) != 0) {
@@ -101,6 +102,7 @@ class MidiFile {
 
   num? _frameCoundPerSecond;
   int? _divisionCountPerFrame;
+
   num? get frameCountPerSecond => _frameCoundPerSecond;
 
   int? get divisionCountPerFrame => _divisionCountPerFrame;

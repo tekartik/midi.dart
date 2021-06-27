@@ -5,6 +5,7 @@ import 'package:path/path.dart';
 import 'package:tekartik_midi/midi.dart';
 import 'package:tekartik_midi/midi_parser.dart';
 import 'package:tekartik_midi/midi_writer.dart';
+
 import 'io_test_common.dart';
 
 void main() {
