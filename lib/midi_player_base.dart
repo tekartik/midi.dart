@@ -14,22 +14,27 @@ abstract class MidiPlayerBase {
   }
 
   MidiFilePlayer? _midiFilePlayer;
+
   //Stopwatch stopwatch;
 
   // True when play has started once already
   bool _isPaused = false;
+
   bool get isPaused => _isPaused;
 
   // True when play has started once already (true when paused)
   bool _isPlaying = false;
+
   bool get isPlaying => _isPlaying && !_isPaused;
 
   // True when done
   bool _isDone = false;
+
   bool get isDone => _isDone;
 
   // null when not load yet
   Future? _done;
+
   Future? get done => _done;
 
   // Created when playing

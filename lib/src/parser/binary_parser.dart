@@ -19,6 +19,7 @@ List<int> create3BytesBEIntegerBuffer(int value) {
 
 abstract class BinaryParser {
   InBuffer? _buffer;
+
   int get length => _buffer!.length;
 
   InBuffer? get inBuffer => _buffer;
