@@ -40,9 +40,9 @@ class TrackParser extends ObjectParser {
     }
   }
 
-  MidiTrack? parseTrack() {
+  MidiTrack parseTrack() {
     parseHeader();
     parseEvents();
-    return track;
+    return track!;
   }
 }

@@ -170,7 +170,7 @@ abstract class MidiEvent {
 
   @override
   String toString() {
-    return '${hexUint8(command)}';
+    return hexUint8(command);
   }
 }
 
@@ -489,17 +489,20 @@ abstract class MetaEvent extends MidiEvent {
   static const int metaTimeSig = 0x58;
 
   // 2018-09-22
-  @deprecated
+  @Deprecated('Use metaTimeSig')
+  // ignore: constant_identifier_names
   static const int META_TIME_SIG = metaTimeSig;
   static const int metaTempo = 0x51;
 
   // 2018-09-22
-  @deprecated
+  @Deprecated('Use metaTempo')
+  // ignore: constant_identifier_names
   static const int META_TEMPO = metaTempo;
   static const int metaEndOfTrack = 0x2F;
 
   // 2018-09-22
-  @deprecated
+  @Deprecated('Use metaEndOfTrack')
+  // ignore: constant_identifier_names
   static const int META_END_OF_TRACK = metaEndOfTrack;
 
   MetaEvent._() : data = <int>[];
@@ -710,19 +713,22 @@ class TimeSigEvent extends MetaEvent {
 class TempoEvent extends MetaEvent {
   TempoEvent._() : super._();
 
-  TempoEvent.bpm(num bpm) : this(MICROSECONDS_PER_MINUTE ~/ bpm);
+  TempoEvent.bpm(num bpm) : this(microsecondsPerMinute ~/ bpm);
 
   TempoEvent(int tempo)
       : super._withParam(
             MetaEvent.metaTempo, create3BytesBEIntegerBuffer(tempo));
 
-  static const int MICROSECONDS_PER_MINUTE = 60000000;
+  @Deprecated('User microsecondsPerMinute')
+  // ignore: constant_identifier_names
+  static const int MICROSECONDS_PER_MINUTE = microsecondsPerMinute;
+  static const int microsecondsPerMinute = 60000000;
 
   num get beatPerMillis => 1000 / tempo;
 
   int get tempo => read3BytesBEInteger(data);
 
-  num get tempoBpm => MICROSECONDS_PER_MINUTE / tempo;
+  num get tempoBpm => microsecondsPerMinute / tempo;
 
   @override
   String toString() {

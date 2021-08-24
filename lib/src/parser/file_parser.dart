@@ -22,8 +22,8 @@ class FileParser extends ObjectParser {
     file!.trackCount = 0;
     for (var i = 0; i < trackCount; i++) {
       //print(hexPretty(_midiParser.inBuffer.buildRemainingData().sublist(0, 20)));
-      trackParser.parseTrack();
-      file!.addTrack(trackParser.track);
+      var track = trackParser.parseTrack();
+      file!.addTrack(track);
     }
   }
 

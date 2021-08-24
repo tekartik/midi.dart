@@ -32,7 +32,7 @@ class _MidiPlayer extends MidiPlayerBase {
 }
 
 Future main(List<String> args) async {
-  args.forEach((String arg) async {
+  for (var arg in args) {
     final file = File(arg);
     if (file.existsSync()) {
       // parse data
@@ -46,5 +46,5 @@ Future main(List<String> args) async {
 
       await player.done;
     }
-  });
+  }
 }
