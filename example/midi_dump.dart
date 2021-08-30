@@ -8,7 +8,7 @@ import 'package:tekartik_midi/midi_parser.dart';
 
 // Dump midi files info and events
 void main(List<String> args) {
-  args.forEach((String arg) {
+  for (var arg in args) {
     final file = File(arg);
     if (file.existsSync()) {
       List<int> data = file.readAsBytesSync();
@@ -16,5 +16,5 @@ void main(List<String> args) {
       parser.parseFile();
       parser.file!.dump();
     }
-  });
+  }
 }

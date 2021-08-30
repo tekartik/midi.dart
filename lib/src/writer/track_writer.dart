@@ -30,10 +30,10 @@ class TrackWriter extends ObjectWriter {
     final headerStartPosition = data.length;
     _writeHeader(0);
     final eventsStartPosition = data.length;
-    track.events.forEach((TrackEvent event) {
+    for (var event in track.events) {
       eventWriter.event = event;
       eventWriter.writeEvent();
-    });
+    }
 
     trackSize = data.length - eventsStartPosition;
     final tmp = MidiWriter();

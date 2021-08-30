@@ -144,26 +144,26 @@ class MidiFilePlayer {
         LocatedTrackPlayer? nextTrackPlayer;
         num? nextMs;
 
-        trackPlayers.forEach((LocatedTrackPlayer trackPlayer) {
+        for (var trackPlayer in trackPlayers) {
           final event = trackPlayer.current(currentDeltaTimeUnitInMillis);
           if (event != null) {
             final trackNextMs = event.absoluteMs;
-            if (nextMs == null || (trackNextMs < nextMs!)) {
+            if (nextMs == null || (trackNextMs < nextMs)) {
               nextMs = trackNextMs;
               nextTrackPlayer = trackPlayer;
             }
           }
-        });
+        }
 
         if (nextTrackPlayer != null) {
-          final event = nextTrackPlayer!.current(currentDeltaTimeUnitInMillis)!;
+          final event = nextTrackPlayer.current(currentDeltaTimeUnitInMillis)!;
           final midiEvent = event.midiEvent;
           if (midiEvent is TempoEvent) {
             _setCurrentTempoEvent(midiEvent);
           }
 
           // if no next, remove track
-          if (nextTrackPlayer!.next(currentDeltaTimeUnitInMillis) == null) {
+          if (nextTrackPlayer.next(currentDeltaTimeUnitInMillis) == null) {
             trackPlayers.remove(nextTrackPlayer);
           }
 

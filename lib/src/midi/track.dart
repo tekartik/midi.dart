@@ -18,9 +18,9 @@ class MidiTrack {
   }
 
   void dump() {
-    events.forEach((TrackEvent e) {
+    for (var e in events) {
       print(e);
-    });
+    }
   }
 
   @override

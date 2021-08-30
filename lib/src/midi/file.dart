@@ -116,7 +116,7 @@ class MidiFile {
 
   int get timeDivision => _timeDivision!;
 
-  List<MidiTrack?> tracks = [];
+  var tracks = <MidiTrack>[];
 
   /// convert a delay in an event to a delay in ms
   num delayToMillis(int delay) {
@@ -153,7 +153,7 @@ class MidiFile {
     return out.toString();
   }
 
-  void addTrack(MidiTrack? track) {
+  void addTrack(MidiTrack track) {
     trackCount++;
     tracks.add(track);
   }
@@ -168,9 +168,9 @@ class MidiFile {
       print('divisionsPerFrame: $divisionCountPerFrame');
     }
     var index = 0;
-    tracks.forEach((MidiTrack? track) {
+    for (var track in tracks) {
       print('Track ${++index}');
-      track!.dump();
-    });
+      track.dump();
+    }
   }
 }

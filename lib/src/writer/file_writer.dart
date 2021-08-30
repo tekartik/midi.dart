@@ -27,10 +27,10 @@ class FileWriter extends ObjectWriter {
       file = _file;
     }
     writeHeader();
-    file.tracks.forEach((MidiTrack? track) {
+    for (var track in file.tracks) {
       final trackWriter = TrackWriter(midiWriter);
       trackWriter.writeTrack(track);
-    });
+    }
   }
 
   static List<int> fileData(MidiFile? file) {
