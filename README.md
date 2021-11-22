@@ -14,7 +14,7 @@ Library for parsing, manipulation Midi files and for sequencing midi event
 dependencies:
   tekartik_midi:
     git:
-      url: git://github.com/tekartik/midi.dart
+      url: https://github.com/tekartik/midi.dart
       ref: dart2
 ```
 
