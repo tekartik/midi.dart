@@ -8,6 +8,8 @@ Library for parsing, manipulation Midi files and for sequencing midi event
 
 ## Setup
 
+[Note about versioning.](https://github.com/tekartik/common.dart/blob/main/doc/tekartik_versioning.md)
+
 `pubspec.yaml`:
 
 ```yaml
@@ -15,7 +17,7 @@ dependencies:
   tekartik_midi:
     git:
       url: https://github.com/tekartik/midi.dart
-      ref: dart2
+      ref: dart2_3
 ```
 
 ## Usage example
