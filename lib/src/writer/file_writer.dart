@@ -22,9 +22,9 @@ class FileWriter extends ObjectWriter {
     writeUint16(file.timeDivision);
   }
 
-  void writeFile([MidiFile? _file]) {
-    if (_file != null) {
-      file = _file;
+  void writeFile([MidiFile? midiFile]) {
+    if (midiFile != null) {
+      file = midiFile;
     }
     writeHeader();
     for (var track in file.tracks) {

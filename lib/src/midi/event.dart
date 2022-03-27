@@ -222,8 +222,8 @@ abstract class Param1ByteEvent extends ChannelEvent {
 class ProgramChangeEvent extends Param1ByteEvent {
   int? get program => _param1;
 
-  set program(int? _program) {
-    _param1 = _program;
+  set program(int? program) {
+    _param1 = program;
   }
 
   ProgramChangeEvent._();
@@ -243,8 +243,8 @@ abstract class Param2BytesEvent extends Param1ByteEvent {
   Param2BytesEvent();
 
   Param2BytesEvent.withParam(
-      int command, int channel, int? _param1, this._param2) //
-      : super.withParam(command, channel, _param1);
+      int command, int channel, int? param1, this._param2) //
+      : super.withParam(command, channel, param1);
 
   @override
   void readData(MidiParser parser) {
@@ -284,8 +284,8 @@ class ChannelAfterTouchEvent extends Param1ByteEvent {
   ChannelAfterTouchEvent(int command, int channel, int amount) //
       : super.withParam(MidiEvent.channelAfterTouch, channel, amount);
 
-  set amount(int? _channel) {
-    _param1 = _channel;
+  set amount(int? channel) {
+    _param1 = channel;
   }
 
   @override
@@ -305,14 +305,14 @@ class ChannelAfterTouchEvent extends Param1ByteEvent {
 abstract class NoteEvent extends Param2BytesEvent {
   int? get note => _param1;
 
-  set note(int? _note) {
-    _param1 = _note;
+  set note(int? note) {
+    _param1 = note;
   }
 
   int? get velocity => _param2;
 
-  set velocity(int? _velocity) {
-    _param2 = _velocity;
+  set velocity(int? velocity) {
+    _param2 = velocity;
   }
 
   NoteEvent();
@@ -364,14 +364,14 @@ class KeyAfterTouchEvent extends NoteEvent {
 class PitchWheelChangeEvent extends Param2BytesEvent {
   int? get bottom => _param1;
 
-  set bottom(int? _bottom) {
-    _param1 = _bottom;
+  set bottom(int? bottom) {
+    _param1 = bottom;
   }
 
   int? get top => _param2;
 
-  set top(int? _top) {
-    _param2 = _top;
+  set top(int? top) {
+    _param2 = top;
   }
 
   PitchWheelChangeEvent._();
@@ -401,14 +401,14 @@ class ControlChangeEvent extends Param2BytesEvent {
 
   int? get controller => _param1;
 
-  set controller(int? _controller) {
-    _param1 = _controller;
+  set controller(int? controller) {
+    _param1 = controller;
   }
 
   int? get value => _param2;
 
-  set value(int? _value) {
-    _param2 = _value;
+  set value(int? value) {
+    _param2 = value;
   }
 
   @override
