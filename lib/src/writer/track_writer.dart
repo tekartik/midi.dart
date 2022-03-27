@@ -18,9 +18,9 @@ class TrackWriter extends ObjectWriter {
     writeUint32(trackSize);
   }
 
-  void writeTrack([MidiTrack? _track]) {
-    if (_track != null) {
-      track = _track;
+  void writeTrack([MidiTrack? midiTrack]) {
+    if (midiTrack != null) {
+      track = midiTrack;
     }
 
     var trackSize = 0;

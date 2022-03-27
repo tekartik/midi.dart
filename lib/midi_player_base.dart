@@ -65,9 +65,9 @@ abstract class MidiPlayerBase {
       isPlaying ? (isPaused ? _lastPauseTime : _nowTimestamp) : null;
 
   Duration? get currentTimestampDuration {
-    final _now = currentTimestamp;
-    if (_now != null) {
-      return Duration(milliseconds: _now.toInt());
+    final now = currentTimestamp;
+    if (now != null) {
+      return Duration(milliseconds: now.toInt());
     }
     return null;
   }
@@ -145,12 +145,12 @@ abstract class MidiPlayerBase {
   }
 
   void resume([num? time]) {
-    final _now = time ?? now;
+    final resumeTime = time ?? now;
     if (isPaused) {
-      _nowDelta += _now - _lastPauseTime!;
+      _nowDelta += resumeTime - _lastPauseTime!;
     }
     // TODO
-    _midiFilePlayer!.resume(_now);
+    _midiFilePlayer!.resume(resumeTime);
     _isPlaying = true;
     _isPaused = false;
     //stopwatch.start();
