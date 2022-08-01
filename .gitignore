@@ -3,6 +3,7 @@
 .buildlog
 .pub/
 build/
+.local/
 packages
 .packages
 
