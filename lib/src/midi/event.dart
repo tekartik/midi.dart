@@ -425,7 +425,6 @@ class ControlChangeEvent extends Param2BytesEvent {
   static ControlChangeEvent newAllResetEvent(int channel) =>
       ControlChangeEvent.withParam(channel, allReset, 0);
 //null;
-
 }
 
 /// Normal SysEx Events.
