@@ -231,7 +231,7 @@ abstract class MidiPlayerBase {
         }, onDone: () {
           //pause();
         })
-        .asFuture()
+        .asFuture<void>()
         .then((_) {
           //devPrint('onDone');
           //_midiFilePlayer = null;
@@ -290,7 +290,7 @@ abstract class MidiPlayerBase {
         _currentEvent = _midiFilePlayer!.next;
         _playNext();
       } else {
-        final nextCompleter = Completer.sync();
+        final nextCompleter = Completer<void>.sync();
         _waitPlayNextCompleter = nextCompleter;
         Future.delayed(
             Duration(

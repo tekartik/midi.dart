@@ -138,7 +138,7 @@ class MidiFile {
       return (fileFormat == other.fileFormat) &&
           (trackCount == other.trackCount) &&
           (_timeDivision == other._timeDivision) &&
-          (const ListEquality().equals(tracks, other.tracks));
+          (const ListEquality<MidiTrack>().equals(tracks, other.tracks));
     }
     return false;
   }

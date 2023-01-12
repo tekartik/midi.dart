@@ -12,7 +12,7 @@ class MidiTrack {
   @override
   bool operator ==(var other) {
     if (other is MidiTrack) {
-      return const ListEquality().equals(events, other.events);
+      return const ListEquality<TrackEvent>().equals(events, other.events);
     }
     return false;
   }

@@ -469,6 +469,7 @@ class SysExEvent extends MidiEvent {
   @override
   bool operator ==(other) {
     if (other is SysExEvent && super == (other)) {
+      // ignore: inference_failure_on_instance_creation
       return (const ListEquality().equals(other.data, data));
     }
     return false;
@@ -571,7 +572,7 @@ abstract class MetaEvent extends MidiEvent {
       if (other.metaCommand != metaCommand) {
         return false;
       }
-      return (const ListEquality().equals(other.data, data));
+      return (const ListEquality<int>().equals(other.data, data));
     }
     return false;
   }
