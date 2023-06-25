@@ -158,7 +158,7 @@ class MidiFile {
     tracks.add(track);
   }
 
-  void dump({bool showDeltaTime = false}) {
+  void dump() {
     print('format: $fileFormat');
     // ignore: unnecessary_null_comparison
     if (ppq != null) {
@@ -170,7 +170,7 @@ class MidiFile {
     var index = 0;
     for (var track in tracks) {
       print('Track ${++index}');
-      track.dump(showDeltaTime: showDeltaTime);
+      track.dump();
     }
   }
 }
