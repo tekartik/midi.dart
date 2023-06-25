@@ -579,7 +579,7 @@ abstract class MetaEvent extends MidiEvent {
 
   @override
   String toString() {
-    return '${super.toString()} meta $metaCommand data ${hexQuickView(data)}';
+    return '${super.toString()} meta $metaCommand${data.isEmpty ? '' : ' data ${hexQuickView(data)}'}';
   }
 }
 
