@@ -41,7 +41,7 @@ Future main(List<String> args) async {
       parser.parseFile();
 
       final player = _MidiPlayer();
-      player.load(parser.file);
+      player.load(parser.file!);
       player.resume();
 
       await player.done;

@@ -267,19 +267,23 @@ void main() {
       file.addTrack(track);
 
       final player = MidiFilePlayer(file);
+      MidiEvent event1 = TempoEvent.bpm(120);
+      track.addEvent(0, event1);
 
       // twice the speed
-      MidiEvent event = TempoEvent.bpm(240);
-      track.addEvent(240, event);
-      MidiEvent event2 = NoteOnEvent(1, 43, 127);
-      track.addEvent(120, event2);
-      file.ppq = 240;
+      var event2 = TempoEvent.bpm(240);
+      track.addEvent(240, event2);
+      MidiEvent event3 = NoteOnEvent(1, 43, 127);
+      track.addEvent(240, event3);
+      //file.ppq = 240;
 
-      expect(player.locatedEvents!.length, 2);
-      expect(player.locatedEvents!.first.midiEvent, event);
-      expect(player.locatedEvents!.first.absoluteMs, closeTo(500, 0.01));
+      expect(player.locatedEvents!.length, 3);
+      expect(player.locatedEvents![0].midiEvent, event1);
+      expect(player.locatedEvents![0].absoluteMs, closeTo(0, 0.01));
       expect(player.locatedEvents![1].midiEvent, event2);
-      expect(player.locatedEvents![1].absoluteMs, closeTo(625, 0.01));
+      expect(player.locatedEvents![1].absoluteMs, closeTo(1000, 0.01));
+      expect(player.locatedEvents![2].midiEvent, event3);
+      expect(player.locatedEvents![2].absoluteMs, closeTo(1500, 0.01));
     });
 
     test('2 tracks located event', () {
@@ -307,6 +311,42 @@ void main() {
       expect(player.locatedEvents![1].absoluteMs, closeTo(500, 0.01));
       expect(player.locatedEvents![2].midiEvent, event3);
       expect(player.locatedEvents![2].absoluteMs, closeTo(1000, 0.01));
+    });
+
+    test('two_tracks_bmp_change', () {
+      final file = MidiFile();
+      final track1 = MidiTrack();
+      final track2 = MidiTrack();
+      file.addTrack(track1);
+      file.addTrack(track2);
+
+      final player = MidiFilePlayer(file);
+      //player.tempoBpm = 120;
+      // 1 quarter note is 500 ms
+      MidiEvent event1 = TempoEvent.bpm(120);
+      track1.addEvent(0, event1);
+      MidiEvent event2 = NoteOnEvent(1, 43, 127);
+      track1.addEvent(120, event2);
+      MidiEvent event3 = NoteOnEvent(1, 44, 127);
+      track1.addEvent(240, event3);
+      // twice the speed
+      var event4 = TempoEvent.bpm(240);
+      track2.addEvent(240, event4);
+      MidiEvent event5 = NoteOnEvent(2, 45, 127);
+      track2.addEvent(480, event5);
+      //file.ppq = 240;
+
+      expect(player.locatedEvents!.length, 5);
+      expect(player.locatedEvents![0].midiEvent, event1);
+      expect(player.locatedEvents![0].absoluteMs, closeTo(0, 0.01));
+      expect(player.locatedEvents![1].midiEvent, event2);
+      expect(player.locatedEvents![1].absoluteMs, closeTo(500, 0.01));
+      expect(player.locatedEvents![2].midiEvent, event4);
+      expect(player.locatedEvents![2].absoluteMs, closeTo(1000, 0.01));
+      expect(player.locatedEvents![3].midiEvent, event3);
+      expect(player.locatedEvents![3].absoluteMs, closeTo(1250, 0.01));
+      expect(player.locatedEvents![4].midiEvent, event5);
+      expect(player.locatedEvents![4].absoluteMs, closeTo(2000, 0.01));
     });
   });
 }

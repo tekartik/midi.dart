@@ -138,7 +138,7 @@ class MidiFile {
       return (fileFormat == other.fileFormat) &&
           (trackCount == other.trackCount) &&
           (_timeDivision == other._timeDivision) &&
-          (const ListEquality().equals(tracks, other.tracks));
+          (const ListEquality<MidiTrack>().equals(tracks, other.tracks));
     }
     return false;
   }
@@ -158,7 +158,7 @@ class MidiFile {
     tracks.add(track);
   }
 
-  void dump() {
+  void dump({bool showDeltaTime = false}) {
     print('format: $fileFormat');
     // ignore: unnecessary_null_comparison
     if (ppq != null) {
@@ -170,7 +170,7 @@ class MidiFile {
     var index = 0;
     for (var track in tracks) {
       print('Track ${++index}');
-      track.dump();
+      track.dump(showDeltaTime: showDeltaTime);
     }
   }
 }
