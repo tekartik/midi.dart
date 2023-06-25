@@ -49,8 +49,6 @@ class TrackEvent {
 
 /// Base midi event.
 abstract class MidiEvent {
-  List<MidiEvent> events = [];
-
   /// Event command combining channel and event type (called command too).
   late int command;
 
