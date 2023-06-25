@@ -176,7 +176,7 @@ abstract class MidiPlayerBase {
 //    _playNext();
 //  }
 
-  void load(MidiFile? file) {
+  void load(MidiFile file) {
     // Pause current
     pause();
 
@@ -216,7 +216,7 @@ abstract class MidiPlayerBase {
 //    return _startNow;
 //  }
 
-  void _load(MidiFile? file) {
+  void _load(MidiFile file) {
     _isDone = false;
     _isPlaying = false;
     _isPaused = false;

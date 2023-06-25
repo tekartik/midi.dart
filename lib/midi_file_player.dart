@@ -3,6 +3,7 @@ library tekartik_midi_file_player;
 import 'dart:math';
 
 import 'package:tekartik_common_utils/common_utils_import.dart';
+import 'package:tekartik_common_utils/list_utils.dart';
 
 import 'midi.dart';
 
@@ -18,30 +19,20 @@ class PlayableEvent {
   }
 }
 
+/// Prepare located events
 class LocatedTrackPlayer {
-  MidiTrack? track;
-
-  int _currentEventIndex = 0;
-  num _currentEventMs = 0;
-  LocatedEvent? _current;
+  MidiTrack track;
 
   LocatedTrackPlayer(this.track);
 
-  LocatedEvent? current(num? timeUnitInMs) {
-    if (_current == null) {
-      if (_currentEventIndex < track!.events.length) {
-        final trackEvent = track!.events[_currentEventIndex];
-        _currentEventMs += trackEvent.deltaTime * timeUnitInMs!;
-        _current = LocatedEvent(_currentEventMs, trackEvent.midiEvent);
-      }
+  List<LocatedEvent> get preLocatedEvents {
+    var events = <LocatedEvent>[];
+    var currentTime = 0;
+    for (var event in track.events) {
+      currentTime += event.deltaTime;
+      events.add(LocatedEvent.pre(currentTime, event.midiEvent));
     }
-    return _current;
-  }
-
-  LocatedEvent? next(num? timeUnitInMs) {
-    _currentEventIndex++;
-    _current = null;
-    return current(timeUnitInMs);
+    return events;
   }
 }
 
@@ -62,15 +53,18 @@ class NoteOnKey {
 
 /// For all tracks
 class LocatedEvent {
-  final num absoluteMs; // ms since start without speed ratio affected
-
+  // Filled later
+  late num absoluteMs; // ms since start without speed ratio affected
+  late int time;
   final MidiEvent midiEvent;
 
+  LocatedEvent.pre(this.time, this.midiEvent);
+  @Deprecated('Use LocatedEvent.pre')
   LocatedEvent(this.absoluteMs, this.midiEvent);
 
   @override
   String toString() {
-    return '${formatTimestampMs(absoluteMs)} ${midiEvent.toString()}';
+    return '${formatTimestampMs(absoluteMs)} $time ${midiEvent.toString()}';
   }
 }
 
@@ -80,7 +74,7 @@ class MidiFilePlayer {
   @visibleForTesting
   Map<NoteOnKey, PlayableEvent> notesOn = {};
 
-  final MidiFile? _file;
+  final MidiFile _file;
 
   MidiFilePlayer(this._file);
 
@@ -132,46 +126,26 @@ class MidiFilePlayer {
 
   List<LocatedEvent>? _prepareForLocation() {
     if (_locatedEvents == null) {
-      final trackPlayers = <LocatedTrackPlayer>[];
-      for (var i = 0; i < _file!.tracks.length; i++) {
-        trackPlayers.add(LocatedTrackPlayer(_file!.tracks[i]));
-      }
+      _locatedEvents = listFlatten(
+          _file.tracks.map((e) => LocatedTrackPlayer(e).preLocatedEvents))
+        ..sort((a, b) => a.time.compareTo(b.time));
 
-      _locatedEvents = [];
-
-      while (true) {
-        // must be null each time
-        LocatedTrackPlayer? nextTrackPlayer;
-        num? nextMs;
-
-        for (var trackPlayer in trackPlayers) {
-          final event = trackPlayer.current(currentDeltaTimeUnitInMillis);
-          if (event != null) {
-            final trackNextMs = event.absoluteMs;
-            if (nextMs == null || (trackNextMs < nextMs)) {
-              nextMs = trackNextMs;
-              nextTrackPlayer = trackPlayer;
-            }
-          }
-        }
-
-        if (nextTrackPlayer != null) {
-          final event = nextTrackPlayer.current(currentDeltaTimeUnitInMillis)!;
-          final midiEvent = event.midiEvent;
-          if (midiEvent is TempoEvent) {
-            _setCurrentTempoEvent(midiEvent);
-          }
-
-          // if no next, remove track
-          if (nextTrackPlayer.next(currentDeltaTimeUnitInMillis) == null) {
-            trackPlayers.remove(nextTrackPlayer);
-          }
-
-          _locatedEvents!.add(event);
-        } else {
-          break;
+      var ms = 0.0;
+      var time = 0;
+      // Compute ms
+      for (var event in _locatedEvents!) {
+        var eventTime = event.time;
+        var eventMs = ms + (eventTime - time) * currentDeltaTimeUnitInMillis;
+        event.absoluteMs = eventMs;
+        // update current time
+        time = eventTime;
+        ms = eventMs;
+        final midiEvent = event.midiEvent;
+        if (midiEvent is TempoEvent) {
+          _setCurrentTempoEvent(midiEvent);
         }
       }
+      return _locatedEvents;
     }
     return _locatedEvents;
   }
@@ -202,6 +176,7 @@ class MidiFilePlayer {
   }
 
   /// Current tempo in bmp.
+  @visibleForTesting
   num get tempoBpm => _currentTempoEvent.tempoBpm;
 
   num? _currentDeltaTimeUnitInMillis; // no ratio
@@ -209,22 +184,22 @@ class MidiFilePlayer {
 
   /// no ratio
   @visibleForTesting
-  num? get currentDeltaTimeUnitInMillis {
+  num get currentDeltaTimeUnitInMillis {
     if (_currentDeltaTimeUnitInMillis == null) {
       // beat = quarter note
       final beatPerMillis = _currentTempoEvent.beatPerMillis;
 
       // check midi docs here
-      if (_file!.ppq != null) {
-        _currentDeltaTimeUnitInMillis = 1 / (_file!.ppq! * beatPerMillis);
+      if (_file.ppq != null) {
+        _currentDeltaTimeUnitInMillis = 1 / (_file.ppq! * beatPerMillis);
       } else {
         _currentDeltaTimeUnitInMillis = 1 /
-            (_file!.frameCountPerSecond! *
-                _file!.divisionCountPerFrame! *
+            (_file.frameCountPerSecond! *
+                _file.divisionCountPerFrame! *
                 beatPerMillis);
       }
     }
-    return _currentDeltaTimeUnitInMillis;
+    return _currentDeltaTimeUnitInMillis!;
   }
 
   @visibleForTesting

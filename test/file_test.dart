@@ -8,6 +8,7 @@ void main() {
   group('midi file', () {
     test('time divisions ppq', () {
       final file = MidiFile();
+      expect(file.ppq, 120);
       file.timeDivision = 3;
 
       expect(file.ppq, file.timeDivision);

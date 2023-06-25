@@ -18,8 +18,8 @@ void main() {
         file = File(join(parentPath, filename));
       }
       List<int> data = file.readAsBytesSync();
-      final parser = FileParser(MidiParser(data));
-      parser.parseFile();
+      //final parser = FileParser(MidiParser(data));
+      //parser.parseFile();
       //parser.file.dump();
 
       final fileRead = FileParser.dataFile(data);

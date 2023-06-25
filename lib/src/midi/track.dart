@@ -17,7 +17,7 @@ class MidiTrack {
     return false;
   }
 
-  void dump() {
+  void dump({bool showDeltaTime = false}) {
     for (var e in events) {
       print(e);
     }
