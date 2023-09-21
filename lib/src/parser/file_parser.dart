@@ -27,9 +27,11 @@ class FileParser extends ObjectParser {
     }
   }
 
-  void parseFile() {
+  /// Throw FormatException if not valid
+  MidiFile parseFile() {
     parseHeader();
     parseTracks();
+    return file!;
   }
 
   void parseHeader() {

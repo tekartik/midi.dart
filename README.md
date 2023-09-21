@@ -17,7 +17,7 @@ dependencies:
   tekartik_midi:
     git:
       url: https://github.com/tekartik/midi.dart
-      ref: dart2_3
+      ref: dart3a
 ```
 
 ## Usage example

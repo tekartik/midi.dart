@@ -4,13 +4,13 @@ description: midi event and file parser
 publish_to: none
 
 environment:
-  sdk: '>=2.18.0 <4.0.0'
+  sdk: '>=3.0.0 <4.0.0'
 dependencies:
   collection: any
   tekartik_common_utils:
     git:
       url: https://github.com/tekartik/common_utils.dart
-      ref: dart2_3
+      ref: dart3a
     version: '>=0.10.7'
 
 dev_dependencies:
@@ -21,8 +21,4 @@ dev_dependencies:
   process_run: '>=0.10.2'
   dev_test: '>0.13.1+1'
   build_web_compilers: '>=0.4.0'
-  chrome_travis:
-    git:
-      url: https://github.com/tekartik/chrome_travis.dart
-      ref: dart2_3
-    version: '>=0.1.4'
+

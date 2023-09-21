@@ -49,8 +49,6 @@ class TrackEvent {
 
 /// Base midi event.
 abstract class MidiEvent {
-  List<MidiEvent> events = [];
-
   /// Event command combining channel and event type (called command too).
   late int command;
 
@@ -579,7 +577,7 @@ abstract class MetaEvent extends MidiEvent {
 
   @override
   String toString() {
-    return '${super.toString()} meta $metaCommand data ${hexQuickView(data)}';
+    return '${super.toString()} meta $metaCommand${data.isEmpty ? '' : ' data ${hexQuickView(data)}'}';
   }
 }
 
