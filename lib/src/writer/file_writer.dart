@@ -2,7 +2,7 @@ import 'package:tekartik_midi/midi.dart';
 import 'package:tekartik_midi/midi_writer.dart';
 
 class FileWriter extends ObjectWriter {
-  FileWriter(MidiWriter midiWriter) : super(midiWriter);
+  FileWriter(super.midiWriter);
 
   late MidiFile file;
 

@@ -2,7 +2,7 @@ import 'package:tekartik_midi/midi.dart';
 import 'package:tekartik_midi/midi_writer.dart';
 
 class TrackWriter extends ObjectWriter {
-  TrackWriter(MidiWriter midiWriter) : super(midiWriter);
+  TrackWriter(super.midiWriter);
 
   late MidiTrack track;
 

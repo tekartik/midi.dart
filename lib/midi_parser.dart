@@ -10,7 +10,7 @@ export 'package:tekartik_midi/src/parser/track_parser.dart';
 
 /// Midi file parser.
 class MidiParser extends BinaryBEParser {
-  MidiParser(List<int> data) : super(data);
+  MidiParser(super.data);
 
   OutBuffer get outBuffer => _outBuffer;
   final _outBuffer = OutBuffer(256);

@@ -12,7 +12,7 @@ class EventParser extends ObjectParser {
   // i.e. the command part has it 8th bits cleared
   int lastCommand = 0;
 
-  EventParser(MidiParser parser) : super(parser);
+  EventParser(super.parser);
 
   MidiEvent? parseEvent() {
     deltaTime = midiParser.readVariableLengthData();

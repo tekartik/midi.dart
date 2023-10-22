@@ -187,8 +187,8 @@ abstract class Param1ByteEvent extends ChannelEvent {
 
   Param1ByteEvent();
 
-  Param1ByteEvent.withParam(int command, int channel, this._param1)
-      : super.withParam(command, channel);
+  Param1ByteEvent.withParam(super.command, super.channel, this._param1)
+      : super.withParam();
 
   @override
   void readData(MidiParser parser) {
@@ -241,8 +241,8 @@ abstract class Param2BytesEvent extends Param1ByteEvent {
   Param2BytesEvent();
 
   Param2BytesEvent.withParam(
-      int command, int channel, int? param1, this._param2) //
-      : super.withParam(command, channel, param1);
+      super.command, super.channel, super.param1, this._param2) //
+      : super.withParam();
 
   @override
   void readData(MidiParser parser) {
@@ -315,8 +315,9 @@ abstract class NoteEvent extends Param2BytesEvent {
 
   NoteEvent();
 
-  NoteEvent.withParam(int command, int channel, int? noteNumber, int velocity)
-      : super.withParam(command, channel, noteNumber, velocity);
+  NoteEvent.withParam(
+      super.command, super.channel, super.noteNumber, int super.velocity)
+      : super.withParam();
 }
 
 /// Note on event.
@@ -438,9 +439,8 @@ class ControlChangeEvent extends Param2BytesEvent {
 class SysExEvent extends MidiEvent {
   List<int> data;
 
-  SysExEvent.withParam(int command, [this.data = const <int>[]])
-      : super.withParam(
-            command); // properly use the full command here (i.e. 0xFF)
+  SysExEvent.withParam(super.command, [this.data = const <int>[]])
+      : super.withParam(); // properly use the full command here (i.e. 0xFF)
 
   @override
   void readData(MidiParser parser) {

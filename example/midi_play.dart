@@ -28,7 +28,7 @@ class _MidiPlayer extends MidiPlayerBase {
     return stopwatch!.elapsed.inMilliseconds;
   }
 
-  _MidiPlayer([num? noteOnLastTimestamp]) : super(noteOnLastTimestamp);
+  _MidiPlayer();
 }
 
 Future main(List<String> args) async {

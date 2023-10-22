@@ -95,7 +95,7 @@ abstract class BinaryParser {
 }
 
 class BinaryBEParser extends BinaryParser {
-  BinaryBEParser(List<int> data) : super(data);
+  BinaryBEParser(super.data);
 
   int readUint16() {
     return read2BytesBEInteger();
