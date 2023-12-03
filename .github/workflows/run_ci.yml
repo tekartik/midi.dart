@@ -15,8 +15,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        dart: [3.1.0, stable, beta, dev]
+        include:
+          - os: ubuntu-latest
+            dart: 3.1.0
+          - os: ubuntu-latest
+            dart: stable
+          - os: ubuntu-latest
+            dart: beta
+          - os: ubuntu-latest
+            dart: dev
+          - os: windows-latest
+            dart: stable
+          - os: macos-latest
+            dart: stable
     steps:
       - uses: actions/checkout@v4
       - uses: dart-lang/setup-dart@v1.4
