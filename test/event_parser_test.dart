@@ -26,6 +26,16 @@ void main() {
       expect(sysExEvent.data, parseHexString('7E 7F 09  01 F7'));
     });
 
+    test('parse trackname event', () {
+      final data = parseHexString('00 ff 03 07 54 72 61 63 6b 20 32');
+      final midiParser = MidiParser(data);
+      final parser = EventParser(midiParser);
+      parser.parseEvent();
+      expect(parser.event is TrackNameEvent, isTrue);
+      final trackNameEvent = parser.event as TrackNameEvent;
+      expect(trackNameEvent.trackName, 'Track 2');
+    });
+
     test('parse other event', () {
       var data = parseHexString('00 FF 51 03 06 1a 80');
       var midiParser = MidiParser(data);

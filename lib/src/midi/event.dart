@@ -760,6 +760,12 @@ class EndOfTrackEvent extends MetaEvent {
   }
 }
 
+/// This meta event defines the name of a sequence when in a Type 0 or Type 2
+/// MIDI file or in the first track of a Type 1 MIDI file. It defines a track
+/// name when it appears in any track after the first in a Type 1 MIDI file.
+///
+/// This meta event should always have a delta time of 0 and come before all
+/// MIDI Channel Events and non-zero delta time events.
 class TrackNameEvent extends MetaEvent {
   TrackNameEvent._() : super._();
 

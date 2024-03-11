@@ -92,6 +92,12 @@ void main() {
       } on FormatException catch (_) {}
     });
 
+    test('trackname', () {
+      var event = TrackNameEvent()
+        ..data = [0x54, 0x72, 0x61, 0x63, 0x6b, 0x20, 0x32];
+      expect(event.trackName, 'Track 2');
+    });
+
     test('various events', () {
       expect(ControlChangeEvent.newAllResetEvent(0).controller,
           ControlChangeEvent.allReset);
