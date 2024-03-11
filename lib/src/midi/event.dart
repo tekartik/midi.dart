@@ -484,6 +484,7 @@ abstract class MetaEvent extends MidiEvent {
   int? metaCommand;
   List<int> data;
 
+  static const int trackName = 0x3;
   static const int metaTimeSig = 0x58;
 
   // 2018-09-22
@@ -528,6 +529,8 @@ abstract class MetaEvent extends MidiEvent {
       case metaEndOfTrack:
         event = EndOfTrackEvent._();
         break;
+      case trackName:
+        event = TrackNameEvent._();
       default:
         event = _MetaEvent();
         break;
@@ -754,6 +757,19 @@ class EndOfTrackEvent extends MetaEvent {
   @override
   String toString() {
     return '${super.toString()} eot';
+  }
+}
+
+class TrackNameEvent extends MetaEvent {
+  TrackNameEvent._() : super._();
+
+  TrackNameEvent() : super._withParam(MetaEvent.trackName);
+
+  String get trackName => String.fromCharCodes(data);
+
+  @override
+  String toString() {
+    return '${super.toString()} track name: $trackName';
   }
 }
 
