@@ -1,4 +1,4 @@
-library event_writer_test;
+library;
 
 import 'package:tekartik_common_utils/hex_utils.dart';
 import 'package:tekartik_midi/midi.dart';

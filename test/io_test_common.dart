@@ -1,4 +1,4 @@
-library tekartik_midi.io_test_common.dart;
+library;
 
 import 'package:path/path.dart';
 

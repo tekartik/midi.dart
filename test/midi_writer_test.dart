@@ -1,4 +1,4 @@
-library midi_writer_test;
+library;
 
 import 'package:tekartik_midi/midi_writer.dart';
 

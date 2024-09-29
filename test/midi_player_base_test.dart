@@ -1,4 +1,4 @@
-library player_base_test;
+library;
 
 import 'package:tekartik_midi/midi.dart';
 import 'package:tekartik_midi/midi_file_player.dart';

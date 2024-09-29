@@ -1,4 +1,4 @@
-library midi_parser_test;
+library;
 
 import 'package:tekartik_midi/midi_parser.dart';
 

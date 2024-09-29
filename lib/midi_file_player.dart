@@ -1,4 +1,4 @@
-library tekartik_midi_file_player;
+library;
 
 import 'dart:math';
 

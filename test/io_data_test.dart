@@ -1,5 +1,5 @@
 @TestOn('vm')
-library file_test;
+library;
 
 import 'package:path/path.dart';
 import 'package:tekartik_midi/midi.dart';

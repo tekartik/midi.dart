@@ -1,5 +1,5 @@
 @TestOn('vm')
-library file_parser_test;
+library;
 
 import 'package:tekartik_common_utils/hex_utils.dart';
 import 'package:tekartik_midi/midi_parser.dart';

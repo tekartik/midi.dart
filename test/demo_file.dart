@@ -1,4 +1,4 @@
-library midi_demo_file;
+library;
 
 import 'package:tekartik_midi/midi.dart';
 

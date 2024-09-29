@@ -1,4 +1,4 @@
-library track_test;
+library;
 
 import 'package:tekartik_midi/midi.dart';
 

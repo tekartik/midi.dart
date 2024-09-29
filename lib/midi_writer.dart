@@ -1,4 +1,4 @@
-library tekartik_midi_writer;
+library;
 
 import 'package:tekartik_midi/src/writer/binary_writer.dart';
 
