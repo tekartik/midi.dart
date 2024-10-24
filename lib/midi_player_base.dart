@@ -417,10 +417,12 @@ abstract class MidiPlayerBase {
     }
   }
 
+  /// Get the total duration of the file
   num get totalDurationMs {
     return _midiFilePlayer!.totalDurationMs;
   }
 
+  /// Get the current position in the file
   num get currentAbsoluteMs {
     if (!_isPlaying) {
       return 0;

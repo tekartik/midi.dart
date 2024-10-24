@@ -28,6 +28,7 @@ class TrackEvent {
   final int deltaTime;
   final MidiEvent midiEvent;
 
+  /// Constructor
   TrackEvent(this.deltaTime, this.midiEvent);
 
   @override
@@ -85,8 +86,10 @@ abstract class MidiEvent {
   /// Meta command.
   static const int cmdMetaEvent = 0xFF;
 
+  /// Constructor
   MidiEvent();
 
+  /// Constructor with command
   MidiEvent.withParam(this.command);
 
   /// Compute command from an event type and a channel
@@ -94,23 +97,29 @@ abstract class MidiEvent {
     return ((eventType << 4) | (channel & 0xF));
   }
 
+  /// Get the event type
   @Deprecated('use commandGetEventType')
   static int commandGetCommand(int command) => commandGetEventType(command);
 
+  /// Get the event type
   static int commandGetEventType(int command) {
     return ((command & 0xF0) >> 4);
   }
 
+  /// Get the channel
   static int commandGetChannel(int command) {
     // (command & 0xF)
     return (command & 0xF);
   }
 
+  /// Get the event type
   int get eventType => commandGetEventType(command);
 
+  /// Get the event type
   @Deprecated('user event type instead')
   int get codeCommand => eventType;
 
+  /// Base command
   factory MidiEvent.base(int command) {
     MidiEvent event;
 
@@ -174,19 +183,25 @@ abstract class MidiEvent {
 
 /// Channel event.
 abstract class ChannelEvent extends MidiEvent {
+  /// Channel
   int get channel => MidiEvent.commandGetChannel(command);
 
+  /// Constructor
   ChannelEvent();
 
-  ChannelEvent.withParam(int comand, int channel)
-      : super.withParam(MidiEvent.commandChannel(comand, channel));
+  /// Constructor with command and channel
+  ChannelEvent.withParam(int command, int channel)
+      : super.withParam(MidiEvent.commandChannel(command, channel));
 }
 
+/// Param1ByteEvent
 abstract class Param1ByteEvent extends ChannelEvent {
   int? _param1;
 
+  /// Constructor
   Param1ByteEvent();
 
+  /// Constructor with command, channel and param1
   Param1ByteEvent.withParam(super.command, super.channel, this._param1)
       : super.withParam();
 

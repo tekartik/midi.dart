@@ -7,10 +7,14 @@ import 'package:tekartik_common_utils/list_utils.dart';
 
 import 'midi.dart';
 
+/// Playable event
 class PlayableEvent {
+  /// in millis
   final num timestamp; // ms
+  /// The event to play
   final MidiEvent midiEvent;
 
+  /// Constructor
   PlayableEvent(this.timestamp, this.midiEvent);
 
   @override
@@ -21,10 +25,13 @@ class PlayableEvent {
 
 /// Prepare located events
 class LocatedTrackPlayer {
+  /// The track
   MidiTrack track;
 
+  /// Constructor
   LocatedTrackPlayer(this.track);
 
+  /// List of located events
   List<LocatedEvent> get preLocatedEvents {
     var events = <LocatedEvent>[];
     var currentTime = 0;

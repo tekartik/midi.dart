@@ -13,6 +13,7 @@ import 'package:tekartik_midi/midi_player_base.dart';
 class _MidiPlayer extends MidiPlayerBase {
   @override
   void rawPlayEvent(PlayableEvent event) {
+    // ignore: avoid_print
     print(event);
   }
 
