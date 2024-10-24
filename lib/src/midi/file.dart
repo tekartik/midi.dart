@@ -1,12 +1,22 @@
 import 'package:collection/collection.dart';
+import 'package:tekartik_midi/src/dump.dart';
 import 'package:tekartik_midi/src/midi/track.dart';
 
+/// A midi file contains a list of tracks
 class MidiFile {
   /// 0 single track, 1, multi track synchronous, 2, multitrack async
   static const int formatMultiTrack = 1;
 
+  /// The format of the midi file
   int fileFormat = formatMultiTrack;
-  int trackCount = 0;
+
+  /// Number of tracks as found in the header
+  int get headerTrackCount => _headerTrackCount ?? trackCount;
+
+  int? _headerTrackCount;
+
+  /// Number of tracks
+  int get trackCount => tracks.length;
 
   /// Pulses per quarter note (PPQ)
   /// When the top bit of the time division bytes is 0, the time division is in ticks per beat.
@@ -20,8 +30,10 @@ class MidiFile {
   /// In the example above, if the MIDI time division is 60 ticks per beat and if the microseconds per beat is 500,000,
   /// then 1 tick = 500,000 / 60 = 8333.33 microseconds.
   int? _ppq = 120; // default value
+  /// PPQ
   int? get ppq => _ppq;
 
+  /// PPQ
   set ppq(int? ppq) {
     assert(ppq != null);
     if ((ppq! & 0x8000) != 0) {
@@ -69,6 +81,7 @@ class MidiFile {
 
   int? _timeDivision;
 
+  /// Set the time division
   set timeDivision(int timeDivision) {
     _timeDivision = timeDivision;
     // ppq?
@@ -103,8 +116,10 @@ class MidiFile {
   num? _frameCoundPerSecond;
   int? _divisionCountPerFrame;
 
+  /// The frames per second
   num? get frameCountPerSecond => _frameCoundPerSecond;
 
+  /// The division count per frame
   int? get divisionCountPerFrame => _divisionCountPerFrame;
 
   /// @param: frameCountPerSecondEncoded in (24, 25, 29 - meaning 29.97 -, 30)
@@ -114,9 +129,13 @@ class MidiFile {
         ((256 - frameCountPerSecondEncoded) << 8) | divisionCountPerFrame;
   }
 
+  /// The time division
   int get timeDivision => _timeDivision!;
 
-  var tracks = <MidiTrack>[];
+  final _tracks = <MidiTrack>[];
+
+  /// The tracks (read only)
+  List<MidiTrack> get tracks => _tracks;
 
   /// convert a delay in an event to a delay in ms
   num delayToMillis(int delay) {
@@ -153,24 +172,33 @@ class MidiFile {
     return out.toString();
   }
 
+  /// Add a track
   void addTrack(MidiTrack track) {
-    trackCount++;
     tracks.add(track);
   }
 
+  /// Debug dump events
   void dump() {
-    print('format: $fileFormat');
+    log('format: $fileFormat');
     // ignore: unnecessary_null_comparison
     if (ppq != null) {
-      print('ppq: $ppq');
+      log('ppq: $ppq');
     } else {
-      print('framesPerSecond: $frameCountPerSecond');
-      print('divisionsPerFrame: $divisionCountPerFrame');
+      log('framesPerSecond: $frameCountPerSecond');
+      log('divisionsPerFrame: $divisionCountPerFrame');
     }
     var index = 0;
     for (var track in tracks) {
-      print('Track ${++index}');
+      log('Track ${++index}');
       track.dump();
     }
+  }
+}
+
+/// Private extension
+extension MidiFilePrvExt on MidiFile {
+  /// Set the header track count
+  void setHeaderTrackCount(int headerTrackCount) {
+    _headerTrackCount = headerTrackCount;
   }
 }

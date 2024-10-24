@@ -15,7 +15,10 @@ void main() {
 
       final file = MidiFile();
       file.fileFormat = 1;
-      file.trackCount = 2;
+
+      /// Add 2 tracks
+      file.addTrack(MidiTrack());
+      file.addTrack(MidiTrack());
       file.timeDivision = 3;
       writer.file = file;
 

@@ -16,6 +16,7 @@ int signedValueToByte(int value) {
   return value;
 }
 
+/// Read a 3 bytes integer
 int read3BytesBEInteger(List<int> data, [int offset = 0]) {
   if (data.length - offset < 3) {
     throw const FormatException('not enought data');
@@ -25,6 +26,7 @@ int read3BytesBEInteger(List<int> data, [int offset = 0]) {
       (data[offset + 2] & 0xFF));
 }
 
+/// Create a 3 bytes integer buffer
 List<int> create3BytesBEIntegerBuffer(int value) {
   final data = <int>[];
   data.add((value & 0xFF0000) >> 16);
@@ -33,13 +35,17 @@ List<int> create3BytesBEIntegerBuffer(int value) {
   return data;
 }
 
+/// Binary parser
 abstract class BinaryParser {
   InBuffer? _buffer;
 
+  /// size
   int get length => _buffer!.length;
 
+  /// The buffer
   InBuffer? get inBuffer => _buffer;
 
+  /// Constructor
   BinaryParser(List<int> data) {
     _buffer = InBuffer(data);
   }
@@ -56,6 +62,7 @@ abstract class BinaryParser {
     }
   }
 
+  /// Read data
   void read(OutBuffer buffer, int size) {
     _checkContains(size);
     _checkHasAvailable(buffer, size);
@@ -65,10 +72,12 @@ abstract class BinaryParser {
     }
   }
 
+  /// Go back
   void back(int size) {
     skip(0 - size);
   }
 
+  /// Skip data
   void skip(int size) {
     _checkContains(size);
     _buffer!.skip(size);
@@ -78,11 +87,13 @@ abstract class BinaryParser {
     return _buffer!.next();
   }
 
+  /// Read a 1 byte integer
   int read1ByteInteger() {
     _checkContains(1);
     return _read1ByteInteger();
   }
 
+  /// Read a 1 byte unsigned integer
   int readUint8() {
     return read1ByteInteger();
   }
@@ -93,6 +104,7 @@ abstract class BinaryParser {
     return byte1 << 8 | byte2;
   }
 
+  /// Read a 2 bytes big endian integer
   int read2BytesBEInteger() {
     _checkContains(2);
     return _read2BytesBEInteger();
@@ -104,19 +116,24 @@ abstract class BinaryParser {
     return short1 << 16 | short2;
   }
 
+  /// Read a 4 bytes big endian integer
   int read4BytesBEInteger() {
     _checkContains(4);
     return _read4BytesBEInteger();
   }
 }
 
+/// Big endian binary parser
 class BinaryBEParser extends BinaryParser {
+  /// Constructor
   BinaryBEParser(super.data);
 
+  /// Read a 2 bytes big endian integer
   int readUint16() {
     return read2BytesBEInteger();
   }
 
+  /// Read a 4 bytes big endian integer
   int readUint32() {
     return read4BytesBEInteger();
   }

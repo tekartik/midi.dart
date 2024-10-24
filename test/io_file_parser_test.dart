@@ -39,7 +39,7 @@ void main() {
       final parser = FileParser(midiParser);
       parser.parseHeader();
       expect(parser.file!.fileFormat, equals(1));
-      expect(parser.file!.trackCount, equals(2));
+      expect(parser.file!.headerTrackCount, equals(2));
       expect(parser.file!.timeDivision, equals(3));
     });
 

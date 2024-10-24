@@ -26,6 +26,8 @@ class TrackEvent {
   /// (defined with a track event). If no tempo is define, 120 beats
   /// per minute is assumed.
   final int deltaTime;
+
+  /// The midi event
   final MidiEvent midiEvent;
 
   /// Constructor
@@ -232,7 +234,9 @@ abstract class Param1ByteEvent extends ChannelEvent {
   }
 }
 
+/// Program change event.
 class ProgramChangeEvent extends Param1ByteEvent {
+  /// Program
   int? get program => _param1;
 
   set program(int? program) {
@@ -241,6 +245,7 @@ class ProgramChangeEvent extends Param1ByteEvent {
 
   ProgramChangeEvent._();
 
+  /// Constructor
   ProgramChangeEvent(int channel, int program) //
       : super.withParam(MidiEvent.programChange, channel, program);
 
@@ -250,11 +255,14 @@ class ProgramChangeEvent extends Param1ByteEvent {
   }
 }
 
+/// 2 bytes param event
 abstract class Param2BytesEvent extends Param1ByteEvent {
   int? _param2;
 
+  /// Constructor
   Param2BytesEvent();
 
+  /// Constructor with command, channel, param1 and param2
   Param2BytesEvent.withParam(
       super.command, super.channel, super.param1, this._param2) //
       : super.withParam();
@@ -290,10 +298,12 @@ abstract class Param2BytesEvent extends Param1ByteEvent {
 
 /// Channel after touch event.
 class ChannelAfterTouchEvent extends Param1ByteEvent {
+  /// Amount
   int? get amount => _param1;
 
   ChannelAfterTouchEvent._();
 
+  /// Constructor
   ChannelAfterTouchEvent(int command, int channel, int amount) //
       : super.withParam(MidiEvent.channelAfterTouch, channel, amount);
 
@@ -316,20 +326,24 @@ class ChannelAfterTouchEvent extends Param1ByteEvent {
 /// @author Alex
 ///
 abstract class NoteEvent extends Param2BytesEvent {
+  /// note
   int? get note => _param1;
 
   set note(int? note) {
     _param1 = note;
   }
 
+  /// velocity
   int? get velocity => _param2;
 
   set velocity(int? velocity) {
     _param2 = velocity;
   }
 
+  /// Constructor
   NoteEvent();
 
+  /// Constructor with command, channel, note and velocity
   NoteEvent.withParam(
       super.command, super.channel, super.noteNumber, int super.velocity)
       : super.withParam();
@@ -339,6 +353,7 @@ abstract class NoteEvent extends Param2BytesEvent {
 class NoteOnEvent extends NoteEvent {
   NoteOnEvent._();
 
+  /// Constructor
   NoteOnEvent(int channel, int noteNumber, int velocity) //
       : super.withParam(MidiEvent.noteOn, channel, noteNumber, velocity);
 
@@ -352,6 +367,7 @@ class NoteOnEvent extends NoteEvent {
 class NoteOffEvent extends NoteEvent {
   NoteOffEvent._();
 
+  /// Constructor
   NoteOffEvent(int channel, int? noteNumber, int velocity) //
       : super.withParam(MidiEvent.noteOff, channel, noteNumber, velocity);
 
@@ -365,6 +381,7 @@ class NoteOffEvent extends NoteEvent {
 class KeyAfterTouchEvent extends NoteEvent {
   KeyAfterTouchEvent._();
 
+  /// Constructor
   KeyAfterTouchEvent(int channel, int noteNumber, int velocity) //
       : super.withParam(MidiEvent.keyAfterTouch, channel, noteNumber, velocity);
 
@@ -376,12 +393,14 @@ class KeyAfterTouchEvent extends NoteEvent {
 
 /// Pitch wheel change event
 class PitchWheelChangeEvent extends Param2BytesEvent {
+  /// bottom
   int? get bottom => _param1;
 
   set bottom(int? bottom) {
     _param1 = bottom;
   }
 
+  /// top
   int? get top => _param2;
 
   set top(int? top) {
@@ -390,6 +409,7 @@ class PitchWheelChangeEvent extends Param2BytesEvent {
 
   PitchWheelChangeEvent._();
 
+  /// Constructor
   PitchWheelChangeEvent(int channel, int noteNumber, int velocity) //
       : super.withParam(
             MidiEvent.pitchWheelChange, channel, noteNumber, velocity);
@@ -404,21 +424,28 @@ class PitchWheelChangeEvent extends Param2BytesEvent {
 class ControlChangeEvent extends Param2BytesEvent {
   ControlChangeEvent._();
 
+  /// Constructor
   ControlChangeEvent.withParam(
       int channel, int controllerType, int controllerValue)
       : super.withParam(
             MidiEvent.controlChange, channel, controllerType, controllerValue);
 
+  /// all notes off
   static int allNotesOff = 123; // <= note off
+  /// all reset
   static int allReset = 121; // <= reset
+  /// all sound off
   static int allSoundOff = 120; // <= quick mute
 
+  /// controller
   int? get controller => _param1;
 
+  /// controller
   set controller(int? controller) {
     _param1 = controller;
   }
 
+  /// value
   int? get value => _param2;
 
   set value(int? value) {
@@ -430,12 +457,15 @@ class ControlChangeEvent extends Param2BytesEvent {
     return '${super.toString()} control change';
   }
 
+  /// Create a all sound off event
   static ControlChangeEvent newAllSoundOffEvent(int channel) =>
       ControlChangeEvent.withParam(channel, allSoundOff, 0);
 
+  /// Create a all notes off event
   static ControlChangeEvent newAllNotesOffEvent(int channel) =>
       ControlChangeEvent.withParam(channel, allNotesOff, 0);
 
+  /// Create a all reset event
   static ControlChangeEvent newAllResetEvent(int channel) =>
       ControlChangeEvent.withParam(channel, allReset, 0);
 //null;
@@ -452,8 +482,10 @@ class ControlChangeEvent extends Param2BytesEvent {
 /// 240 (0xF0)  variable-length data bytes, 0xF7
 /// Normal SysEx Event Values
 class SysExEvent extends MidiEvent {
+  /// Data
   List<int> data;
 
+  /// Constructor
   SysExEvent.withParam(super.command, [this.data = const <int>[]])
       : super.withParam(); // properly use the full command here (i.e. 0xFF)
 
@@ -496,29 +528,26 @@ class SysExEvent extends MidiEvent {
 
 /// A Meta mide event.
 abstract class MetaEvent extends MidiEvent {
+  /// Meta command
   int? metaCommand;
+
+  /// Data
   List<int> data;
 
+  /// track name
   static const int trackName = 0x3;
+
+  /// time signature
   static const int metaTimeSig = 0x58;
+
+  /// key signature
   static const int metaKeySig = 0x59;
 
-  // 2018-09-22
-  @Deprecated('Use metaTimeSig')
-  // ignore: constant_identifier_names
-  static const int META_TIME_SIG = metaTimeSig;
+  /// tempo
   static const int metaTempo = 0x51;
 
-  // 2018-09-22
-  @Deprecated('Use metaTempo')
-  // ignore: constant_identifier_names
-  static const int META_TEMPO = metaTempo;
+  /// end of track
   static const int metaEndOfTrack = 0x2F;
-
-  // 2018-09-22
-  @Deprecated('Use metaEndOfTrack')
-  // ignore: constant_identifier_names
-  static const int META_END_OF_TRACK = metaEndOfTrack;
 
   MetaEvent._() : data = <int>[];
 
@@ -526,6 +555,7 @@ abstract class MetaEvent extends MidiEvent {
       : super.withParam(MidiEvent
             .cmdMetaEvent); // properly use the full command here (i.e. 0xFF)
 
+  /// Constructor
   factory MetaEvent(int metaCommand, [List<int> data = const <int>[]]) {
     final event = MetaEvent.base(MidiEvent.cmdMetaEvent, metaCommand);
     // ignore: prefer_initializing_formals
@@ -533,6 +563,7 @@ abstract class MetaEvent extends MidiEvent {
     return event;
   }
 
+  /// Constructor
   factory MetaEvent.base(int command, int metaCommand) {
     MetaEvent event;
     switch (metaCommand) {
@@ -641,11 +672,13 @@ abstract class MetaEvent extends MidiEvent {
 class TimeSigEvent extends MetaEvent {
   TimeSigEvent._() : super._();
 
+  /// Create data
   static List<int> createData(
       int num, int denom, int tickCount, int num32ndToQuarter) {
     return [num, denom, tickCount, num32ndToQuarter];
   }
 
+  /// bottom to denom
   static int bottomToDenom(int bottom) {
     var denominator = 0;
     var initialBottom = bottom;
@@ -659,18 +692,22 @@ class TimeSigEvent extends MetaEvent {
     return denominator;
   }
 
+  /// Create a time signature event
   TimeSigEvent.topBottom(int top, int bottom)
       : this(top, bottomToDenom(bottom));
 
+  /// Create a time signature event
   TimeSigEvent(int num, int denom,
       [int tickCount = 24, int num32ndToQuarter = 8])
       : super._withParam(MetaEvent.metaTimeSig,
             createData(num, denom, tickCount, num32ndToQuarter));
 
+  /// bottom
   int get bottom {
     return 1 << data[1];
   }
 
+  /// top
   int get top => data[0];
 
   @override
@@ -704,6 +741,8 @@ class KeySigEvent extends MetaEvent {
 
   /// 0 the scale is major, 1 the scale is minor.
   int get scale => data[1];
+
+  /// Constructor
   KeySigEvent(int alterations, int scale)
       : super._withParam(MetaEvent.metaTimeSig,
             [signedValueToByte(_fixAlterations(alterations)), scale]);
@@ -739,21 +778,24 @@ class KeySigEvent extends MetaEvent {
 class TempoEvent extends MetaEvent {
   TempoEvent._() : super._();
 
+  /// Tempo event with bpm
   TempoEvent.bpm(num bpm) : this(microsecondsPerMinute ~/ bpm);
 
+  /// Constructor
   TempoEvent(int tempo)
       : super._withParam(
             MetaEvent.metaTempo, create3BytesBEIntegerBuffer(tempo));
 
-  @Deprecated('User microsecondsPerMinute')
-  // ignore: constant_identifier_names
-  static const int MICROSECONDS_PER_MINUTE = microsecondsPerMinute;
+  /// 60,000,000 microseconds per minute
   static const int microsecondsPerMinute = 60000000;
 
+  /// tempo
   num get beatPerMillis => 1000 / tempo;
 
+  /// tempo
   int get tempo => read3BytesBEInteger(data);
 
+  /// tempo
   num get tempoBpm => microsecondsPerMinute / tempo;
 
   @override
@@ -777,6 +819,7 @@ class TempoEvent extends MetaEvent {
 class EndOfTrackEvent extends MetaEvent {
   EndOfTrackEvent._() : super._();
 
+  /// Constructor
   EndOfTrackEvent() : super._withParam(MetaEvent.metaEndOfTrack);
 
   @override
@@ -794,8 +837,10 @@ class EndOfTrackEvent extends MetaEvent {
 class TrackNameEvent extends MetaEvent {
   TrackNameEvent._() : super._();
 
+  /// Constructor
   TrackNameEvent() : super._withParam(MetaEvent.trackName);
 
+  /// track name
   String get trackName => String.fromCharCodes(data);
 
   @override

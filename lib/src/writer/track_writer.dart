@@ -1,11 +1,15 @@
 import 'package:tekartik_midi/midi.dart';
 import 'package:tekartik_midi/midi_writer.dart';
 
+/// Track writer
 class TrackWriter extends ObjectWriter {
+  /// Constructor
   TrackWriter(super.midiWriter);
 
+  /// The track
   late MidiTrack track;
 
+  /// Track header
   static final List<int> trackHeader = [
     'M'.codeUnitAt(0),
     'T'.codeUnitAt(0),
@@ -18,6 +22,7 @@ class TrackWriter extends ObjectWriter {
     writeUint32(trackSize);
   }
 
+  /// Write the track
   void writeTrack([MidiTrack? midiTrack]) {
     if (midiTrack != null) {
       track = midiTrack;

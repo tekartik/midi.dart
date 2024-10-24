@@ -1,5 +1,6 @@
 library;
 
+import 'package:tekartik_common_utils/common_utils_import.dart';
 import 'package:tekartik_midi/src/buffer/midi_buffer.dart';
 import 'package:tekartik_midi/src/parser/binary_parser.dart';
 
@@ -10,11 +11,15 @@ export 'package:tekartik_midi/src/parser/track_parser.dart';
 
 /// Midi file parser.
 class MidiParser extends BinaryBEParser {
+  /// Constructor
   MidiParser(super.data);
 
+  /// The output buffer to read data to.
+  @protected
   OutBuffer get outBuffer => _outBuffer;
   final _outBuffer = OutBuffer(256);
 
+  /// Read a buffer
   void readBuffer(int size) {
     read(_outBuffer, size);
   }

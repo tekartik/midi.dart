@@ -6,9 +6,11 @@ import 'dart:math';
 import 'package:tekartik_midi/midi.dart';
 import 'package:tekartik_midi/midi_file_player.dart';
 
+/// Base class for midi player
 abstract class MidiPlayerBase {
   int? _fileIndex;
 
+  /// True if the file matches the current file
   bool fileMatches(int fileIndex) {
     return _fileIndex == fileIndex;
   }
@@ -20,21 +22,25 @@ abstract class MidiPlayerBase {
   // True when play has started once already
   bool _isPaused = false;
 
+  /// True when paused
   bool get isPaused => _isPaused;
 
   // True when play has started once already (true when paused)
   bool _isPlaying = false;
 
+  /// True when playing
   bool get isPlaying => _isPlaying && !_isPaused;
 
   // True when done
   bool _isDone = false;
 
+  /// True when done
   bool get isDone => _isDone;
 
   // null when not load yet
   Future? _done;
 
+  /// Done future
   Future? get done => _done;
 
   // Created when playing
@@ -45,6 +51,8 @@ abstract class MidiPlayerBase {
 
   /// Send event when status change and every second
   StreamController<bool> playingController = StreamController();
+
+  /// Stream of playing status
   Stream<bool>? playingStream;
 
   /// time to send the event before the real event occured
@@ -61,9 +69,11 @@ abstract class MidiPlayerBase {
   num? _lastPauseTime;
   num _nowDelta = 0; // delta from now, pausing increases delta
 
+  /// Current timestamp (milliseconds)
   num? get currentTimestamp =>
       isPlaying ? (isPaused ? _lastPauseTime : _nowTimestamp) : null;
 
+  /// Current timestamp duration
   Duration? get currentTimestampDuration {
     final now = currentTimestamp;
     if (now != null) {
@@ -72,7 +82,7 @@ abstract class MidiPlayerBase {
     return null;
   }
 
-  // estimation
+  /// estimation
   num nowToTimestamp([num? now]) {
     now ??= this.now;
 
@@ -89,6 +99,7 @@ abstract class MidiPlayerBase {
     }
   }
 
+  /// Send all notes off to all channel
   void allNotesOff() {
     for (var i = 0; i < MidiEvent.channelCount; i++) {
       final playableEvent = PlayableEvent(
@@ -97,6 +108,7 @@ abstract class MidiPlayerBase {
     }
   }
 
+  /// Send all reset to all channel
   void allReset() {
     for (var i = 0; i < MidiEvent.channelCount; i++) {
       final playableEvent = PlayableEvent(
@@ -105,6 +117,7 @@ abstract class MidiPlayerBase {
     }
   }
 
+  /// Send panic to all channel
   void panic() {
     //allSoundOff();
     //allReset();
@@ -128,6 +141,7 @@ abstract class MidiPlayerBase {
     }
   }
 
+  /// Pause playback
   void rawPause() {
     if (!isPaused) {
       _lastPauseTime = now;
@@ -144,6 +158,7 @@ abstract class MidiPlayerBase {
     //    }
   }
 
+  /// Resume playback
   void resume([num? time]) {
     final resumeTime = time ?? now;
     if (isPaused) {
@@ -176,6 +191,7 @@ abstract class MidiPlayerBase {
 //    _playNext();
 //  }
 
+  /// Load a midi file
   void load(MidiFile file) {
     // Pause current
     pause();
@@ -252,12 +268,15 @@ abstract class MidiPlayerBase {
 //    _playNext();
 //  }
 
+  /// Get the current speed ratio
   num? get currentSpeedRadio => _nextRatio; // ?
 
+  /// Set the next speed ratio
   void setNextSpeedRadio(num ratio) {
     _nextRatio = ratio;
   }
 
+  /// Set the speed ratio
   void setSpeedRadio(num ratio) {
     if (_midiFilePlayer == null) {
       _nextRatio = ratio;
@@ -313,6 +332,7 @@ abstract class MidiPlayerBase {
     }
   }
 
+  /// Convert an event timestamp to an output timestamp
   num eventTimestampToOutputTimestamp(PlayableEvent event) {
     //return event.timestamp + _startNow + _nowDelta + _preFillDuration + _preFillDuration;
     return event.timestamp + _nowDelta + _preFillDuration + _preFillDuration;
@@ -346,18 +366,22 @@ abstract class MidiPlayerBase {
   }
   */
 
-  // In milliseconds
+  /// In milliseconds
   num get now;
 
+  /// Midi player base
   MidiPlayerBase(this.noteOnLastTimestamp);
 
+  /// Note on keys
   final noteOnKeys = <NoteOnKey>{};
+
+  /// Last note on timestamp
   num? noteOnLastTimestamp;
 
-  // to implement
+  /// to implement
   void rawPlayEvent(PlayableEvent midiEvent) {}
 
-  // must be overriden and called
+  /// must be overriden and called
   void playEvent(PlayableEvent event) {
     // first play it
     rawPlayEvent(event);
@@ -385,6 +409,7 @@ abstract class MidiPlayerBase {
     }
   }
 
+  /// Pause playback
   void pause() {
     if (isPlaying) {
       final nowTimestamp = nowToTimestamp();

@@ -2,19 +2,26 @@ import 'package:tekartik_midi/midi.dart';
 import 'package:tekartik_midi/midi_parser.dart';
 import 'package:tekartik_midi/src/parser/object_parser.dart';
 
+/// Event parser
 class EventParser extends ObjectParser {
+  /// Delta time
   late int deltaTime;
+
+  /// The event parsed
   late MidiEvent event;
 
+  /// The track event
   TrackEvent get trackEvent => TrackEvent(deltaTime, event);
 
-  // Use the last command when command is ommited
-  // i.e. the command part has it 8th bits cleared
+  /// Use the last command when command is ommited
+  /// i.e. the command part has it 8th bits cleared
   int lastCommand = 0;
 
+  /// Constructor
   EventParser(super.parser);
 
-  MidiEvent? parseEvent() {
+  /// Parse the event
+  MidiEvent parseEvent() {
     deltaTime = midiParser.readVariableLengthData();
     var command = midiParser.readUint8();
     if ((command & 0x80) == 0) {

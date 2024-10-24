@@ -43,10 +43,15 @@ class LocatedTrackPlayer {
   }
 }
 
+/// Key for note on
 class NoteOnKey {
+  /// Channel
   int channel;
+
+  /// Note
   int? note;
 
+  /// Constructor
   NoteOnKey(this.channel, this.note);
 
   @override
@@ -60,12 +65,18 @@ class NoteOnKey {
 
 /// For all tracks
 class LocatedEvent {
-  // Filled later
+  /// Filled later
   late num absoluteMs; // ms since start without speed ratio affected
+  /// Time in delta time
   late int time;
+
+  /// The event
   final MidiEvent midiEvent;
 
+  /// Constructor
   LocatedEvent.pre(this.time, this.midiEvent);
+
+  /// Constructor
   @Deprecated('Use LocatedEvent.pre')
   LocatedEvent(this.absoluteMs, this.midiEvent);
 
@@ -79,12 +90,16 @@ class LocatedEvent {
 ///
 class MidiFilePlayer {
   @visibleForTesting
+
+  /// Notes on
   Map<NoteOnKey, PlayableEvent> notesOn = {};
 
   final MidiFile _file;
 
+  /// Constructor
   MidiFilePlayer(this._file);
 
+  /// True if playing
   bool get isPlaying => _startTimestamp != null && _lastPauseTimestamp == null;
 
   // in millis
@@ -94,16 +109,19 @@ class MidiFilePlayer {
   // save for updating _startTimestamp on resume
   num? _lastPauseTimestamp;
 
+  /// Start timestamp
   num? get startTimestamp => _startTimestamp;
 
   // default tempo
   TempoEvent _currentTempoEvent = TempoEvent.bpm(120);
 
+  /// current notes on
   @visibleForTesting
   Iterable<PlayableEvent> get currentNoteOnEvents => notesOn.values;
 
   List<LocatedEvent>? _locatedEvents;
 
+  /// Current located event index
   @visibleForTesting
   int? currentLocatedEventIndex;
 
