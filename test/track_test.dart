@@ -48,5 +48,18 @@ void main() {
       expect((track.events[1].midiEvent as TempoEvent).tempo, 2);
       expect(track.events.length, 2);
     });
+
+    test('absoluteTime', () {
+      final track = MidiTrack();
+      track.addEvent(10, TempoEvent(1));
+      track.addEvent(25, TempoEvent(2));
+      track.addEvent(30, TempoEvent(3));
+      expect(track.absoluteTimeAt(0), 10);
+      expect(track.absoluteTimeAt(2), 65);
+      expect(track.absoluteTimeDiff(0, 1), -25);
+      expect(track.absoluteTimeDiff(0, 2), -55);
+      expect(track.absoluteTimeDiff(1, 2), -30);
+      expect(track.absoluteTimeDiff(2, 1), 30);
+    });
   });
 }
