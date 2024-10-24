@@ -486,6 +486,7 @@ abstract class MetaEvent extends MidiEvent {
 
   static const int trackName = 0x3;
   static const int metaTimeSig = 0x58;
+  static const int metaKeySig = 0x59;
 
   // 2018-09-22
   @Deprecated('Use metaTimeSig')
@@ -531,6 +532,9 @@ abstract class MetaEvent extends MidiEvent {
         break;
       case trackName:
         event = TrackNameEvent._();
+      case metaKeySig:
+        event = KeySigEvent._();
+        break;
       default:
         event = _MetaEvent();
         break;
@@ -580,7 +584,7 @@ abstract class MetaEvent extends MidiEvent {
 
   @override
   String toString() {
-    return '${super.toString()} meta $metaCommand${data.isEmpty ? '' : ' data ${hexQuickView(data)}'}';
+    return '${super.toString()} meta ${hexUint8(metaCommand!)}${data.isEmpty ? '' : ' data ${hexQuickView(data)}'}';
   }
 }
 
@@ -648,29 +652,6 @@ class TimeSigEvent extends MetaEvent {
       : super._withParam(MetaEvent.metaTimeSig,
             createData(num, denom, tickCount, num32ndToQuarter));
 
-//  public TimeSig(int num, int denom) {
-//    super(META_TIME_SIG);
-//      data = new byte[4];
-//      data[0] = Util.intToByte(num);
-//      int numerator = 0;
-//      switch (num) {
-//      case 1:
-//        break;
-//      case 2:
-//        numerator = 1;
-//        break;
-//      case 4:
-//        numerator = 2;
-//        break;
-//      }
-//      data[1] = Util.intToByte(numerator);
-//      data[2] = 24;
-//      data[3] = 8;
-//    }
-//
-//    private TimeSig() {
-//    }
-//
   int get bottom {
     return 1 << data[1];
   }
@@ -681,13 +662,42 @@ class TimeSigEvent extends MetaEvent {
   String toString() {
     return '${super.toString()} $top/$bottom ${data[2]} ${data[3]}';
   }
-//
-//    @Override
-//    public String toString() {
-//      return String.format('%s time_sig %d/%d %d %d', super.toString(),
-//          (int) data[0], getDenominator(), (int) data[2],
-//          (int) data[3]);
-//    }
+}
+
+/// Key signature
+/// This meta event is used to specify the key (number of sharps or flats) and scale (major or minor) of a sequence. A positive value for the key specifies the number of sharps and a negative value specifies the number of flats. A value of 0 for the scale specifies a major key and a value of 1 specifies a minor key.
+///
+/// Meta Event 	Type 	Length 	Key 	Scale
+/// 255 (0xFF) 	89 (0x59) 	2 	-7-7 	0-1
+///
+/// https://www.recordingblogs.com/wiki/midi-key-signature-meta-message
+class KeySigEvent extends MetaEvent {
+  KeySigEvent._() : super._();
+
+  static const _keyFromSharps = ['C', 'G', 'D', 'A', 'E', 'B', 'F#', 'C#'];
+  static const _keyFromFlats = ['C', 'F', 'Bb', 'Eb', 'Ab', 'Db', 'Cb', 'Gb'];
+
+  /// values between -7 and 7 and specifies the key signature in terms of number of flats (if negative) or sharps (if positive)
+  int get alterations => _fixAlterations(byteToSignedValue(data[0]));
+
+  static int _fixAlterations(int alterations) {
+    if (alterations < -7 || alterations > 7) {
+      return 0;
+    }
+    return alterations;
+  }
+
+  /// 0 the scale is major, 1 the scale is minor.
+  int get scale => data[1];
+  KeySigEvent(int alterations, int scale)
+      : super._withParam(MetaEvent.metaTimeSig,
+            [signedValueToByte(_fixAlterations(alterations)), scale]);
+  @override
+  String toString() {
+    return '${super.toString()} '
+        '${alterations >= 0 ? _keyFromSharps[alterations] : _keyFromFlats[-alterations]} '
+        '${scale == 1 ? 'minor' : (scale == 0 ? 'major' : 'unknown scale')}';
+  }
 }
 
 /// Tempo

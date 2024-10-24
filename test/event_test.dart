@@ -58,8 +58,8 @@ void main() {
       expect(event, isNot(MetaEvent(0xF2)));
       expect(MetaEvent(0xF2, [1]), MetaEvent(0xF2, [1]));
       expect(MetaEvent(0xF2, [1]), isNot(MetaEvent(0xF2, [2])));
-      expect(MetaEvent(0xF1).toString(), 'FF meta 241');
-      expect(MetaEvent(0xF2, [1]).toString(), 'FF meta 242 data 01');
+      expect(MetaEvent(0xF1).toString(), 'FF meta F1');
+      expect(MetaEvent(0xF2, [1]).toString(), 'FF meta F2 data 01');
     });
 
     test('tempo', () {
@@ -98,6 +98,17 @@ void main() {
       expect(event.trackName, 'Track 2');
     });
 
+    test('key signature', () {
+      var event = KeySigEvent(1, 1);
+      expect(event.alterations, 1);
+      expect(event.scale, 1);
+      expect(event, KeySigEvent(1, 1));
+      expect(event, isNot(KeySigEvent(1, 0)));
+      expect(event, isNot(KeySigEvent(0, 1)));
+      event = KeySigEvent(-1, 0);
+      expect(event.alterations, -1);
+      expect(event.scale, 0);
+    });
     test('various events', () {
       expect(ControlChangeEvent.newAllResetEvent(0).controller,
           ControlChangeEvent.allReset);

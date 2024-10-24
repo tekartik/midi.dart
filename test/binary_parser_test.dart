@@ -13,5 +13,13 @@ void main() {
       expect(parser.readUint16(), equals(0xCDEF));
       expect(parser.readUint32(), equals(0x02030405));
     });
+    test('signedValue', () {
+      expect(signedValueToByte(-1), 0xFF);
+      expect(signedValueToByte(-2), 0xFE);
+      expect(signedValueToByte(2), 0x02);
+      expect(byteToSignedValue(0xFF), -1);
+      expect(byteToSignedValue(0xFE), -2);
+      expect(byteToSignedValue(2), 2);
+    });
   });
 }

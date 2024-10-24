@@ -7,6 +7,13 @@ import 'package:tekartik_midi/midi_parser.dart';
 import 'test_common.dart';
 
 void main() {
+  MidiEvent? parseMidiEventFromHexString(String hexString) {
+    final data = parseHexString(hexString);
+    final midiParser = MidiParser(data);
+    final parser = EventParser(midiParser);
+    return parser.parseEvent();
+  }
+
   group('midi event parser', () {
     test('parse event', () {
       final data = <int>[0, 0xff, 0x2f, 0];
@@ -34,6 +41,16 @@ void main() {
       expect(parser.event is TrackNameEvent, isTrue);
       final trackNameEvent = parser.event as TrackNameEvent;
       expect(trackNameEvent.trackName, 'Track 2');
+    });
+
+    test('parse key sig event', () {
+      var event =
+          parseMidiEventFromHexString('00 FF 59 02 00 00') as KeySigEvent;
+      expect(event.alterations, 0);
+      expect(event.scale, 0);
+      event = parseMidiEventFromHexString('00 FF 59 02 FE 01') as KeySigEvent;
+      expect(event.alterations, -2);
+      expect(event.scale, 1);
     });
 
     test('parse other event', () {

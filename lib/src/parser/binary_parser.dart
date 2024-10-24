@@ -1,5 +1,21 @@
 import 'package:tekartik_midi/src/buffer/midi_buffer.dart';
 
+/// Signed value for a byte
+int byteToSignedValue(int value) {
+  if (value > 127) {
+    return value - 256;
+  }
+  return value;
+}
+
+/// Convert a signed value to a byte
+int signedValueToByte(int value) {
+  if (value < 0) {
+    return value + 256;
+  }
+  return value;
+}
+
 int read3BytesBEInteger(List<int> data, [int offset = 0]) {
   if (data.length - offset < 3) {
     throw const FormatException('not enought data');
