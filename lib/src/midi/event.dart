@@ -814,13 +814,16 @@ class TempoEvent extends MetaEvent {
   /// 60,000,000 microseconds per minute
   static const int microsecondsPerMinute = 60000000;
 
-  /// tempo
+  /// 60,000 milliseconds per minute
+  static const int millisecondsPerMinute = 60000;
+
+  /// tempo per millis: 0.002 for 120 bpm
   num get beatPerMillis => 1000 / tempo;
 
-  /// tempo
+  /// tempo (ex: 500000 for 120 bpm)
   int get tempo => read3BytesBEInteger(data);
 
-  /// tempo
+  /// tempo bmp (ex: 120 bpm)
   num get tempoBpm => microsecondsPerMinute / tempo;
 
   @override

@@ -348,5 +348,13 @@ void main() {
       expect(player.locatedEvents![4].midiEvent, event5);
       expect(player.locatedEvents![4].absoluteMs, closeTo(2000, 0.01));
     });
+    test('midiDeltaTimeToMillis', () {
+      expect(midiDeltaTimeUnitToMillis(), closeTo(4.1667, 0.01));
+      expect(midiDeltaTimeToMillis(120), closeTo(500, 0.01));
+      expect(
+          midiDeltaTimeToMillis(120, ppq: 120, bpm: 120), closeTo(500, 0.01));
+      expect(midiDeltaTimeToMillis(120, ppq: 240), closeTo(250, 0.01));
+      expect(midiDeltaTimeToMillis(120, bpm: 240), closeTo(250, 0.01));
+    });
   });
 }

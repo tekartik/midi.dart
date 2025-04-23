@@ -13,6 +13,12 @@ class MidiFile {
   /// Number of tracks as found in the header
   int get headerTrackCount => _headerTrackCount ?? trackCount;
 
+  /// Default ppq value
+  static const ppqDefault = 120;
+
+  /// Default bpm value
+  static const bpmDefault = 120;
+
   int? _headerTrackCount;
 
   /// Number of tracks
@@ -29,7 +35,7 @@ class MidiFile {
   /// If it is not specified then it is 500,000 microseconds by default, which is equivalent to 120 beats per minute.
   /// In the example above, if the MIDI time division is 60 ticks per beat and if the microseconds per beat is 500,000,
   /// then 1 tick = 500,000 / 60 = 8333.33 microseconds.
-  int? _ppq = 120; // default value
+  int? _ppq = ppqDefault; // default value
   /// PPQ
   int? get ppq => _ppq;
 

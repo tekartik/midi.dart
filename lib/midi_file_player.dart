@@ -6,7 +6,11 @@ import 'package:tekartik_common_utils/common_utils_import.dart';
 import 'package:tekartik_common_utils/list_utils.dart';
 
 import 'midi.dart';
+export 'src/player/time.dart'
+    show midiDeltaTimeToMillis, midiDeltaTimeUnitToMillis;
 
+/// Format a timestamp in ms}
+///
 /// Playable event
 class PlayableEvent {
   /// in millis

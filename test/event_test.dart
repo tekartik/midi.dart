@@ -64,10 +64,18 @@ void main() {
     });
 
     test('tempo', () {
-      final event = TempoEvent.bpm(150);
+      var event = TempoEvent.bpm(150);
       expect(event.tempoBpm, 150);
+      expect(event.tempo, 400000);
+      expect(event.beatPerMillis, 0.0025);
       expect(event, TempoEvent.bpm(150));
       expect(event, isNot(TempoEvent.bpm(120)));
+      event = TempoEvent.bpm(120);
+      expect(event.tempoBpm, 120);
+      expect(event.beatPerMillis, 0.002);
+      expect(event.tempoBpm,
+          TempoEvent.millisecondsPerMinute * event.beatPerMillis);
+      expect(event.tempo, 500000);
     });
 
     test('eot', () {
