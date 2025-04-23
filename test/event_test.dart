@@ -1,3 +1,4 @@
+import 'package:tekartik_common_utils/hex_utils.dart';
 import 'package:tekartik_midi/midi.dart';
 
 import 'test_common.dart';
@@ -93,9 +94,26 @@ void main() {
     });
 
     test('trackname', () {
-      var event = TrackNameEvent()
-        ..data = [0x54, 0x72, 0x61, 0x63, 0x6b, 0x20, 0x32];
+      var event =
+          TrackNameEvent(data: [0x54, 0x72, 0x61, 0x63, 0x6b, 0x20, 0x32]);
       expect(event.trackName, 'Track 2');
+      expect(event.toString(),
+          'FF meta 03 data 54 72 61 63  6B 20 32 track name: Track 2');
+    });
+
+    test('metatext', () {
+      var event =
+          MetaTextEvent(data: [0x54, 0x72, 0x61, 0x63, 0x6b, 0x20, 0x32]);
+      expect(event.metaCommand, 1);
+      expect(event.text, 'Track 2');
+      expect(toHexString(event.data), '547261636B2032');
+      expect(event.toString(),
+          'FF meta 01 data 54 72 61 63  6B 20 32 text: Track 2');
+
+      event = MetaTextEvent.text('élève');
+      expect(event.metaCommand, 1);
+      expect(event.text, 'élève');
+      expect(toHexString(event.data), 'C3A96CC3A87665');
     });
 
     test('key signature', () {

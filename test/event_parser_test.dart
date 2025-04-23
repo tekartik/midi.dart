@@ -43,6 +43,23 @@ void main() {
       expect(trackNameEvent.trackName, 'Track 2');
     });
 
+    test('parse meta text event', () {
+      var data = parseHexString('00 FF 01 04 42 61 73 73');
+      var midiParser = MidiParser(data);
+      var parser = EventParser(midiParser);
+      parser.parseEvent();
+      expect(parser.event, isA<MetaTextEvent>());
+      var metaTextEvent = parser.event as MetaTextEvent;
+      expect(metaTextEvent.text, 'Bass');
+
+      data = parseHexString('00FF0107C3A96CC3A87665');
+      midiParser = MidiParser(data);
+      parser = EventParser(midiParser);
+      parser.parseEvent();
+      metaTextEvent = parser.event as MetaTextEvent;
+      expect(metaTextEvent.text, 'élève');
+    });
+
     test('parse key sig event', () {
       var event =
           parseMidiEventFromHexString('00 FF 59 02 00 00') as KeySigEvent;

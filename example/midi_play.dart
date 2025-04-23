@@ -4,13 +4,14 @@ library;
 
 import 'dart:io';
 
+import 'package:path/path.dart';
 import 'package:tekartik_midi/midi_file_player.dart';
 import 'package:tekartik_midi/midi_parser.dart';
 import 'package:tekartik_midi/midi_player_base.dart';
 
 // Display midi event timing
 
-class _MidiPlayer extends MidiPlayerBase {
+class StdoutMidiPlayer extends MidiPlayerBase {
   @override
   void rawPlayEvent(PlayableEvent event) {
     // ignore: avoid_print
@@ -29,10 +30,13 @@ class _MidiPlayer extends MidiPlayerBase {
     return stopwatch!.elapsed.inMilliseconds;
   }
 
-  _MidiPlayer() : super(null);
+  StdoutMidiPlayer() : super(null);
 }
 
 Future main(List<String> args) async {
+  if (args.isEmpty) {
+    args = [join('example', 'sample.mid')];
+  }
   for (var arg in args) {
     final file = File(arg);
     if (file.existsSync()) {
@@ -41,7 +45,7 @@ Future main(List<String> args) async {
       final parser = FileParser(MidiParser(data));
       parser.parseFile();
 
-      final player = _MidiPlayer();
+      final player = StdoutMidiPlayer();
       player.load(parser.file!);
       player.resume();
 

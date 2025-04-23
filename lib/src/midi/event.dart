@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:tekartik_common_utils/common_utils_import.dart';
 import 'package:tekartik_common_utils/hex_utils.dart';
-import 'package:tekartik_common_utils/log_utils.dart';
 import 'package:tekartik_midi/midi_parser.dart';
 import 'package:tekartik_midi/midi_writer.dart';
 import 'package:tekartik_midi/src/buffer/midi_buffer.dart';
@@ -53,7 +52,12 @@ class TrackEvent {
 /// Base midi event.
 abstract class MidiEvent {
   /// Event command combining channel and event type (called command too).
-  late int command;
+  int get command => _command;
+  late int _command;
+  @Deprecated('Removed some day')
+  set command(int command) {
+    _command = command;
+  }
 
   /// Available channel count.
   static const int channelCount = 16;
@@ -92,7 +96,7 @@ abstract class MidiEvent {
   MidiEvent();
 
   /// Constructor with command
-  MidiEvent.withParam(this.command);
+  MidiEvent.withParam(this._command);
 
   /// Compute command from an event type and a channel
   static int commandChannel(int eventType, int channel) {
@@ -156,7 +160,7 @@ abstract class MidiEvent {
         throw 'Event $eventType not supported in MidiEvent.base';
     }
     // ignore: prefer_initializing_formals
-    event.command = command;
+    event._command = command;
     return event;
   }
 
@@ -529,10 +533,27 @@ class SysExEvent extends MidiEvent {
 /// A Meta mide event.
 abstract class MetaEvent extends MidiEvent {
   /// Meta command
-  int? metaCommand;
+  int? get metaCommand => _metaCommand;
+
+  @Deprecated('removed some day')
+  set metaCommand(int? metaCommand) {
+    _metaCommand = metaCommand;
+  }
+
+  int? _metaCommand;
 
   /// Data
-  List<int> data;
+  List<int> get data => _data;
+
+  @Deprecated('removed some day')
+  set data(List<int> data) {
+    _data = data;
+  }
+
+  List<int> _data;
+
+  /// text
+  static const int metaText = 0x1;
 
   /// track name
   static const int trackName = 0x3;
@@ -549,17 +570,18 @@ abstract class MetaEvent extends MidiEvent {
   /// end of track
   static const int metaEndOfTrack = 0x2F;
 
-  MetaEvent._() : data = <int>[];
+  MetaEvent._() : _data = <int>[];
 
-  MetaEvent._withParam(this.metaCommand, [this.data = const <int>[]])
-      : super.withParam(MidiEvent
+  MetaEvent._withParam(this._metaCommand, {List<int>? data})
+      : _data = data ?? <int>[],
+        super.withParam(MidiEvent
             .cmdMetaEvent); // properly use the full command here (i.e. 0xFF)
 
   /// Constructor
   factory MetaEvent(int metaCommand, [List<int> data = const <int>[]]) {
     final event = MetaEvent.base(MidiEvent.cmdMetaEvent, metaCommand);
     // ignore: prefer_initializing_formals
-    event.data = data;
+    event._data = data;
     return event;
   }
 
@@ -567,6 +589,9 @@ abstract class MetaEvent extends MidiEvent {
   factory MetaEvent.base(int command, int metaCommand) {
     MetaEvent event;
     switch (metaCommand) {
+      case metaText:
+        event = MetaTextEvent._();
+        break;
       case metaTimeSig:
         event = TimeSigEvent._();
         break;
@@ -585,22 +610,22 @@ abstract class MetaEvent extends MidiEvent {
         event = _MetaEvent();
         break;
     }
-    event.command = command;
+    event._command = command;
     // ignore: prefer_initializing_formals
-    event.metaCommand = metaCommand;
+    event._metaCommand = metaCommand;
     return event;
   }
 
   @override
   void readData(MidiParser parser) {
     // Don't re-read meta command
-    metaCommand ??= parser.readUint8();
+    _metaCommand ??= parser.readUint8();
 
     final dataSize = parser.readVariableLengthData();
     if (dataSize > 0) {
       final buffer = OutBuffer(dataSize);
       parser.read(buffer, dataSize);
-      data = buffer.data;
+      _data = buffer.data;
     }
   }
 
@@ -700,7 +725,7 @@ class TimeSigEvent extends MetaEvent {
   TimeSigEvent(int num, int denom,
       [int tickCount = 24, int num32ndToQuarter = 8])
       : super._withParam(MetaEvent.metaTimeSig,
-            createData(num, denom, tickCount, num32ndToQuarter));
+            data: createData(num, denom, tickCount, num32ndToQuarter));
 
   /// bottom
   int get bottom {
@@ -745,7 +770,7 @@ class KeySigEvent extends MetaEvent {
   /// Constructor
   KeySigEvent(int alterations, int scale)
       : super._withParam(MetaEvent.metaTimeSig,
-            [signedValueToByte(_fixAlterations(alterations)), scale]);
+            data: [signedValueToByte(_fixAlterations(alterations)), scale]);
   @override
   String toString() {
     return '${super.toString()} '
@@ -783,8 +808,8 @@ class TempoEvent extends MetaEvent {
 
   /// Constructor
   TempoEvent(int tempo)
-      : super._withParam(
-            MetaEvent.metaTempo, create3BytesBEIntegerBuffer(tempo));
+      : super._withParam(MetaEvent.metaTempo,
+            data: create3BytesBEIntegerBuffer(tempo));
 
   /// 60,000,000 microseconds per minute
   static const int microsecondsPerMinute = 60000000;
@@ -838,7 +863,7 @@ class TrackNameEvent extends MetaEvent {
   TrackNameEvent._() : super._();
 
   /// Constructor
-  TrackNameEvent() : super._withParam(MetaEvent.trackName);
+  TrackNameEvent({super.data}) : super._withParam(MetaEvent.trackName);
 
   /// track name
   String get trackName => String.fromCharCodes(data);
@@ -851,4 +876,26 @@ class TrackNameEvent extends MetaEvent {
 
 class _MetaEvent extends MetaEvent {
   _MetaEvent() : super._();
+}
+
+/// This meta event defines some text which can be used for any reason including
+/// track notes, comments, etc. The text string is usually ASCII text, but may
+/// be any character (0x00-0xFF)..
+class MetaTextEvent extends MetaEvent {
+  MetaTextEvent._() : super._();
+
+  /// Constructor
+  MetaTextEvent({super.data}) : super._withParam(MetaEvent.metaText);
+
+  /// Constructor
+  MetaTextEvent.text(String text)
+      : super._withParam(MetaEvent.metaText, data: utf8.encode(text));
+
+  /// track name
+  String get text => utf8.decode(data);
+
+  @override
+  String toString() {
+    return '${super.toString()} text: $text';
+  }
 }
