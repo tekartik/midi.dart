@@ -1,5 +1,6 @@
 library;
 
+import 'package:tekartik_common_utils/foundation/constants.dart';
 import 'package:tekartik_midi/midi.dart';
 
 import 'test_common.dart';
@@ -17,6 +18,16 @@ void main() {
       expect(track, isNot(track2));
       track2.addEvent(0, TempoEvent(120));
       expect(track, track2);
+    });
+    test('add twice', () {
+      var track = MidiTrack();
+      var track2 = MidiTrack();
+      var file = MidiFile();
+      file.addTrack(track);
+      file.addTrack(track2);
+      if (kDebugMode) {
+        expect(() => file.addTrack(track2), throwsStateError);
+      }
     });
     test('addAbsoluteEvent', () {
       MidiTrack track;
