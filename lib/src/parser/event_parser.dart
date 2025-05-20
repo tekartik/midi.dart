@@ -20,10 +20,16 @@ class EventParser extends ObjectParser {
   /// Constructor
   EventParser(super.parser);
 
-  /// Parse the event
+  /// Parse the event with its delta time
   MidiEvent parseEvent() {
     deltaTime = midiParser.readVariableLengthData();
+    return parseMidiEvent();
+  }
+
+  /// Parse the raw event (no time)
+  MidiEvent parseMidiEvent() {
     var command = midiParser.readUint8();
+
     if ((command & 0x80) == 0) {
       if ((lastCommand & 0x80) == 0) {
         throw const FormatException('invalid last command');
@@ -53,9 +59,16 @@ class EventParser extends ObjectParser {
   }
 
   /// for testing only
-  static MidiEvent? dataParseEvent(List<int> data) {
+  static MidiEvent dataParseEvent(List<int> data) {
     final midiParser = MidiParser(data);
     final parser = EventParser(midiParser);
     return parser.parseEvent();
+  }
+
+  /// Parse a midi event (no time)
+  static MidiEvent dataParseMidiEvent(List<int> data) {
+    final midiParser = MidiParser(data);
+    final parser = EventParser(midiParser);
+    return parser.parseMidiEvent();
   }
 }

@@ -120,5 +120,10 @@ void main() {
       parser.parseEvent();
       expect(parser.event, const TypeMatcher<NoteOffEvent>());
     });
+
+    test('Raw midi event', () {
+      var event = EventParser.dataParseMidiEvent([0x96, 0x10, 0x7f]);
+      expect(event, isA<NoteOnEvent>());
+    });
   });
 }
