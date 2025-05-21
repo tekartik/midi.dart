@@ -94,7 +94,9 @@ abstract class MidiPlayerBase {
   void allSoundOff() {
     for (var i = 0; i < MidiEvent.channelCount; i++) {
       final playableEvent = PlayableEvent(
-          nowToTimestamp(), ControlChangeEvent.newAllSoundOffEvent(i));
+        nowToTimestamp(),
+        ControlChangeEvent.newAllSoundOffEvent(i),
+      );
       playEvent(playableEvent);
     }
   }
@@ -103,7 +105,9 @@ abstract class MidiPlayerBase {
   void allNotesOff() {
     for (var i = 0; i < MidiEvent.channelCount; i++) {
       final playableEvent = PlayableEvent(
-          nowToTimestamp(), ControlChangeEvent.newAllSoundOffEvent(i));
+        nowToTimestamp(),
+        ControlChangeEvent.newAllSoundOffEvent(i),
+      );
       playEvent(playableEvent);
     }
   }
@@ -112,7 +116,9 @@ abstract class MidiPlayerBase {
   void allReset() {
     for (var i = 0; i < MidiEvent.channelCount; i++) {
       final playableEvent = PlayableEvent(
-          nowToTimestamp(), ControlChangeEvent.newAllResetEvent(i));
+        nowToTimestamp(),
+        ControlChangeEvent.newAllResetEvent(i),
+      );
       playEvent(playableEvent);
     }
   }
@@ -124,8 +130,10 @@ abstract class MidiPlayerBase {
 
     for (var j = 0; j < MidiEvent.noteCount; j++) {
       for (var i = 0; i < MidiEvent.channelCount; i++) {
-        final playableEvent =
-            PlayableEvent(nowToTimestamp(), NoteOffEvent(i, j, 0));
+        final playableEvent = PlayableEvent(
+          nowToTimestamp(),
+          NoteOffEvent(i, j, 0),
+        );
         playEvent(playableEvent);
       }
     }
@@ -174,22 +182,22 @@ abstract class MidiPlayerBase {
     _playNext();
   }
 
-//  void _play(MidiFile file) {
-//    _load(file);
-//    //stopwatch = new Stopwatch()..start();
-//    _midiFilePlayer.start(0 - _preFillDuration);
-//
-//    if (_nextRatio != null) {
-//      _midiFilePlayer.setSpeedRatio(_nextRatio, now);
-//      _nextRatio = null;
-//    }
-//
-//    _startNow = now - _nowDelta;
-//    devPrint('Starting ${formatTimestampMs(_startNow)}');
-//    // Get first
-//    _currentEvent = _midiFilePlayer.next;
-//    _playNext();
-//  }
+  //  void _play(MidiFile file) {
+  //    _load(file);
+  //    //stopwatch = new Stopwatch()..start();
+  //    _midiFilePlayer.start(0 - _preFillDuration);
+  //
+  //    if (_nextRatio != null) {
+  //      _midiFilePlayer.setSpeedRatio(_nextRatio, now);
+  //      _nextRatio = null;
+  //    }
+  //
+  //    _startNow = now - _nowDelta;
+  //    devPrint('Starting ${formatTimestampMs(_startNow)}');
+  //    // Get first
+  //    _currentEvent = _midiFilePlayer.next;
+  //    _playNext();
+  //  }
 
   /// Load a midi file
   void load(MidiFile file) {
@@ -204,33 +212,33 @@ abstract class MidiPlayerBase {
     //isPaused = true;
     //_isPlaying = true;
     //playingController.add(true);
-//          Stream<PlayableEvent> stream = _play(file);
-//          stream..listen((PlayableEvent event) {
-//                playEvent(event);
-//              }, onDone: () {
-//                pause();
-//                print('onDone');
-//                player = null;
-//              });
+    //          Stream<PlayableEvent> stream = _play(file);
+    //          stream..listen((PlayableEvent event) {
+    //                playEvent(event);
+    //              }, onDone: () {
+    //                pause();
+    //                print('onDone');
+    //                player = null;
+    //              });
     _load(file);
 
     //});
   }
 
-//  void play(MidiFile file) {
-//    load(file).then((_) {
-//      _play(file);
-//
-//    });
-//
-//  }
+  //  void play(MidiFile file) {
+  //    load(file).then((_) {
+  //      _play(file);
+  //
+  //    });
+  //
+  //  }
 
-//  num get startNow {
-//    if (_startNow == null) {
-//      _startNow = now;
-//    }
-//    return _startNow;
-//  }
+  //  num get startNow {
+  //    if (_startNow == null) {
+  //      _startNow = now;
+  //    }
+  //    return _startNow;
+  //  }
 
   void _load(MidiFile file) {
     _isDone = false;
@@ -242,11 +250,14 @@ abstract class MidiPlayerBase {
     _streamController = StreamController<PlayableEvent?>(sync: true);
 
     _done = _streamController!.stream
-        .listen((PlayableEvent? event) {
-          playEvent(event!);
-        }, onDone: () {
-          //pause();
-        })
+        .listen(
+          (PlayableEvent? event) {
+            playEvent(event!);
+          },
+          onDone: () {
+            //pause();
+          },
+        )
         .asFuture<void>()
         .then((_) {
           //devPrint('onDone');
@@ -256,17 +267,17 @@ abstract class MidiPlayerBase {
         });
   }
 
-//  void _play(MidiFile file) {
-//    _load(file);
-//    //stopwatch = new Stopwatch()..start();
-//    player.start(0 - _preFillDuration);
-//
-//    _startNow = now - _nowDelta;
-//    devPrint('Starting ${formatTimestampMs(_startNow)}');
-//    // Get first
-//    _currentEvent = player.next;
-//    _playNext();
-//  }
+  //  void _play(MidiFile file) {
+  //    _load(file);
+  //    //stopwatch = new Stopwatch()..start();
+  //    player.start(0 - _preFillDuration);
+  //
+  //    _startNow = now - _nowDelta;
+  //    devPrint('Starting ${formatTimestampMs(_startNow)}');
+  //    // Get first
+  //    _currentEvent = player.next;
+  //    _playNext();
+  //  }
 
   /// Get the current speed ratio
   num? get currentSpeedRadio => _nextRatio; // ?
@@ -312,22 +323,28 @@ abstract class MidiPlayerBase {
         final nextCompleter = Completer<void>.sync();
         _waitPlayNextCompleter = nextCompleter;
         Future.delayed(
-            Duration(
-                milliseconds:
-                    (_currentEvent!.timestamp - nowTimestamp + _timerResolution)
-                        .toInt()), () {
-          if (!nextCompleter.isCompleted) {
-            nextCompleter.complete();
-          }
-          _waitPlayNextCompleter = null;
-        });
+          Duration(
+            milliseconds:
+                (_currentEvent!.timestamp - nowTimestamp + _timerResolution)
+                    .toInt(),
+          ),
+          () {
+            if (!nextCompleter.isCompleted) {
+              nextCompleter.complete();
+            }
+            _waitPlayNextCompleter = null;
+          },
+        );
 
         // This will be cancelled if _waitPlayNextCompleter has been complete with an error before
-        nextCompleter.future.then((_) {
-          _playNext();
-        }, onError: (_) {
-          //devPrint('was paused');
-        });
+        nextCompleter.future.then(
+          (_) {
+            _playNext();
+          },
+          onError: (_) {
+            //devPrint('was paused');
+          },
+        );
       }
     }
   }
@@ -338,23 +355,23 @@ abstract class MidiPlayerBase {
     return event.timestamp + _nowDelta + _preFillDuration + _preFillDuration;
   }
 
-//  MidiFile _currentFile;
-//  MidiFile get currentFile => _currentFile;
-//  set currentFile(MidiFile currentFile_) {
-//    _currentFile = currentFile_;
-//    // to force duration recomputation
-//    _currentFileDuration = null;
-//    _currentFileDuration = null;
-//  }
-//  Duration _currentFileDuration;
-//  Duration get currentFileDuration {
-//    if (_currentFileDuration == null) {
-//      if (currentFile != null) {
-//        _currentFileDuration = getMidiFileDuration(currentFile);
-//      }
-//    }
-//    return _currentFileDuration;
-//  }
+  //  MidiFile _currentFile;
+  //  MidiFile get currentFile => _currentFile;
+  //  set currentFile(MidiFile currentFile_) {
+  //    _currentFile = currentFile_;
+  //    // to force duration recomputation
+  //    _currentFileDuration = null;
+  //    _currentFileDuration = null;
+  //  }
+  //  Duration _currentFileDuration;
+  //  Duration get currentFileDuration {
+  //    if (_currentFileDuration == null) {
+  //      if (currentFile != null) {
+  //        _currentFileDuration = getMidiFileDuration(currentFile);
+  //      }
+  //    }
+  //    return _currentFileDuration;
+  //  }
 
   /*
 
@@ -430,8 +447,10 @@ abstract class MidiPlayerBase {
       //devPrint('###### $timestamp - ${nowToTimestamp()}/last: $noteOnLastTimestamp');
       // Clear the notes sent
       for (final key in noteOnKeys) {
-        final event =
-            PlayableEvent(timestamp, NoteOffEvent(key.channel, key.note, 0));
+        final event = PlayableEvent(
+          timestamp,
+          NoteOffEvent(key.channel, key.note, 0),
+        );
         //devPrint(event);
         rawPlayEvent(event);
       }

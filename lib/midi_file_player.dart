@@ -94,7 +94,6 @@ class LocatedEvent {
 ///
 class MidiFilePlayer {
   @visibleForTesting
-
   /// Notes on
   Map<NoteOnKey, PlayableEvent> notesOn = {};
 
@@ -156,8 +155,8 @@ class MidiFilePlayer {
   List<LocatedEvent>? _prepareForLocation() {
     if (_locatedEvents == null) {
       _locatedEvents = listFlatten(
-          _file.tracks.map((e) => LocatedTrackPlayer(e).preLocatedEvents))
-        ..sort((a, b) => a.time.compareTo(b.time));
+        _file.tracks.map((e) => LocatedTrackPlayer(e).preLocatedEvents),
+      )..sort((a, b) => a.time.compareTo(b.time));
 
       var ms = 0.0;
       var time = 0;
@@ -191,7 +190,8 @@ class MidiFilePlayer {
       //   |------------|
       final currentMs = timestampToAbsoluteMs(currentTimestamp);
       _speedRatio = ratio;
-      _startTimestamp = _startTimestamp! -
+      _startTimestamp =
+          _startTimestamp! -
           (absoluteMsToTimestamp(currentMs) - currentTimestamp);
     } else {
       _speedRatio = ratio;
@@ -222,7 +222,8 @@ class MidiFilePlayer {
       if (_file.ppq != null) {
         _currentDeltaTimeUnitInMillis = 1 / (_file.ppq! * beatPerMillis);
       } else {
-        _currentDeltaTimeUnitInMillis = 1 /
+        _currentDeltaTimeUnitInMillis =
+            1 /
             (_file.frameCountPerSecond! *
                 _file.divisionCountPerFrame! *
                 beatPerMillis);
@@ -236,9 +237,9 @@ class MidiFilePlayer {
     _currentDeltaTimeUnitInMillis = value;
   }
 
-//  num deltaTimeToMillis(int delay) {
-//    return delay * _currentTimeUnitInMillis;
-//  }
+  //  num deltaTimeToMillis(int delay) {
+  //    return delay * _currentTimeUnitInMillis;
+  //  }
 
   /// Find the player timestamp given a millisecond location.
   num absoluteMsToTimestamp(num absoluteMs) {
@@ -293,7 +294,7 @@ class MidiFilePlayer {
       final event = PlayableEvent(timestamp, locatedEvent.midiEvent);
       final midiEvent = locatedEvent.midiEvent;
 
-// And Note on event and remove note off event (and note on with velocity 0)
+      // And Note on event and remove note off event (and note on with velocity 0)
       if (midiEvent is NoteOnEvent) {
         final key = NoteOnKey(midiEvent.channel, midiEvent.note);
 

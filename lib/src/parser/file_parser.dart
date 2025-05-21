@@ -16,7 +16,7 @@ class FileParser extends ObjectParser {
     'M'.codeUnitAt(0),
     'T'.codeUnitAt(0),
     'h'.codeUnitAt(0),
-    'd'.codeUnitAt(0)
+    'd'.codeUnitAt(0),
   ];
 
   /// Parse the tracks

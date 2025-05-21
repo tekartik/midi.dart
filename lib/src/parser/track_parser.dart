@@ -21,7 +21,7 @@ class TrackParser extends ObjectParser {
     'M'.codeUnitAt(0),
     'T'.codeUnitAt(0),
     'r'.codeUnitAt(0),
-    'k'.codeUnitAt(0)
+    'k'.codeUnitAt(0),
   ];
 
   /// Parse the header
@@ -42,9 +42,9 @@ class TrackParser extends ObjectParser {
     while (midiParser.inBuffer!.position < endPosition) {
       eventParser.parseEvent();
       //print(eventParser.event);
-//      if (eventParser.event is EndOfTrackEvent) {
-//      print(eventParser.event);
-//      }
+      //      if (eventParser.event is EndOfTrackEvent) {
+      //      print(eventParser.event);
+      //      }
       track!.events.add(TrackEvent(eventParser.deltaTime, eventParser.event));
     }
   }

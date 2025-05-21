@@ -22,25 +22,26 @@ void main() {
 
       writer.writeTrack();
       expect(
-          writer.data,
-          equals([
-            'M'.codeUnitAt(0),
-            'T'.codeUnitAt(0),
-            'r'.codeUnitAt(0),
-            'k'.codeUnitAt(0),
-            0,
-            0,
-            0,
-            8,
-            0,
-            0xff,
-            0x2f,
-            0,
-            0,
-            0xff,
-            0x2f,
-            0
-          ]));
+        writer.data,
+        equals([
+          'M'.codeUnitAt(0),
+          'T'.codeUnitAt(0),
+          'r'.codeUnitAt(0),
+          'k'.codeUnitAt(0),
+          0,
+          0,
+          0,
+          8,
+          0,
+          0xff,
+          0x2f,
+          0,
+          0,
+          0xff,
+          0x2f,
+          0,
+        ]),
+      );
     });
 
     void writeReadAndCheck(MidiTrack track) {

@@ -24,7 +24,7 @@ class _TestMidiPlayer extends MidiPlayerBase {
   num now;
 
   _TestMidiPlayer(this.now, num? noteOnLastTimestamp)
-      : super(noteOnLastTimestamp);
+    : super(noteOnLastTimestamp);
 }
 
 void main() {
@@ -71,9 +71,9 @@ void main() {
     test('noteOnLastTimestamp', () {
       MidiPlayerBase player = _TestMidiPlayer(10, null);
       expect(player.noteOnLastTimestamp, null);
-//      return player.load(getDemoFileCDE()).then((_) {
-//        //player.resume();
-//      });
+      //      return player.load(getDemoFileCDE()).then((_) {
+      //        //player.resume();
+      //      });
     });
 
     test('status_play', () {
@@ -92,7 +92,7 @@ void main() {
       expect(player.isPlaying, true);
       expect(player.isPaused, false);
       expect(player.isDone, false);
-// Forward enough
+      // Forward enough
       player.now = 5000;
       return player.done!.then((_) {
         expect(player.isPlaying, false);

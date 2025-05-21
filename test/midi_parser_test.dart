@@ -18,14 +18,20 @@ void main() {
       expect(MidiParser([0xC0, 0]).readVariableLengthData(), equals(0x2000));
       expect(MidiParser([0xFF, 0x7F]).readVariableLengthData(), equals(0x3FFF));
 
-      expect(MidiParser([0xFF, 0xFF, 0x7F]).readVariableLengthData(),
-          equals(0x1FFFFF));
+      expect(
+        MidiParser([0xFF, 0xFF, 0x7F]).readVariableLengthData(),
+        equals(0x1FFFFF),
+      );
 
-      expect(MidiParser([0xC0, 0x80, 0x80, 0]).readVariableLengthData(),
-          equals(0x8000000));
+      expect(
+        MidiParser([0xC0, 0x80, 0x80, 0]).readVariableLengthData(),
+        equals(0x8000000),
+      );
 
-      expect(MidiParser([0xFF, 0xFF, 0xFF, 0x7F]).readVariableLengthData(),
-          equals(0xFFFFFFF));
+      expect(
+        MidiParser([0xFF, 0xFF, 0xFF, 0x7F]).readVariableLengthData(),
+        equals(0xFFFFFFF),
+      );
     });
   });
 }

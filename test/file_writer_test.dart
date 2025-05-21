@@ -24,23 +24,24 @@ void main() {
 
       writer.writeHeader();
       expect(
-          writer.data,
-          equals([
-            'M'.codeUnitAt(0),
-            'T'.codeUnitAt(0),
-            'h'.codeUnitAt(0),
-            'd'.codeUnitAt(0),
-            0,
-            0,
-            0,
-            6,
-            0,
-            1,
-            0,
-            2,
-            0,
-            3
-          ]));
+        writer.data,
+        equals([
+          'M'.codeUnitAt(0),
+          'T'.codeUnitAt(0),
+          'h'.codeUnitAt(0),
+          'd'.codeUnitAt(0),
+          0,
+          0,
+          0,
+          6,
+          0,
+          1,
+          0,
+          2,
+          0,
+          3,
+        ]),
+      );
     });
 
     void writeReadAndCheck(MidiFile file) {

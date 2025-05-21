@@ -33,7 +33,7 @@ void main() {
         0,
         2,
         0,
-        3
+        3,
       ];
       final midiParser = MidiParser(data);
       final parser = FileParser(midiParser);
@@ -44,33 +44,36 @@ void main() {
     });
 
     test('parse header SMPTE frames per seconds', () {
-      final file = FileParser.dataFile(
-          parseHexString('4D 54 68 64  00 00 00 06  00 01 00 00  E7 28'))!;
+      final file =
+          FileParser.dataFile(
+            parseHexString('4D 54 68 64  00 00 00 06  00 01 00 00  E7 28'),
+          )!;
       expect(file.frameCountPerSecond, 25);
       expect(file.divisionCountPerFrame, 40);
     });
 
     test('parse file', () {
       final data = parseHexString(
-          '4d 54 68 64 00 00 00 06 00 01 00 02 01 e0 4d 54 72 6b 00 00 00 13 00 ff 58 04 04 02 18 08 00 ff 51 03 06 1a 80 00 ff 2f 00 4d 54 72 6b 00 00 00 00');
+        '4d 54 68 64 00 00 00 06 00 01 00 02 01 e0 4d 54 72 6b 00 00 00 13 00 ff 58 04 04 02 18 08 00 ff 51 03 06 1a 80 00 ff 2f 00 4d 54 72 6b 00 00 00 00',
+      );
       final midiParser = MidiParser(data);
       final parser = FileParser(midiParser);
       parser.parseFile();
     });
 
     test('parse demo file', () {
-      return File(inDataFilenamePath('simple_in.mid'))
-          .readAsBytes()
-          .then((data) {
+      return File(inDataFilenamePath('simple_in.mid')).readAsBytes().then((
+        data,
+      ) {
         final file = FileParser.dataFile(data)!;
         file.dump();
       });
     }, skip: true);
 
     test('parse note on off file', () {
-      return File(inDataFilenamePath('note_on_off.mid'))
-          .readAsBytes()
-          .then((data) {
+      return File(inDataFilenamePath('note_on_off.mid')).readAsBytes().then((
+        data,
+      ) {
         FileParser.dataFile(data);
         //file.dump();
       });
@@ -78,9 +81,9 @@ void main() {
 
     // to skip
     test('parse take 5', () {
-      return File(inDataFilenamePath('tmp/take_5.mid'))
-          .readAsBytes()
-          .then((data) {
+      return File(inDataFilenamePath('tmp/take_5.mid')).readAsBytes().then((
+        data,
+      ) {
         final file = FileParser.dataFile(data)!;
         expect(file.trackCount, 30);
         //file.dump();

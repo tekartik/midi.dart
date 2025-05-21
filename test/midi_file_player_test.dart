@@ -195,13 +195,17 @@ void main() {
       file.ppq = 240;
 
       expect(getMidiFileDuration(file), const Duration(milliseconds: 501));
-      expect(MidiFilePlayer(file).totalDurationMs,
-          closeTo(getMidiFileDuration(file).inMilliseconds, 1));
+      expect(
+        MidiFilePlayer(file).totalDurationMs,
+        closeTo(getMidiFileDuration(file).inMilliseconds, 1),
+      );
 
       track.addEvent(240, event);
       expect(getMidiFileDuration(file), const Duration(milliseconds: 1001));
-      expect(MidiFilePlayer(file).totalDurationMs,
-          closeTo(getMidiFileDuration(file).inMilliseconds, 1));
+      expect(
+        MidiFilePlayer(file).totalDurationMs,
+        closeTo(getMidiFileDuration(file).inMilliseconds, 1),
+      );
     });
 
     test('one_located_events', () {
@@ -352,7 +356,9 @@ void main() {
       expect(midiDeltaTimeUnitToMillis(), closeTo(4.1667, 0.01));
       expect(midiDeltaTimeToMillis(120), closeTo(500, 0.01));
       expect(
-          midiDeltaTimeToMillis(120, ppq: 120, bpm: 120), closeTo(500, 0.01));
+        midiDeltaTimeToMillis(120, ppq: 120, bpm: 120),
+        closeTo(500, 0.01),
+      );
       expect(midiDeltaTimeToMillis(120, ppq: 240), closeTo(250, 0.01));
       expect(midiDeltaTimeToMillis(120, bpm: 240), closeTo(250, 0.01));
     });

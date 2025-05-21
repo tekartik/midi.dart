@@ -197,7 +197,7 @@ abstract class ChannelEvent extends MidiEvent {
 
   /// Constructor with command and channel
   ChannelEvent.withParam(int command, int channel)
-      : super.withParam(MidiEvent.commandChannel(command, channel));
+    : super.withParam(MidiEvent.commandChannel(command, channel));
 }
 
 /// Param1ByteEvent
@@ -209,7 +209,7 @@ abstract class Param1ByteEvent extends ChannelEvent {
 
   /// Constructor with command, channel and param1
   Param1ByteEvent.withParam(super.command, super.channel, this._param1)
-      : super.withParam();
+    : super.withParam();
 
   @override
   void readData(MidiParser parser) {
@@ -251,7 +251,7 @@ class ProgramChangeEvent extends Param1ByteEvent {
 
   /// Constructor
   ProgramChangeEvent(int channel, int program) //
-      : super.withParam(MidiEvent.programChange, channel, program);
+    : super.withParam(MidiEvent.programChange, channel, program);
 
   @override
   String toString() {
@@ -268,8 +268,12 @@ abstract class Param2BytesEvent extends Param1ByteEvent {
 
   /// Constructor with command, channel, param1 and param2
   Param2BytesEvent.withParam(
-      super.command, super.channel, super.param1, this._param2) //
-      : super.withParam();
+    super.command,
+    super.channel,
+    super.param1,
+    this._param2,
+  ) //
+  : super.withParam();
 
   @override
   void readData(MidiParser parser) {
@@ -309,7 +313,7 @@ class ChannelAfterTouchEvent extends Param1ByteEvent {
 
   /// Constructor
   ChannelAfterTouchEvent(int command, int channel, int amount) //
-      : super.withParam(MidiEvent.channelAfterTouch, channel, amount);
+    : super.withParam(MidiEvent.channelAfterTouch, channel, amount);
 
   set amount(int? channel) {
     _param1 = channel;
@@ -349,8 +353,11 @@ abstract class NoteEvent extends Param2BytesEvent {
 
   /// Constructor with command, channel, note and velocity
   NoteEvent.withParam(
-      super.command, super.channel, super.noteNumber, int super.velocity)
-      : super.withParam();
+    super.command,
+    super.channel,
+    super.noteNumber,
+    int super.velocity,
+  ) : super.withParam();
 }
 
 /// Note on event.
@@ -359,7 +366,7 @@ class NoteOnEvent extends NoteEvent {
 
   /// Constructor
   NoteOnEvent(int channel, int noteNumber, int velocity) //
-      : super.withParam(MidiEvent.noteOn, channel, noteNumber, velocity);
+    : super.withParam(MidiEvent.noteOn, channel, noteNumber, velocity);
 
   @override
   String toString() {
@@ -373,7 +380,7 @@ class NoteOffEvent extends NoteEvent {
 
   /// Constructor
   NoteOffEvent(int channel, int? noteNumber, int velocity) //
-      : super.withParam(MidiEvent.noteOff, channel, noteNumber, velocity);
+    : super.withParam(MidiEvent.noteOff, channel, noteNumber, velocity);
 
   @override
   String toString() {
@@ -387,7 +394,7 @@ class KeyAfterTouchEvent extends NoteEvent {
 
   /// Constructor
   KeyAfterTouchEvent(int channel, int noteNumber, int velocity) //
-      : super.withParam(MidiEvent.keyAfterTouch, channel, noteNumber, velocity);
+    : super.withParam(MidiEvent.keyAfterTouch, channel, noteNumber, velocity);
 
   @override
   String toString() {
@@ -415,8 +422,12 @@ class PitchWheelChangeEvent extends Param2BytesEvent {
 
   /// Constructor
   PitchWheelChangeEvent(int channel, int noteNumber, int velocity) //
-      : super.withParam(
-            MidiEvent.pitchWheelChange, channel, noteNumber, velocity);
+    : super.withParam(
+        MidiEvent.pitchWheelChange,
+        channel,
+        noteNumber,
+        velocity,
+      );
 
   @override
   String toString() {
@@ -430,9 +441,15 @@ class ControlChangeEvent extends Param2BytesEvent {
 
   /// Constructor
   ControlChangeEvent.withParam(
-      int channel, int controllerType, int controllerValue)
-      : super.withParam(
-            MidiEvent.controlChange, channel, controllerType, controllerValue);
+    int channel,
+    int controllerType,
+    int controllerValue,
+  ) : super.withParam(
+        MidiEvent.controlChange,
+        channel,
+        controllerType,
+        controllerValue,
+      );
 
   /// all notes off
   static int allNotesOff = 123; // <= note off
@@ -472,7 +489,7 @@ class ControlChangeEvent extends Param2BytesEvent {
   /// Create a all reset event
   static ControlChangeEvent newAllResetEvent(int channel) =>
       ControlChangeEvent.withParam(channel, allReset, 0);
-//null;
+  //null;
 }
 
 /// Normal SysEx Events.
@@ -491,7 +508,7 @@ class SysExEvent extends MidiEvent {
 
   /// Constructor
   SysExEvent.withParam(super.command, [this.data = const <int>[]])
-      : super.withParam(); // properly use the full command here (i.e. 0xFF)
+    : super.withParam(); // properly use the full command here (i.e. 0xFF)
 
   @override
   void readData(MidiParser parser) {
@@ -573,9 +590,10 @@ abstract class MetaEvent extends MidiEvent {
   MetaEvent._() : _data = <int>[];
 
   MetaEvent._withParam(this._metaCommand, {List<int>? data})
-      : _data = data ?? <int>[],
-        super.withParam(MidiEvent
-            .cmdMetaEvent); // properly use the full command here (i.e. 0xFF)
+    : _data = data ?? <int>[],
+      super.withParam(
+        MidiEvent.cmdMetaEvent,
+      ); // properly use the full command here (i.e. 0xFF)
 
   /// Constructor
   factory MetaEvent(int metaCommand, [List<int> data = const <int>[]]) {
@@ -699,7 +717,11 @@ class TimeSigEvent extends MetaEvent {
 
   /// Create data
   static List<int> createData(
-      int num, int denom, int tickCount, int num32ndToQuarter) {
+    int num,
+    int denom,
+    int tickCount,
+    int num32ndToQuarter,
+  ) {
     return [num, denom, tickCount, num32ndToQuarter];
   }
 
@@ -719,13 +741,18 @@ class TimeSigEvent extends MetaEvent {
 
   /// Create a time signature event
   TimeSigEvent.topBottom(int top, int bottom)
-      : this(top, bottomToDenom(bottom));
+    : this(top, bottomToDenom(bottom));
 
   /// Create a time signature event
-  TimeSigEvent(int num, int denom,
-      [int tickCount = 24, int num32ndToQuarter = 8])
-      : super._withParam(MetaEvent.metaTimeSig,
-            data: createData(num, denom, tickCount, num32ndToQuarter));
+  TimeSigEvent(
+    int num,
+    int denom, [
+    int tickCount = 24,
+    int num32ndToQuarter = 8,
+  ]) : super._withParam(
+         MetaEvent.metaTimeSig,
+         data: createData(num, denom, tickCount, num32ndToQuarter),
+       );
 
   /// bottom
   int get bottom {
@@ -769,8 +796,10 @@ class KeySigEvent extends MetaEvent {
 
   /// Constructor
   KeySigEvent(int alterations, int scale)
-      : super._withParam(MetaEvent.metaTimeSig,
-            data: [signedValueToByte(_fixAlterations(alterations)), scale]);
+    : super._withParam(
+        MetaEvent.metaTimeSig,
+        data: [signedValueToByte(_fixAlterations(alterations)), scale],
+      );
   @override
   String toString() {
     return '${super.toString()} '
@@ -808,8 +837,10 @@ class TempoEvent extends MetaEvent {
 
   /// Constructor
   TempoEvent(int tempo)
-      : super._withParam(MetaEvent.metaTempo,
-            data: create3BytesBEIntegerBuffer(tempo));
+    : super._withParam(
+        MetaEvent.metaTempo,
+        data: create3BytesBEIntegerBuffer(tempo),
+      );
 
   /// 60,000,000 microseconds per minute
   static const int microsecondsPerMinute = 60000000;
@@ -892,7 +923,7 @@ class MetaTextEvent extends MetaEvent {
 
   /// Constructor
   MetaTextEvent.text(String text)
-      : super._withParam(MetaEvent.metaText, data: utf8.encode(text));
+    : super._withParam(MetaEvent.metaText, data: utf8.encode(text));
 
   /// track name
   String get text => utf8.decode(data);

@@ -100,8 +100,9 @@ void main() {
       file.addTrack(track);
 
       await Directory(outDataPath).create(recursive: true);
-      File(outDataFilenamePath('c-d-e.midi'))
-          .writeAsBytesSync(FileWriter.fileData(file));
+      File(
+        outDataFilenamePath('c-d-e.midi'),
+      ).writeAsBytesSync(FileWriter.fileData(file));
     });
   });
 }

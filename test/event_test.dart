@@ -73,8 +73,10 @@ void main() {
       event = TempoEvent.bpm(120);
       expect(event.tempoBpm, 120);
       expect(event.beatPerMillis, 0.002);
-      expect(event.tempoBpm,
-          TempoEvent.millisecondsPerMinute * event.beatPerMillis);
+      expect(
+        event.tempoBpm,
+        TempoEvent.millisecondsPerMinute * event.beatPerMillis,
+      );
       expect(event.tempo, 500000);
     });
 
@@ -102,21 +104,27 @@ void main() {
     });
 
     test('trackname', () {
-      var event =
-          TrackNameEvent(data: [0x54, 0x72, 0x61, 0x63, 0x6b, 0x20, 0x32]);
+      var event = TrackNameEvent(
+        data: [0x54, 0x72, 0x61, 0x63, 0x6b, 0x20, 0x32],
+      );
       expect(event.trackName, 'Track 2');
-      expect(event.toString(),
-          'FF meta 03 data 54 72 61 63  6B 20 32 track name: Track 2');
+      expect(
+        event.toString(),
+        'FF meta 03 data 54 72 61 63  6B 20 32 track name: Track 2',
+      );
     });
 
     test('metatext', () {
-      var event =
-          MetaTextEvent(data: [0x54, 0x72, 0x61, 0x63, 0x6b, 0x20, 0x32]);
+      var event = MetaTextEvent(
+        data: [0x54, 0x72, 0x61, 0x63, 0x6b, 0x20, 0x32],
+      );
       expect(event.metaCommand, 1);
       expect(event.text, 'Track 2');
       expect(toHexString(event.data), '547261636B2032');
-      expect(event.toString(),
-          'FF meta 01 data 54 72 61 63  6B 20 32 text: Track 2');
+      expect(
+        event.toString(),
+        'FF meta 01 data 54 72 61 63  6B 20 32 text: Track 2',
+      );
 
       event = MetaTextEvent.text('élève');
       expect(event.metaCommand, 1);
@@ -136,8 +144,10 @@ void main() {
       expect(event.scale, 0);
     });
     test('various events', () {
-      expect(ControlChangeEvent.newAllResetEvent(0).controller,
-          ControlChangeEvent.allReset);
+      expect(
+        ControlChangeEvent.newAllResetEvent(0).controller,
+        ControlChangeEvent.allReset,
+      );
     });
   });
 }

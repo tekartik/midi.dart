@@ -56,11 +56,11 @@ void main() {
       expect(file, isNot(file2));
       final track2 = MidiTrack();
       expect(track, track2);
-//
-//      track.events.add(new TempoEvent(0, 120));
-//      expect(track, isNot(track2));
-//      track2.events.add(new TempoEvent(0, 120));
-//      expect(track, track2);
+      //
+      //      track.events.add(new TempoEvent(0, 120));
+      //      expect(track, isNot(track2));
+      //      track2.events.add(new TempoEvent(0, 120));
+      //      expect(track, track2);
     });
   });
 }

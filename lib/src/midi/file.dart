@@ -131,7 +131,9 @@ class MidiFile {
 
   /// @param: frameCountPerSecondEncoded in (24, 25, 29 - meaning 29.97 -, 30)
   void setFrameDivision(
-      int frameCountPerSecondEncoded, int divisionCountPerFrame) {
+    int frameCountPerSecondEncoded,
+    int divisionCountPerFrame,
+  ) {
     timeDivision =
         ((256 - frameCountPerSecondEncoded) << 8) | divisionCountPerFrame;
   }

@@ -29,7 +29,7 @@ void main() {
         1,
         2,
         3,
-        4
+        4,
       ];
       final midiParser = MidiParser(data);
       final parser = TrackParser(midiParser);
@@ -50,16 +50,17 @@ void main() {
     test('parse track', () {
       //final data = parseHexString('4d 54 68 64 00 00 00 06 00 01 00 02 01 e0 4d 54 72 6b 00 00 00 13 00 ff 58 04 04 02 18 08 00 ff 51 03 06 1a 80 00 ff 2f 00 4d 54 72 6b 00 00 00');
       final data = parseHexString(
-          '4d 54 72 6b 00 00 00 13 00 ff 58 04 04 02 18 08 00 ff 51 03 06 1a 80 00 ff 2f 00');
+        '4d 54 72 6b 00 00 00 13 00 ff 58 04 04 02 18 08 00 ff 51 03 06 1a 80 00 ff 2f 00',
+      );
       final midiParser = MidiParser(data);
       final parser = TrackParser(midiParser);
       parser.parseTrack();
       expect(parser.track!.events[0].midiEvent is TimeSigEvent, isTrue);
       expect(parser.track!.events[1].midiEvent is TempoEvent, isTrue);
       expect(parser.track!.events[2].midiEvent is EndOfTrackEvent, isTrue);
-//      parser.track.events.forEach((MidiEvent e) {
-//        print(e);
-//      });
+      //      parser.track.events.forEach((MidiEvent e) {
+      //        print(e);
+      //      });
     });
   });
 }

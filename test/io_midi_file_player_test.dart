@@ -11,18 +11,20 @@ void main() {
   group('midi_file_player_test_console', () {
     // to skip
     test('parse take 5', () {
-      return File(inDataFilenamePath('tmp/take_5.mid'))
-          .readAsBytes()
-          .then((data) {
+      return File(inDataFilenamePath('tmp/take_5.mid')).readAsBytes().then((
+        data,
+      ) {
         final file = FileParser.dataFile(data)!;
         expect(file.trackCount, 30);
 
-        expect(getMidiFileDuration(file),
-            const Duration(minutes: 2, seconds: 26, milliseconds: 785));
         expect(
-            Duration(
-                milliseconds: MidiFilePlayer(file).totalDurationMs.round()),
-            getMidiFileDuration(file));
+          getMidiFileDuration(file),
+          const Duration(minutes: 2, seconds: 26, milliseconds: 785),
+        );
+        expect(
+          Duration(milliseconds: MidiFilePlayer(file).totalDurationMs.round()),
+          getMidiFileDuration(file),
+        );
       });
     });
   }, skip: true);

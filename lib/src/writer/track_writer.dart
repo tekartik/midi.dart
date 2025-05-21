@@ -14,7 +14,7 @@ class TrackWriter extends ObjectWriter {
     'M'.codeUnitAt(0),
     'T'.codeUnitAt(0),
     'r'.codeUnitAt(0),
-    'k'.codeUnitAt(0)
+    'k'.codeUnitAt(0),
   ];
 
   void _writeHeader(int trackSize) {

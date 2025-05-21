@@ -14,7 +14,7 @@ class FileWriter extends ObjectWriter {
     'M'.codeUnitAt(0),
     'T'.codeUnitAt(0),
     'h'.codeUnitAt(0),
-    'd'.codeUnitAt(0)
+    'd'.codeUnitAt(0),
   ];
 
   /// Write the header
