@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:tekartik_midi/midi.dart';
 import 'package:tekartik_midi/midi_writer.dart';
 
@@ -20,5 +22,13 @@ class EventWriter extends ObjectWriter {
   void writeMidiEvent(MidiEvent midiEvent) {
     writeUint8(midiEvent.command);
     midiEvent.writeData(midiWriter);
+  }
+
+  /// Events to bytes
+  static Uint8List midiEventToBytes(MidiEvent midiEvent) {
+    final writer = MidiWriter();
+    final tmpEventWriter = EventWriter(writer);
+    tmpEventWriter.writeMidiEvent(midiEvent);
+    return Uint8List.fromList(writer.data);
   }
 }

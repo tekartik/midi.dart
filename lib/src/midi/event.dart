@@ -202,49 +202,52 @@ abstract class ChannelEvent extends MidiEvent {
 
 /// Param1ByteEvent
 abstract class Param1ByteEvent extends ChannelEvent {
-  int? _param1;
+  int? _param1OrNull;
+
+  /// Non null param1
+  int get _param1 => _param1OrNull!;
 
   /// Constructor
   Param1ByteEvent();
 
   /// Constructor with command, channel and param1
-  Param1ByteEvent.withParam(super.command, super.channel, this._param1)
+  Param1ByteEvent.withParam(super.command, super.channel, this._param1OrNull)
     : super.withParam();
 
   @override
   void readData(MidiParser parser) {
-    _param1 = parser.readUint8();
+    _param1OrNull = parser.readUint8();
   }
 
   @override
   void writeData(MidiWriter writer) {
-    writer.writeUint8(_param1!);
+    writer.writeUint8(_param1OrNull!);
   }
 
   @override
-  int get hashCode => super.hashCode * 17 + _param1!;
+  int get hashCode => super.hashCode * 17 + _param1OrNull!;
 
   @override
   bool operator ==(other) {
     if (super == (other) && other is Param1ByteEvent) {
-      return other._param1 == _param1;
+      return other._param1OrNull == _param1OrNull;
     }
     return false;
   }
 
   @override
   String toString() {
-    return '${super.toString()} p1 $_param1';
+    return '${super.toString()} p1 $_param1OrNull';
   }
 }
 
 /// Program change event.
 class ProgramChangeEvent extends Param1ByteEvent {
   /// Program
-  int? get program => _param1;
+  int get program => _param1;
 
-  set program(int? program) {
-    _param1 = program;
+  set program(int program) {
+    _param1OrNull = program;
   }
 
   ProgramChangeEvent._();
@@ -261,7 +264,8 @@ class ProgramChangeEvent extends Param1ByteEvent {
 
 /// 2 bytes param event
 abstract class Param2BytesEvent extends Param1ByteEvent {
-  int? _param2;
+  int? _param2OrNull;
+  int get _param2 => _param2OrNull!;
 
   /// Constructor
   Param2BytesEvent();
@@ -271,43 +275,43 @@ abstract class Param2BytesEvent extends Param1ByteEvent {
     super.command,
     super.channel,
     super.param1,
-    this._param2,
+    this._param2OrNull,
   ) //
   : super.withParam();
 
   @override
   void readData(MidiParser parser) {
     super.readData(parser);
-    _param2 = parser.readUint8();
+    _param2OrNull = parser.readUint8();
   }
 
   @override
   void writeData(MidiWriter writer) {
     super.writeData(writer);
-    writer.writeUint8(_param2!);
+    writer.writeUint8(_param2OrNull!);
   }
 
   @override
   bool operator ==(other) {
     if (super == (other) && other is Param2BytesEvent) {
-      return other._param2 == _param2;
+      return other._param2OrNull == _param2OrNull;
     }
     return false;
   }
 
   @override
-  int get hashCode => super.hashCode * 31 + _param2!;
+  int get hashCode => super.hashCode * 31 + _param2OrNull!;
 
   @override
   String toString() {
-    return '${super.toString()} p2 $_param2';
+    return '${super.toString()} p2 $_param2OrNull';
   }
 }
 
 /// Channel after touch event.
 class ChannelAfterTouchEvent extends Param1ByteEvent {
   /// Amount
-  int? get amount => _param1;
+  int get amount => _param1;
 
   ChannelAfterTouchEvent._();
 
@@ -315,8 +319,8 @@ class ChannelAfterTouchEvent extends Param1ByteEvent {
   ChannelAfterTouchEvent(int command, int channel, int amount) //
     : super.withParam(MidiEvent.channelAfterTouch, channel, amount);
 
-  set amount(int? channel) {
-    _param1 = channel;
+  set amount(int channel) {
+    _param1OrNull = channel;
   }
 
   @override
@@ -335,17 +339,17 @@ class ChannelAfterTouchEvent extends Param1ByteEvent {
 ///
 abstract class NoteEvent extends Param2BytesEvent {
   /// note
-  int? get note => _param1;
+  int get note => _param1;
 
-  set note(int? note) {
-    _param1 = note;
+  set note(int note) {
+    _param1OrNull = note;
   }
 
   /// velocity
-  int? get velocity => _param2;
+  int get velocity => _param2;
 
-  set velocity(int? velocity) {
-    _param2 = velocity;
+  set velocity(int velocity) {
+    _param2OrNull = velocity;
   }
 
   /// Constructor
@@ -379,7 +383,7 @@ class NoteOffEvent extends NoteEvent {
   NoteOffEvent._();
 
   /// Constructor
-  NoteOffEvent(int channel, int? noteNumber, int velocity) //
+  NoteOffEvent(int channel, int noteNumber, int velocity) //
     : super.withParam(MidiEvent.noteOff, channel, noteNumber, velocity);
 
   @override
@@ -405,17 +409,17 @@ class KeyAfterTouchEvent extends NoteEvent {
 /// Pitch wheel change event
 class PitchWheelChangeEvent extends Param2BytesEvent {
   /// bottom
-  int? get bottom => _param1;
+  int get bottom => _param1;
 
-  set bottom(int? bottom) {
-    _param1 = bottom;
+  set bottom(int bottom) {
+    _param1OrNull = bottom;
   }
 
   /// top
-  int? get top => _param2;
+  int get top => _param2;
 
-  set top(int? top) {
-    _param2 = top;
+  set top(int top) {
+    _param2OrNull = top;
   }
 
   PitchWheelChangeEvent._();
@@ -459,18 +463,18 @@ class ControlChangeEvent extends Param2BytesEvent {
   static int allSoundOff = 120; // <= quick mute
 
   /// controller
-  int? get controller => _param1;
+  int get controller => _param1;
 
   /// controller
-  set controller(int? controller) {
-    _param1 = controller;
+  set controller(int controller) {
+    _param1OrNull = controller;
   }
 
   /// value
-  int? get value => _param2;
+  int get value => _param2;
 
-  set value(int? value) {
-    _param2 = value;
+  set value(int value) {
+    _param2OrNull = value;
   }
 
   @override
@@ -550,14 +554,14 @@ class SysExEvent extends MidiEvent {
 /// A Meta mide event.
 abstract class MetaEvent extends MidiEvent {
   /// Meta command
-  int? get metaCommand => _metaCommand;
+  int get metaCommand => _metaCommandOrNull!;
 
   @Deprecated('removed some day')
-  set metaCommand(int? metaCommand) {
-    _metaCommand = metaCommand;
+  set metaCommand(int metaCommand) {
+    _metaCommandOrNull = metaCommand;
   }
 
-  int? _metaCommand;
+  int? _metaCommandOrNull;
 
   /// Data
   List<int> get data => _data;
@@ -589,7 +593,7 @@ abstract class MetaEvent extends MidiEvent {
 
   MetaEvent._() : _data = <int>[];
 
-  MetaEvent._withParam(this._metaCommand, {List<int>? data})
+  MetaEvent._withParam(this._metaCommandOrNull, {List<int>? data})
     : _data = data ?? <int>[],
       super.withParam(
         MidiEvent.cmdMetaEvent,
@@ -630,14 +634,14 @@ abstract class MetaEvent extends MidiEvent {
     }
     event._command = command;
     // ignore: prefer_initializing_formals
-    event._metaCommand = metaCommand;
+    event._metaCommandOrNull = metaCommand;
     return event;
   }
 
   @override
   void readData(MidiParser parser) {
     // Don't re-read meta command
-    _metaCommand ??= parser.readUint8();
+    _metaCommandOrNull ??= parser.readUint8();
 
     final dataSize = parser.readVariableLengthData();
     if (dataSize > 0) {
@@ -649,7 +653,7 @@ abstract class MetaEvent extends MidiEvent {
 
   @override
   void writeData(MidiWriter writer) {
-    writer.writeUint8(metaCommand!);
+    writer.writeUint8(metaCommand);
     final dataSize = data.length;
     writer.writeVariableLengthData(dataSize);
     if (dataSize > 0) {
@@ -658,7 +662,7 @@ abstract class MetaEvent extends MidiEvent {
   }
 
   @override
-  int get hashCode => super.hashCode * 17 + metaCommand!;
+  int get hashCode => super.hashCode * 17 + metaCommand;
 
   @override
   bool operator ==(other) {
@@ -673,7 +677,7 @@ abstract class MetaEvent extends MidiEvent {
 
   @override
   String toString() {
-    return '${super.toString()} meta ${hexUint8(metaCommand!)}${data.isEmpty ? '' : ' data ${hexQuickView(data)}'}';
+    return '${super.toString()} meta ${hexUint8(metaCommand)}${data.isEmpty ? '' : ' data ${hexQuickView(data)}'}';
   }
 }
 

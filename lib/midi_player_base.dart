@@ -415,7 +415,7 @@ abstract class MidiPlayerBase {
         noteOnLastTimestamp = event.timestamp;
       }
 
-      if (midiEvent.velocity! > 0) {
+      if (midiEvent.velocity > 0) {
         noteOnKeys.add(key);
       } else {
         noteOnKeys.remove(key);

@@ -53,13 +53,13 @@ class NoteOnKey {
   int channel;
 
   /// Note
-  int? note;
+  int note;
 
   /// Constructor
   NoteOnKey(this.channel, this.note);
 
   @override
-  int get hashCode => channel * 128 + note!;
+  int get hashCode => channel * 128 + note;
 
   @override
   bool operator ==(other) {
@@ -298,7 +298,7 @@ class MidiFilePlayer {
       if (midiEvent is NoteOnEvent) {
         final key = NoteOnKey(midiEvent.channel, midiEvent.note);
 
-        if (midiEvent.velocity! > 0) {
+        if (midiEvent.velocity > 0) {
           notesOn[key] = event;
         } else {
           notesOn.remove(key);
