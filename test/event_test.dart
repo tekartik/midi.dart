@@ -38,14 +38,14 @@ void main() {
       final noteOff = NoteOffEvent(2, 3, 4);
       expect(noteOn, isNot(equals(noteOff)));
 
-      expect(NoteOnEvent(1, 2, 3).toString(), '91 p1 2 p2 3 note on');
+      expect(NoteOnEvent(1, 2, 3).toString(), '91 p1 02 p2 03 note on');
     });
 
     test('program change', () {
       final event = ProgramChangeEvent(1, 12);
       expect(event, event);
       expect(event, ProgramChangeEvent(1, 12));
-      expect(event.toString(), 'C1 p1 12 program change');
+      expect(event.toString(), 'C1 p1 0C program change');
       expect(event, isNot(ProgramChangeEvent(1, 13)));
       expect(event, isNot(ProgramChangeEvent(0, 13)));
     });

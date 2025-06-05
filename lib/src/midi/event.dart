@@ -237,7 +237,7 @@ abstract class Param1ByteEvent extends ChannelEvent {
 
   @override
   String toString() {
-    return '${super.toString()} p1 $_param1OrNull';
+    return '${super.toString()} p1 ${hexUint8(_param1OrNull ?? 0)}';
   }
 }
 
@@ -304,7 +304,7 @@ abstract class Param2BytesEvent extends Param1ByteEvent {
 
   @override
   String toString() {
-    return '${super.toString()} p2 $_param2OrNull';
+    return '${super.toString()} p2 ${hexUint8(_param2OrNull ?? 0)}';
   }
 }
 
