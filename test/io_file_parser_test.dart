@@ -44,10 +44,9 @@ void main() {
     });
 
     test('parse header SMPTE frames per seconds', () {
-      final file =
-          FileParser.dataFile(
-            parseHexString('4D 54 68 64  00 00 00 06  00 01 00 00  E7 28'),
-          )!;
+      final file = FileParser.dataFile(
+        parseHexString('4D 54 68 64  00 00 00 06  00 01 00 00  E7 28'),
+      )!;
       expect(file.frameCountPerSecond, 25);
       expect(file.divisionCountPerFrame, 40);
     });
