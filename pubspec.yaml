@@ -4,7 +4,7 @@ description: midi event and file parser
 publish_to: none
 
 environment:
-  sdk: ^3.7.0
+  sdk: ^3.8.0
 dependencies:
   collection: ">=1.18.0"
   tekartik_common_utils:
