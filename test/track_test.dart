@@ -1,6 +1,6 @@
 library;
 
-import 'package:tekartik_common_utils/foundation/constants.dart';
+import 'package:tekartik_common_utils/env_utils.dart';
 import 'package:tekartik_midi/midi.dart';
 
 import 'test_common.dart';
@@ -25,7 +25,7 @@ void main() {
       var file = MidiFile();
       file.addTrack(track);
       file.addTrack(track2);
-      if (kDebugMode) {
+      if (isDebug) {
         expect(() => file.addTrack(track2), throwsStateError);
       }
     });

@@ -1,5 +1,5 @@
 import 'package:collection/collection.dart';
-import 'package:tekartik_common_utils/foundation/constants.dart';
+import 'package:tekartik_common_utils/env_utils.dart';
 import 'package:tekartik_midi/src/dump.dart';
 import 'package:tekartik_midi/src/midi/track.dart';
 
@@ -183,7 +183,7 @@ class MidiFile {
 
   /// Add a track
   void addTrack(MidiTrack track) {
-    if (kDebugMode) {
+    if (isDebug) {
       for (var existingTrack in tracks) {
         if (identical(track, existingTrack)) {
           throw StateError('Track already added');
