@@ -157,7 +157,9 @@ abstract class MidiEvent {
         // not handled here
         // event = new MetaEvent();
         // return null;
-        throw 'Event $eventType not supported in MidiEvent.base';
+        throw UnsupportedError(
+          'Event $eventType not supported in MidiEvent.base',
+        );
     }
     // ignore: prefer_initializing_formals
     event._command = command;
