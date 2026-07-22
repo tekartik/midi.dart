@@ -52,6 +52,7 @@ class TrackParser extends ObjectParser {
   /// Parse the track
   MidiTrack parseTrack() {
     parseHeader();
+
     parseEvents();
     return track!;
   }

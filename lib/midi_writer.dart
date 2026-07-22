@@ -38,12 +38,16 @@ class MidiWriter extends BinaryBEWriter {
         final byte3 = byte2 >> 7;
         if (byte3 >= 0x80) {
           final byte4 = byte3 >> 7;
+
           writeUint8((byte4 & 0x7F) | 0x80);
         }
+
         writeUint8((byte3 & 0x7F) | 0x80);
       }
+
       writeUint8((byte2 & 0x7F) | 0x80);
     }
+
     writeUint8(value & 0x7F);
   }
 }

@@ -19,6 +19,7 @@ class TrackWriter extends ObjectWriter {
 
   void _writeHeader(int trackSize) {
     writeBuffer(trackHeader);
+
     writeUint32(trackSize);
   }
 

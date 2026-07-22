@@ -23,6 +23,7 @@ class EventParser extends ObjectParser {
   /// Parse the event with its delta time
   MidiEvent parseEvent() {
     deltaTime = midiParser.readVariableLengthData();
+
     return parseMidiEvent();
   }
 

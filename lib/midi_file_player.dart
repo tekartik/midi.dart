@@ -91,7 +91,6 @@ class LocatedEvent {
 }
 
 /// Basic player, computing event real time location.
-///
 class MidiFilePlayer {
   @visibleForTesting
   /// Notes on
@@ -149,6 +148,7 @@ class MidiFilePlayer {
       return 0;
     }
     num progress = timestampToAbsoluteMs(currentTimestamp) / totalDuration;
+
     return min(max(progress, 0), 1);
   }
 
@@ -317,5 +317,6 @@ class MidiFilePlayer {
 /// Get a file duration.
 Duration getMidiFileDuration(MidiFile file) {
   final player = MidiFilePlayer(file);
+
   return Duration(milliseconds: player.totalDurationMs.ceil());
 }

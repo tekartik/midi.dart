@@ -201,6 +201,7 @@ class MidiFile {
       log('ppq: $ppq');
     } else {
       log('framesPerSecond: $frameCountPerSecond');
+
       log('divisionsPerFrame: $divisionCountPerFrame');
     }
     var index = 0;

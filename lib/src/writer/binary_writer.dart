@@ -22,12 +22,14 @@ abstract class BinaryWriter {
   /// Write a 2 bytes integer
   void write2BytesBEInteger(int value) {
     write1ByteInteger((value >> 8) & 0xFF);
+
     write1ByteInteger(value & 0xFF);
   }
 
   /// Write a 4 bytes integer
   void write4BytesBEInteger(int value) {
     write2BytesBEInteger((value >> 16) & 0xFFFF);
+
     write2BytesBEInteger(value & 0xFFFF);
   }
 

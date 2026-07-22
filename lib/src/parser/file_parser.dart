@@ -37,6 +37,7 @@ class FileParser extends ObjectParser {
   /// Throw FormatException if not valid
   MidiFile parseFile() {
     parseHeader();
+
     parseTracks();
     return file!;
   }

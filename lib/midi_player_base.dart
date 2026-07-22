@@ -97,6 +97,7 @@ abstract class MidiPlayerBase {
         nowToTimestamp(),
         ControlChangeEvent.newAllSoundOffEvent(i),
       );
+
       playEvent(playableEvent);
     }
   }
@@ -108,6 +109,7 @@ abstract class MidiPlayerBase {
         nowToTimestamp(),
         ControlChangeEvent.newAllSoundOffEvent(i),
       );
+
       playEvent(playableEvent);
     }
   }
@@ -119,6 +121,7 @@ abstract class MidiPlayerBase {
         nowToTimestamp(),
         ControlChangeEvent.newAllResetEvent(i),
       );
+
       playEvent(playableEvent);
     }
   }
@@ -132,8 +135,10 @@ abstract class MidiPlayerBase {
       for (var i = 0; i < MidiEvent.channelCount; i++) {
         final playableEvent = PlayableEvent(
           nowToTimestamp(),
+
           NoteOffEvent(i, j, 0),
         );
+
         playEvent(playableEvent);
       }
     }
@@ -449,6 +454,7 @@ abstract class MidiPlayerBase {
       for (final key in noteOnKeys) {
         final event = PlayableEvent(
           timestamp,
+
           NoteOffEvent(key.channel, key.note, 0),
         );
         //devPrint(event);

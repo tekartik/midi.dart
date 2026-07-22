@@ -14,6 +14,7 @@ class EventWriter extends ObjectWriter {
   /// Write the event
   void writeEvent() {
     writeVariableLengthData(event.deltaTime);
+
     writeUint8(event.midiEvent.command);
     event.midiEvent.writeData(midiWriter);
   }

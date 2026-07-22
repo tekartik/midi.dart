@@ -20,10 +20,13 @@ class FileWriter extends ObjectWriter {
   /// Write the header
   void writeHeader() {
     writeBuffer(fileHeader);
+
     writeUint32(6);
 
     writeUint16(file.fileFormat);
+
     writeUint16(file.trackCount);
+
     writeUint16(file.timeDivision);
   }
 
@@ -32,6 +35,7 @@ class FileWriter extends ObjectWriter {
     if (midiFile != null) {
       file = midiFile;
     }
+
     writeHeader();
     for (var track in file.tracks) {
       final trackWriter = TrackWriter(midiWriter);

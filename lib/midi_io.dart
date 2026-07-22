@@ -15,5 +15,6 @@ Future<MidiFile> ioReadMidiFile(String path) async {
 /// Write a midi file
 Future<void> ioWriteMidiFile(String path, MidiFile midiFile) async {
   var data = FileWriter.fileData(midiFile);
+
   await File(path).writeAsBytes(data);
 }

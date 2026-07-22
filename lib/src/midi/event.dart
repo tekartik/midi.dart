@@ -338,7 +338,6 @@ class ChannelAfterTouchEvent extends Param1ByteEvent {
 /// </ol>
 ///
 /// @author Alex
-///
 abstract class NoteEvent extends Param2BytesEvent {
   /// note
   int get note => _param1;
@@ -717,7 +716,6 @@ abstract class MetaEvent extends MidiEvent {
 /// </ul>
 ///
 /// @author Alex
-///
 class TimeSigEvent extends MetaEvent {
   TimeSigEvent._() : super._();
 
@@ -880,7 +878,6 @@ class TempoEvent extends MetaEvent {
 /// </ul
 ///
 /// @author Alex
-///
 class EndOfTrackEvent extends MetaEvent {
   EndOfTrackEvent._() : super._();
 
