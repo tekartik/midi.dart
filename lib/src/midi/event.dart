@@ -668,7 +668,9 @@ abstract class MetaEvent extends MidiEvent {
   @override
   bool operator ==(other) {
     if (other is MetaEvent && super == (other)) {
-      if (other.metaCommand != metaCommand) {
+      // Also the event class, i.e. the type the meta command is read as.
+      if (other.metaCommand != metaCommand ||
+          other.runtimeType != runtimeType) {
         return false;
       }
       return (const ListEquality<int>().equals(other.data, data));
@@ -738,16 +740,20 @@ class TimeSigEvent extends MetaEvent {
       denominator++;
     }
     if (1 << denominator != initialBottom) {
-      throw FormatException('bottom $bottom not supported');
+      throw FormatException('bottom $initialBottom not supported');
     }
     return denominator;
   }
 
-  /// Create a time signature event
+  /// Create a time signature event from the [top] and [bottom] of the
+  /// signature, i.e. `TimeSigEvent.topBottom(4, 4)` for 4/4.
   TimeSigEvent.topBottom(int top, int bottom)
     : this(top, bottomToDenom(bottom));
 
-  /// Create a time signature event
+  /// Create a time signature event as stored in the file: [num] is the top
+  /// of the signature but [denom] is the power of 2 of its bottom, i.e.
+  /// `TimeSigEvent(4, 2)` for 4/4 (`TimeSigEvent(4, 4)` is 4/16). Prefer
+  /// [TimeSigEvent.topBottom].
   TimeSigEvent(
     int num,
     int denom, [
@@ -783,7 +789,31 @@ class KeySigEvent extends MetaEvent {
   KeySigEvent._() : super._();
 
   static const _keyFromSharps = ['C', 'G', 'D', 'A', 'E', 'B', 'F#', 'C#'];
-  static const _keyFromFlats = ['C', 'F', 'Bb', 'Eb', 'Ab', 'Db', 'Cb', 'Gb'];
+  static const _keyFromFlats = ['C', 'F', 'Bb', 'Eb', 'Ab', 'Db', 'Gb', 'Cb'];
+  static const _minorKeyFromSharps = [
+    'A',
+    'E',
+    'B',
+    'F#',
+    'C#',
+    'G#',
+    'D#',
+    'A#',
+  ];
+  static const _minorKeyFromFlats = ['A', 'D', 'G', 'C', 'F', 'Bb', 'Eb', 'Ab'];
+
+  /// The key name, the relative minor key for a minor scale.
+  String get _keyName {
+    var alterations = this.alterations;
+    if (scale == 1) {
+      return alterations >= 0
+          ? _minorKeyFromSharps[alterations]
+          : _minorKeyFromFlats[-alterations];
+    }
+    return alterations >= 0
+        ? _keyFromSharps[alterations]
+        : _keyFromFlats[-alterations];
+  }
 
   /// values between -7 and 7 and specifies the key signature in terms of number of flats (if negative) or sharps (if positive)
   int get alterations => _fixAlterations(byteToSignedValue(data[0]));
@@ -801,13 +831,13 @@ class KeySigEvent extends MetaEvent {
   /// Constructor
   KeySigEvent(int alterations, int scale)
     : super._withParam(
-        MetaEvent.metaTimeSig,
+        MetaEvent.metaKeySig,
         data: [signedValueToByte(_fixAlterations(alterations)), scale],
       );
   @override
   String toString() {
     return '${super.toString()} '
-        '${alterations >= 0 ? _keyFromSharps[alterations] : _keyFromFlats[-alterations]} '
+        '$_keyName '
         '${scale == 1 ? 'minor' : (scale == 0 ? 'major' : 'unknown scale')}';
   }
 }
@@ -903,7 +933,7 @@ class TrackNameEvent extends MetaEvent {
   TrackNameEvent({super.data}) : super._withParam(MetaEvent.trackName);
 
   /// track name
-  String get trackName => String.fromCharCodes(data);
+  String get trackName => _metaDataText(data);
 
   @override
   String toString() {
@@ -929,10 +959,20 @@ class MetaTextEvent extends MetaEvent {
     : super._withParam(MetaEvent.metaText, data: utf8.encode(text));
 
   /// track name
-  String get text => utf8.decode(data);
+  String get text => _metaDataText(data);
 
   @override
   String toString() {
     return '${super.toString()} text: $text';
+  }
+}
+
+/// The text of a meta event: utf8, or latin1 (i.e. the lyrics of .kar files)
+/// when it is not valid utf8, never throws.
+String _metaDataText(List<int> data) {
+  try {
+    return utf8.decode(data);
+  } on FormatException {
+    return latin1.decode(data.map((byte) => byte & 0xFF).toList());
   }
 }

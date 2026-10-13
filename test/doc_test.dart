@@ -19,7 +19,7 @@ void main() {
       file.ppq = 240;
 
       var track = MidiTrack();
-      track.addEvent(0, TimeSigEvent(4, 4));
+      track.addEvent(0, TimeSigEvent.topBottom(4, 4));
       track.addEvent(0, TempoEvent.bpm(120));
       track.addEvent(0, EndOfTrackEvent());
       file.addTrack(track);
@@ -27,23 +27,25 @@ void main() {
 
     test('README parsing midi file', () {
       var someData = sampleData;
-      try {
-        // ignore: omit_local_variable_types
-        Uint8List data = someData; // the file binary data
+      // ignore: omit_local_variable_types
+      Uint8List data = someData; // the file binary data
 
-        // ... fill the data from a midi file
+      // ... fill the data from a midi file
 
-        var midiParser = MidiParser(data);
-        var parser = FileParser(midiParser);
-        parser.parseFile();
+      var midiParser = MidiParser(data);
+      var parser = FileParser(midiParser);
+      parser.parseFile();
 
-        // Resulting midi file
-        var file = parser.file!;
+      // Resulting midi file
+      var file = parser.file!;
 
-        file.dump();
-      } catch (_) {
-        // Crashes since data is null
-      }
+      file.dump();
+      expect(file.trackCount, 2);
+      expect(file.ppq, 480);
+      var timeSig = file.tracks.first.events.first.midiEvent as TimeSigEvent;
+      expect([timeSig.top, timeSig.bottom], [4, 4]);
+      // Same as the README file creation.
+      expect(timeSig, TimeSigEvent.topBottom(4, 4));
     });
   });
 }

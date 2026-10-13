@@ -34,10 +34,10 @@ void main() {
       final midiWriter = MidiWriter();
       final writer = EventWriter(midiWriter);
 
-      writer.event = TrackEvent(1, NoteOnEvent(2, 64, 96));
+      writer.event = TrackEvent(1, NoteOffEvent(2, 64, 96));
 
       writer.writeEvent();
-      expect(writer.data, parseHexString('01 92 40 60'));
+      expect(writer.data, parseHexString('01 82 40 60'));
     });
 
     void writeReadAndCheck(TrackEvent event) {

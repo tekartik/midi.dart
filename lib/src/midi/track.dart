@@ -75,6 +75,8 @@ class MidiTrack {
       final newTime = time + event.deltaTime;
       if (absoluteTime < newTime) {
         events.insert(i, TrackEvent(absoluteTime - time, midiEvent));
+        // The next event keeps its absolute time.
+        events[i + 1] = TrackEvent(newTime - absoluteTime, event.midiEvent);
         return i;
       }
       time = newTime;

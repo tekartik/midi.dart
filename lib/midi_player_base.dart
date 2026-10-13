@@ -67,7 +67,6 @@ abstract class MidiPlayerBase {
   num? _nextRatio;
 
   num? _lastPauseTime;
-  num _nowDelta = 0; // delta from now, pausing increases delta
 
   /// Current timestamp (milliseconds)
   num? get currentTimestamp =>
@@ -90,41 +89,21 @@ abstract class MidiPlayerBase {
     //return now - startNow - _nowDelta; // - _preFillDuration - _preFillDuration;
   }
 
-  /// Send sound off to all channel
-  void allSoundOff() {
+  /// Play the event created by [newEvent] now on every channel.
+  void _forAllChannels(ControlChangeEvent Function(int channel) newEvent) {
     for (var i = 0; i < MidiEvent.channelCount; i++) {
-      final playableEvent = PlayableEvent(
-        nowToTimestamp(),
-        ControlChangeEvent.newAllSoundOffEvent(i),
-      );
-
-      playEvent(playableEvent);
+      playEvent(PlayableEvent(nowToTimestamp(), newEvent(i)));
     }
   }
+
+  /// Send sound off to all channel
+  void allSoundOff() => _forAllChannels(ControlChangeEvent.newAllSoundOffEvent);
 
   /// Send all notes off to all channel
-  void allNotesOff() {
-    for (var i = 0; i < MidiEvent.channelCount; i++) {
-      final playableEvent = PlayableEvent(
-        nowToTimestamp(),
-        ControlChangeEvent.newAllSoundOffEvent(i),
-      );
-
-      playEvent(playableEvent);
-    }
-  }
+  void allNotesOff() => _forAllChannels(ControlChangeEvent.newAllNotesOffEvent);
 
   /// Send all reset to all channel
-  void allReset() {
-    for (var i = 0; i < MidiEvent.channelCount; i++) {
-      final playableEvent = PlayableEvent(
-        nowToTimestamp(),
-        ControlChangeEvent.newAllResetEvent(i),
-      );
-
-      playEvent(playableEvent);
-    }
-  }
+  void allReset() => _forAllChannels(ControlChangeEvent.newAllResetEvent);
 
   /// Send panic to all channel
   void panic() {
@@ -174,9 +153,6 @@ abstract class MidiPlayerBase {
   /// Resume playback
   void resume([num? time]) {
     final resumeTime = time ?? now;
-    if (isPaused) {
-      _nowDelta += resumeTime - _lastPauseTime!;
-    }
     // TODO
     _midiFilePlayer!.resume(resumeTime);
     _isPlaying = true;
@@ -357,7 +333,9 @@ abstract class MidiPlayerBase {
   /// Convert an event timestamp to an output timestamp
   num eventTimestampToOutputTimestamp(PlayableEvent event) {
     //return event.timestamp + _startNow + _nowDelta + _preFillDuration + _preFillDuration;
-    return event.timestamp + _nowDelta + _preFillDuration + _preFillDuration;
+    // The event timestamp already includes the pauses (the file player start
+    // is moved on resume).
+    return event.timestamp + _preFillDuration + _preFillDuration;
   }
 
   //  MidiFile _currentFile;

@@ -38,8 +38,9 @@ class EventParser extends ObjectParser {
       command = lastCommand;
       // We go back 1
       midiParser.back(1);
-    } else {
-      // save for later use
+    } else if (command < 0xF0) {
+      // save for later use, only channel messages have a running status (a
+      // meta or sysex event keeps the previous one)
       lastCommand = command;
     }
 

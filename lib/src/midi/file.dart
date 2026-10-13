@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:tekartik_common_utils/env_utils.dart';
 import 'package:tekartik_midi/src/dump.dart';
 import 'package:tekartik_midi/src/midi/track.dart';
+import 'package:tekartik_midi/src/player/time.dart';
 
 /// A midi file contains a list of tracks
 class MidiFile {
@@ -86,7 +87,8 @@ class MidiFile {
   /// is being specified rather than regular ticks-per-quarter note.
   // int get framePerSecond;
 
-  int? _timeDivision;
+  // The default ppq, so that a new file can be written as is.
+  int? _timeDivision = ppqDefault;
 
   /// Set the time division
   set timeDivision(int timeDivision) {
@@ -146,19 +148,24 @@ class MidiFile {
   /// The tracks (read only)
   List<MidiTrack> get tracks => _tracks;
 
-  /// convert a delay in an event to a delay in ms
+  /// convert a delay in an event to a delay in ms, at the default tempo
+  /// (120 bpm, as no tempo is known here) for a ppq time division.
   num delayToMillis(int delay) {
-    return delay / ppq!;
+    return delay *
+        midiMillisPerTick(
+          ppq: ppq,
+          frameCountPerSecond: frameCountPerSecond,
+          divisionCountPerFrame: divisionCountPerFrame,
+        );
   }
 
   @override
-  int get hashCode {
-    var hash = (fileFormat * 17 + trackCount) * 31;
-    if (tracks.isNotEmpty) {
-      hash += tracks.hashCode;
-    }
-    return hash;
-  }
+  int get hashCode => Object.hash(
+    fileFormat,
+    trackCount,
+    _timeDivision,
+    const ListEquality<MidiTrack>().hash(tracks),
+  );
 
   @override
   bool operator ==(var other) {

@@ -43,6 +43,8 @@ void main() {
       track.addAbsolutionEvent(5, TempoEvent(2));
       expect((track.events.first.midiEvent as TempoEvent).tempo, 2);
       expect(track.events.length, 2);
+      // The existing event keeps its absolute time.
+      expect(track.events.map((e) => e.deltaTime), [5, 5]);
 
       // add middle
       track = MidiTrack();
@@ -51,6 +53,16 @@ void main() {
       track.addAbsolutionEvent(5, TempoEvent(3));
       expect((track.events[1].midiEvent as TempoEvent).tempo, 3);
       expect(track.events.length, 3);
+      expect(track.events.map((e) => e.deltaTime), [5, 0, 10]);
+      expect(track.absoluteTimeAt(2), 15);
+
+      // add between two events, the later ones keep their absolute time.
+      track = MidiTrack();
+      track.addEvent(0, TempoEvent(1));
+      track.addEvent(100, TempoEvent(2));
+      track.addAbsolutionEvent(50, TempoEvent(3));
+      expect(track.events.map((e) => e.deltaTime), [0, 50, 50]);
+      expect(track.absoluteTimeAt(2), 100);
 
       // add last
       track = MidiTrack();

@@ -58,11 +58,12 @@ void main() {
       file.setFrameDivision(25, 40);
       final player = MidiFilePlayer(file);
 
-      expect(player.currentDeltaTimeUnitInMillis, closeTo(.5, 0.0001));
+      // 25 frames x 40 divisions = 1000 ticks per second, whatever the tempo.
+      expect(player.currentDeltaTimeUnitInMillis, closeTo(1, 0.0001));
 
       player.setSpeedRatio(0.5);
       expect(player.tempoBpm, closeTo(120, 0.001));
-      expect(player.currentDeltaTimeUnitInMillis, closeTo(.5, 0.0001));
+      expect(player.currentDeltaTimeUnitInMillis, closeTo(1, 0.0001));
     });
 
     test('get next event simple', () {

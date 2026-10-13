@@ -78,7 +78,7 @@ void main() {
       file.ppq = 240;
 
       var track = MidiTrack();
-      track.addEvent(0, TimeSigEvent(4, 4));
+      track.addEvent(0, TimeSigEvent.topBottom(4, 4));
       track.addEvent(0, TempoEvent.bpm(120));
       track.addEvent(0, EndOfTrackEvent());
       file.addTrack(track);

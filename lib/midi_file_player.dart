@@ -2,10 +2,12 @@ library;
 
 import 'dart:math';
 
+import 'package:collection/collection.dart' show mergeSort;
 import 'package:tekartik_common_utils/common_utils_import.dart';
 import 'package:tekartik_common_utils/list_utils.dart';
 
 import 'midi.dart';
+import 'src/player/time.dart' show midiMillisPerTick;
 export 'src/player/time.dart'
     show midiDeltaTimeToMillis, midiDeltaTimeUnitToMillis;
 
@@ -154,9 +156,15 @@ class MidiFilePlayer {
 
   List<LocatedEvent>? _prepareForLocation() {
     if (_locatedEvents == null) {
-      _locatedEvents = listFlatten(
+      // Stable sort, the events of the same time keep their order (i.e. a
+      // note off before the note on of the same note).
+      var locatedEvents = listFlatten(
         _file.tracks.map((e) => LocatedTrackPlayer(e).preLocatedEvents),
-      )..sort((a, b) => a.time.compareTo(b.time));
+      );
+      mergeSort(locatedEvents, compare: (a, b) => a.time.compareTo(b.time));
+      _locatedEvents = locatedEvents;
+      // Start from the default tempo (not the last one of a previous pass).
+      _setCurrentTempoEvent(TempoEvent.bpm(MidiFile.bpmDefault));
 
       var ms = 0.0;
       var time = 0;
@@ -214,21 +222,13 @@ class MidiFilePlayer {
   /// no ratio
   @visibleForTesting
   num get currentDeltaTimeUnitInMillis {
-    if (_currentDeltaTimeUnitInMillis == null) {
-      // beat = quarter note
-      final beatPerMillis = _currentTempoEvent.beatPerMillis;
-
-      // check midi docs here
-      if (_file.ppq != null) {
-        _currentDeltaTimeUnitInMillis = 1 / (_file.ppq! * beatPerMillis);
-      } else {
-        _currentDeltaTimeUnitInMillis =
-            1 /
-            (_file.frameCountPerSecond! *
-                _file.divisionCountPerFrame! *
-                beatPerMillis);
-      }
-    }
+    // beat = quarter note, a SMPTE division does not depend on the tempo.
+    _currentDeltaTimeUnitInMillis ??= midiMillisPerTick(
+      ppq: _file.ppq,
+      beatPerMillis: _currentTempoEvent.beatPerMillis,
+      frameCountPerSecond: _file.frameCountPerSecond,
+      divisionCountPerFrame: _file.divisionCountPerFrame,
+    );
     return _currentDeltaTimeUnitInMillis!;
   }
 

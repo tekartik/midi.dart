@@ -29,18 +29,30 @@ num midiDeltaTimeUnitToMillis({
   int? divisionCountPerFrame,
 }) {
   bpm ??= MidiFile.bpmDefault;
-  var beatPerMillis = bpm / TempoEvent.millisecondsPerMinute;
+  return midiMillisPerTick(
+    ppq: ppq,
+    beatPerMillis: bpm / TempoEvent.millisecondsPerMinute,
+    frameCountPerSecond: frameCountPerSecond,
+    divisionCountPerFrame: divisionCountPerFrame,
+  );
+}
 
-  num ppqResult(int ppq) {
-    return 1 / (ppq * beatPerMillis);
+/// Milliseconds per tick (the delta time unit), not exported.
+///
+/// With a SMPTE time division (frames per second and divisions per frame) a
+/// tick has a fixed length, whatever the tempo. With [ppq] (defaulting to
+/// 120 when no SMPTE division is given) it depends on the tempo,
+/// [beatPerMillis] (0.002 for 120 bpm, the default).
+num midiMillisPerTick({
+  int? ppq,
+  num? beatPerMillis,
+  num? frameCountPerSecond,
+  int? divisionCountPerFrame,
+}) {
+  if (ppq == null &&
+      (frameCountPerSecond != null || divisionCountPerFrame != null)) {
+    return 1000 / (frameCountPerSecond! * divisionCountPerFrame!);
   }
-
-  // check midi docs here
-  if (ppq != null) {
-    return ppqResult(ppq);
-  } else if (frameCountPerSecond != null || divisionCountPerFrame != null) {
-    return 1 / (frameCountPerSecond! * divisionCountPerFrame! * beatPerMillis);
-  } else {
-    return ppqResult(MidiFile.ppqDefault);
-  }
+  beatPerMillis ??= MidiFile.bpmDefault / TempoEvent.millisecondsPerMinute;
+  return 1 / ((ppq ?? MidiFile.ppqDefault) * beatPerMillis);
 }
