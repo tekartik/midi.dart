@@ -20,14 +20,15 @@ covered by the sibling skill [tekartik-midi-player](../tekartik-midi-player/SKIL
 
 ## Guidelines
 
-* Dependency (git only, not on pub.dev); the README asks for the `dart3a` ref:
+* Dependency (git only, not on pub.dev), the tip of the default branch (no
+  `ref`: the old `dart3a` branch misses years of fixes):
   ```yaml
   dependencies:
     tekartik_midi:
       git:
         url: https://github.com/tekartik/midi.dart
-        ref: dart3a
   ```
+  or `dart pub add tekartik_midi --git-url=https://github.com/tekartik/midi.dart`.
   The package is at the repo root, so no `path:` entry.
 * Imports: `package:tekartik_midi/midi.dart` for the model (`MidiFile`,
   `MidiTrack`, `TrackEvent`, `MidiEvent` and every event class),
@@ -50,9 +51,9 @@ covered by the sibling skill [tekartik-midi-player](../tekartik-midi-player/SKIL
 * Add events with `track.addEvent(deltaTime, event)` where `deltaTime` is the
   number of ticks **since the previous event of that track** (0 for
   simultaneous events), or `track.addAbsolutionEvent(absoluteTime, event)`
-  which inserts at the right place and returns the index (delta times of the
-  following event are not fixed up, so prefer `addEvent` when appending in
-  order). `absoluteTimeAt(index)` sums the delta times up to an index.
+  which inserts at the right place and returns the index (the delta time of
+  the next event is adjusted, so it keeps its absolute time).
+  `absoluteTimeAt(index)` sums the delta times up to an index.
   End every track with `EndOfTrackEvent()`.
 * Channel events (channel is 0..15, `MidiEvent.channelCount` is 16, notes 0..127,
   `MidiEvent.noteCount` is 128): `NoteOnEvent(channel, note, velocity)`,
@@ -74,7 +75,10 @@ covered by the sibling skill [tekartik-midi-player](../tekartik-midi-player/SKIL
   `MetaTextEvent.text('...')` with the `text` getter, `EndOfTrackEvent()`, and
   the generic `MetaEvent(metaCommand, data)` for anything else.
 * Parse bytes with the one liner `FileParser.dataFile(bytes)` (returns
-  `MidiFile?`, throws `FormatException` on a bad header), or keep the parser
+  `MidiFile?`, never null after a successful parse; throws a `FormatException`
+  for any invalid file: bad header, truncated data, a length larger than the
+  file, a zero time division; a bad length never allocates more than the file;
+  chunks that are not `MTrk` are skipped), or keep the parser
   around: `var parser = FileParser(MidiParser(bytes)); parser.parseFile();` then
   `parser.file!`. `bytes` is any `List<int>` (`Uint8List` included).
   `EventParser.dataParseEvent(bytes)` / `dataParseMidiEvent(bytes)` parse a
@@ -82,6 +86,10 @@ covered by the sibling skill [tekartik-midi-player](../tekartik-midi-player/SKIL
 * Write bytes with `FileWriter.fileData(file)` (a `List<int>` ready to save) or
   `EventWriter.midiEventToBytes(event)` for one event (`Uint8List`). A round
   trip parse/write is stable: `MidiFile` and `MidiTrack` implement `==`.
+* Known gap: a tempo, time or key signature meta event shorter than its type
+  (3, 4, 2 bytes) parses, then its getters throw (`tempo` a
+  `FormatException`, `top`/`toString` a `RangeError`), `getMidiFileDuration`
+  included for a tempo. Wrap the use of a file from an unknown source.
 * On the VM, `await ioReadMidiFile(path)` and `await ioWriteMidiFile(path,
   file)` wrap the above with `dart:io`. Keep them out of web code; the rest of
   the package compiles everywhere.

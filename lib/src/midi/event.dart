@@ -497,6 +497,19 @@ class ControlChangeEvent extends Param2BytesEvent {
   //null;
 }
 
+/// Reads the [size] bytes of data of a sysex or meta event.
+///
+/// The size comes from the file (up to 0x1000007F): check that the data is
+/// there before allocating it, a bad file must not allocate gigabytes.
+List<int> _readEventData(MidiParser parser, int size) {
+  if (!parser.inBuffer!.contains(size)) {
+    throw const FormatException('not enough data');
+  }
+  final buffer = OutBuffer(size);
+  parser.read(buffer, size);
+  return buffer.data;
+}
+
 /// Normal SysEx Events.
 ///
 /// These are the most common type of SysEx event and are used to hold a single
@@ -519,9 +532,7 @@ class SysExEvent extends MidiEvent {
   void readData(MidiParser parser) {
     var dataSize = parser.readVariableLengthData();
     if (dataSize > 0) {
-      final buffer = OutBuffer(dataSize);
-      parser.read(buffer, dataSize);
-      data = buffer.data;
+      data = _readEventData(parser, dataSize);
     }
   }
 
@@ -646,9 +657,7 @@ abstract class MetaEvent extends MidiEvent {
 
     final dataSize = parser.readVariableLengthData();
     if (dataSize > 0) {
-      final buffer = OutBuffer(dataSize);
-      parser.read(buffer, dataSize);
-      _data = buffer.data;
+      _data = _readEventData(parser, dataSize);
     }
   }
 

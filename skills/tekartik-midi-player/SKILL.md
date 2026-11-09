@@ -18,13 +18,13 @@ covered by the sibling skill [tekartik-midi-files](../tekartik-midi-files/SKILL.
 
 ## Guidelines
 
-* Dependency (git only, not on pub.dev); the README asks for the `dart3a` ref:
+* Dependency (git only, not on pub.dev), the tip of the default branch (no
+  `ref`: the old `dart3a` branch misses the timing fixes):
   ```yaml
   dependencies:
     tekartik_midi:
       git:
         url: https://github.com/tekartik/midi.dart
-        ref: dart3a
   ```
 * Imports: `package:tekartik_midi/midi_file_player.dart` for `MidiFilePlayer`,
   `PlayableEvent`, `LocatedEvent`, `LocatedTrackPlayer`, `NoteOnKey`,

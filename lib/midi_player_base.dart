@@ -282,24 +282,28 @@ abstract class MidiPlayerBase {
   num get _nowTimestamp => nowToTimestamp();
 
   void _playNext() {
-    if (_currentEvent == null || isPaused) {
-      // Are we done
-      if (!isPaused) {
-        //TODO? Wait for all events to be played closing stream
-        //int fileIndex = this._fileIndex;
-        //new Future.
-        _streamController!.close();
-      } else {
-        pause();
+    // A loop, not a recursion: all the events already due are played here,
+    // and a burst of thousands of them (a timer firing late) must not
+    // overflow the stack.
+    while (true) {
+      if (_currentEvent == null || isPaused) {
+        // Are we done
+        if (!isPaused) {
+          //TODO? Wait for all events to be played closing stream
+          //int fileIndex = this._fileIndex;
+          //new Future.
+          _streamController!.close();
+        } else {
+          pause();
+        }
+        return;
       }
-    } else {
       final nowTimestamp = _nowTimestamp; //stopwatch.elapsedMilliseconds;
 
       if (_currentEvent!.timestamp < nowTimestamp) {
         //devPrint('## $now: $_currentEvent');
         _streamController!.add(_currentEvent);
         _currentEvent = _midiFilePlayer!.next;
-        _playNext();
       } else {
         final nextCompleter = Completer<void>.sync();
         _waitPlayNextCompleter = nextCompleter;
@@ -326,6 +330,7 @@ abstract class MidiPlayerBase {
             //devPrint('was paused');
           },
         );
+        return;
       }
     }
   }

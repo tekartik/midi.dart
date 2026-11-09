@@ -29,8 +29,27 @@ class FileParser extends ObjectParser {
 
     for (var i = 0; i < trackCount; i++) {
       //print(hexPretty(_midiParser.inBuffer.buildRemainingData().sublist(0, 20)));
+      _skipAlienChunks();
       var track = trackParser.parseTrack();
       file!.addTrack(track);
+    }
+  }
+
+  /// Skips the chunks that are not tracks: the spec asks readers to "expect
+  /// alien chunks and treat them as if they weren't there".
+  void _skipAlienChunks() {
+    while (true) {
+      readBuffer(4);
+      if (buffer.equalsList(TrackParser.trackHeader)) {
+        midiParser.back(4);
+        return;
+      }
+      final length = readUint32();
+      // Negative on the web for a length of 2 GB or more: never go back.
+      if (length < 0) {
+        throw const FormatException('Bad chunk length');
+      }
+      skip(length);
     }
   }
 
@@ -56,7 +75,16 @@ class FileParser extends ObjectParser {
 
     file!.fileFormat = readUint16();
     file!.setHeaderTrackCount(readUint16());
-    file!.timeDivision = readUint16();
+    final timeDivision = readUint16();
+    // A tick of a zero time division (0 ppq, or 0 ticks per SMPTE frame)
+    // would last forever: every time would be NaN.
+    final ticks = (timeDivision & 0x8000) == 0
+        ? timeDivision
+        : timeDivision & 0xFF;
+    if (ticks == 0) {
+      throw const FormatException('invalid time division');
+    }
+    file!.timeDivision = timeDivision;
     if (dataHeaderLen > 6) {
       skip(dataHeaderLen - 6);
     }

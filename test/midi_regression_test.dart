@@ -238,5 +238,76 @@ void main() {
       expect(parser.parseEvent(), isA<MetaTextEvent>());
       expect(parser.parseEvent(), NoteOnEvent(0, 0x41, 0x50));
     });
+
+    test('a huge event data length fails without allocating it', () {
+      // One track: a text meta event of length FF FF FF 7F (256 MB) in a
+      // 29 byte file. It used to allocate 2 GB before failing.
+      final data = parseHexString(
+        '4d 54 68 64 00 00 00 06 00 01 00 01 00 78 '
+        '4d 54 72 6b 00 00 00 08 00 ff 01 ff ff ff 7f',
+      );
+      final sysex = parseHexString(
+        '4d 54 68 64 00 00 00 06 00 01 00 01 00 78 '
+        '4d 54 72 6b 00 00 00 08 00 f0 ff ff ff 7f',
+      );
+      final sw = Stopwatch()..start();
+      for (var i = 0; i < 20; i++) {
+        expect(() => FileParser.dataFile(data), throwsFormatException);
+        expect(() => FileParser.dataFile(sysex), throwsFormatException);
+      }
+      expect(sw.elapsed, lessThan(const Duration(seconds: 5)));
+    });
+
+    test('a zero time division is invalid', () {
+      // ppq 0, then 25 frames per second of 0 ticks.
+      for (final division in ['00 00', 'e7 00']) {
+        final data = parseHexString(
+          '4d 54 68 64 00 00 00 06 00 01 00 01 $division '
+          '4d 54 72 6b 00 00 00 08 00 90 40 60 00 ff 2f 00',
+        );
+        expect(
+          () => FileParser.dataFile(data),
+          throwsA(
+            isA<FormatException>().having(
+              (e) => e.message,
+              'message',
+              'invalid time division',
+            ),
+          ),
+        );
+      }
+    });
+
+    test('alien chunks are skipped', () {
+      final data = parseHexString(
+        '4d 54 68 64 00 00 00 06 00 00 00 01 00 78 '
+        // An unknown chunk of 2 bytes.
+        '58 46 49 48 00 00 00 02 01 02 '
+        '4d 54 72 6b 00 00 00 04 00 ff 2f 00',
+      );
+      final file = FileParser.dataFile(data)!;
+      expect(file.trackCount, 1);
+      expect(file.tracks.first.events.single.midiEvent, isA<EndOfTrackEvent>());
+      // Truncated in the alien chunk.
+      expect(
+        () => FileParser.dataFile(data.sublist(0, 20)),
+        throwsFormatException,
+      );
+    });
+
+    test('many events due at once are played without a stack overflow', () {
+      final file = MidiFile()..ppq = 120;
+      final track = MidiTrack();
+      for (var i = 0; i < 50000; i++) {
+        track.addEvent(1, NoteOnEvent(0, 60, 100));
+      }
+      file.addTrack(track);
+      final player = _RecordingMidiPlayer(0);
+      player.load(file);
+      // The first timer comes late (a device asleep): everything is due.
+      player.now = 1e9;
+      player.resume(0);
+      expect(player.events.length, 50000);
+    });
   });
 }
